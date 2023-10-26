@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "870192772334",
+    "project_id": "proven-cosine-402110",
+    "storage_bucket": "proven-cosine-402110.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:870192772334:android:56abed12ca0628a4c96fff",
+        "android_client_info": {
+          "package_name": "com.DisSistInteractivos.Findal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKeipkVa3ru7OnQ0u0x4npX5iNXbQr51s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

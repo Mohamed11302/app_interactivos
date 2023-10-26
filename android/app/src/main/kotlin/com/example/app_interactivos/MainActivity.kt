@@ -1,4 +1,4 @@
-package com.example.app_interactivos
+package com.DisSistInteractivos.Findal
 
 import io.flutter.embedding.android.FlutterActivity
 
