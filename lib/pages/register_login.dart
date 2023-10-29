@@ -41,9 +41,9 @@ class _RegisterLoginState extends State<RegisterLogin> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  FadeInUp(duration: Duration(milliseconds: 1000), child: Text("Login", style: TextStyle(color: Colors.white, fontSize: 40),)),
+                  FadeInUp(duration: Duration(milliseconds: 1000), child: Text("Findal", style: TextStyle(color: Colors.white, fontSize: 40),)),
                   SizedBox(height: 10,),
-                  FadeInUp(duration: Duration(milliseconds: 1300), child: Text("Welcome Back", style: TextStyle(color: Colors.white, fontSize: 18),)),
+                  FadeInUp(duration: Duration(milliseconds: 1300), child: Text("Login", style: TextStyle(color: Colors.white, fontSize: 18),)),
                 ],
               ),
             ),
@@ -132,6 +132,7 @@ class _RegisterLoginState extends State<RegisterLogin> {
                               SizedBox(
                                 width: 5,
                               ),
+                              FadeInUp(duration: Duration(milliseconds: 1500), child:
                               GestureDetector(
                                   onTap: () {
                                     Navigator.pushAndRemoveUntil(
@@ -144,7 +145,7 @@ class _RegisterLoginState extends State<RegisterLogin> {
                                     "Forgot password?",
                                     style: TextStyle(
                                         color: Colors.grey, fontWeight: FontWeight.bold),
-                                  ))
+                                  )),),
                             ],
                           ),
                         SizedBox(height: 50,),
