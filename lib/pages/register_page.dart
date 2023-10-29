@@ -20,7 +20,7 @@ class _RegisterPageState extends State<RegisterPage> {
   String password_data = '';
   bool isSigningUp = false;
   final FirebaseAuthService _auth = FirebaseAuthService();
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
