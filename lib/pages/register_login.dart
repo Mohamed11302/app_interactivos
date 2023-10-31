@@ -83,6 +83,7 @@ class _RegisterLoginState extends State<RegisterLogin> {
                                       user_data = text;
                                     });
                                   },
+                                  keyboardType: TextInputType.emailAddress,
                                   decoration: InputDecoration(
                                     hintText: "Email or Phone number",
                                     hintStyle: TextStyle(color: Colors.grey),
