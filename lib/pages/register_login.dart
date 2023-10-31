@@ -15,6 +15,7 @@ class RegisterLogin extends StatefulWidget {
 class _RegisterLoginState extends State<RegisterLogin> {
   String user_data = '';
   String password_data = '';
+  bool _obscureText = true;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
@@ -94,20 +95,39 @@ class _RegisterLoginState extends State<RegisterLogin> {
                                 decoration: BoxDecoration(
                                   border: Border(bottom: BorderSide(color: Colors.grey.shade200))
                                 ),
-                                child: TextField(
-                                  onChanged: (text){
-                                    setState(() {
-                                      password_data = text;
-                                    });
-                                  },
-                                  obscureText: true,
-                                  decoration: InputDecoration(
-                                    hintText: "Password",
-                                    hintStyle: TextStyle(color: Colors.grey),
-                                    border: InputBorder.none
-                                  ),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: TextField(
+                                        onChanged: (text) {
+                                          setState(() {
+                                            password_data = text;
+                                          });
+                                        },
+                                        obscureText: _obscureText,
+                                        decoration: InputDecoration(
+                                          hintText: "Password",
+                                          hintStyle: TextStyle(color: Colors.grey),
+                                          border: InputBorder.none,
+                                        ),
+                                      ),
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          _obscureText = !_obscureText;
+                                        });
+                                      },
+                                      icon: Icon(
+                                        _obscureText ? Icons.visibility : Icons.visibility_off,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
+                              )
+
+                              
                             ],
                           ),
                         )),

@@ -5,8 +5,7 @@ import 'package:app_interactivos/pages/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:app_interactivos/global/common/toast.dart';
 import 'package:app_interactivos/user_auth/firebase_auth_implementation/firebase_auth_services.dart';
-
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
 
@@ -16,15 +15,17 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   String username_data = '';
-  String user_data = '';
+  String user_email_data = '';
   String password_data = '';
+  String password_confirmation_data = '';
+  int age_data = 0;
   bool isSigningUp = false;
-  final FirebaseAuthService _auth = FirebaseAuthService();
+  bool _obscureText_password1 = true;
+  bool _obscureText_password2 = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: Container(
         width: double.infinity,
         decoration: BoxDecoration(
@@ -37,7 +38,7 @@ class _RegisterPageState extends State<RegisterPage> {
             ]
           )
         ),
-        child: Column(
+          child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             SizedBox(height: 80,),
@@ -84,25 +85,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 child: TextField(
                                   onChanged: (text){
                                     setState(() {
-                                      username_data = text;
-                                    });
-                                  },
-                                  decoration: InputDecoration(
-                                    hintText: "User name",
-                                    hintStyle: TextStyle(color: Colors.grey),
-                                    border: InputBorder.none
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  border: Border(bottom: BorderSide(color: Colors.grey.shade200))
-                                ),
-                                child: TextField(
-                                  onChanged: (text){
-                                    setState(() {
-                                      user_data = text;
+                                      user_email_data = text;
                                     });
                                   },
                                   decoration: InputDecoration(
@@ -120,17 +103,108 @@ class _RegisterPageState extends State<RegisterPage> {
                                 child: TextField(
                                   onChanged: (text){
                                     setState(() {
-                                      password_data = text;
+                                      username_data = text;
                                     });
                                   },
-                                  obscureText: true,
                                   decoration: InputDecoration(
-                                    hintText: "Password",
+                                    hintText: "Username",
                                     hintStyle: TextStyle(color: Colors.grey),
                                     border: InputBorder.none
                                   ),
                                 ),
                               ),
+                              Container(
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  border: Border(bottom: BorderSide(color: Colors.grey.shade200))
+                                ),
+                                child: TextField(
+                                  onChanged: (text){
+                                    setState(() {
+                                      age_data = int.parse(text);
+                                    });
+                                  },
+                                  decoration: InputDecoration(
+                                    hintText: "Age",
+                                    hintStyle: TextStyle(color: Colors.grey),
+                                    border: InputBorder.none
+                                    
+                                  ),
+                                  keyboardType: TextInputType.number,
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  border: Border(bottom: BorderSide(color: Colors.grey.shade200))
+                                ),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: TextField(
+                                        onChanged: (text) {
+                                          setState(() {
+                                            password_data = text;
+                                          });
+                                        },
+                                        obscureText: _obscureText_password1,
+                                        decoration: InputDecoration(
+                                          hintText: "Password",
+                                          hintStyle: TextStyle(color: Colors.grey),
+                                          border: InputBorder.none,
+                                        ),
+                                      ),
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          _obscureText_password1 = !_obscureText_password1;
+                                        });
+                                      },
+                                      icon: Icon(
+                                        _obscureText_password1 ? Icons.visibility : Icons.visibility_off,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  border: Border(bottom: BorderSide(color: Colors.grey.shade200))
+                                ),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: TextField(
+                                        onChanged: (text) {
+                                          setState(() {
+                                            password_confirmation_data = text;
+                                          });
+                                        },
+                                        obscureText: _obscureText_password2,
+                                        decoration: InputDecoration(
+                                          hintText: "Confirm Password",
+                                          hintStyle: TextStyle(color: Colors.grey),
+                                          border: InputBorder.none,
+                                        ),
+                                      ),
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          _obscureText_password2 = !_obscureText_password2;
+                                        });
+                                      },
+                                      icon: Icon(
+                                        _obscureText_password2 ? Icons.visibility : Icons.visibility_off,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
                             ],
                           ),
                         )),
@@ -163,7 +237,27 @@ class _RegisterPageState extends State<RegisterPage> {
                         FadeInUp(duration: Duration(milliseconds: 1500), child:
                         GestureDetector(
                           onTap:  (){
-                            _signUp(username_data, user_data, password_data);
+                            if (password_data == password_confirmation_data){
+                              _signUp(username_data, user_email_data, password_data, age_data);
+
+                            }
+                            else{
+                              showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                title: Text('ERROR'),
+                                                content: Text('The passwords do not match'),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () => Navigator.of(context).pop(),
+                                                    child: Text('OK'),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                            }
 
                           },
                           child: Container(
@@ -188,30 +282,38 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
             )
           ],
-        ),
+      ),
       ),
     );
   }
 
-  void _signUp(String username_data, String user_data, String password_data) async {
+  void _signUp(String username_data, String user_data, String password_data, int age_data) async {
 
 setState(() {
   isSigningUp = true;
 });
 
     String username = username_data;
-    String user = user_data;
+    String user_email = user_data;
     String password = password_data;
-
-    User? register_user = await _auth.signUpWithEmailAndPassword(user, password);
+    UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: user_data, password: password_data);
+    //User? register_user = await _auth.signUpWithEmailAndPassword(user, password);
+    User? firebaseUser = userCredential.user;
+    
 
 setState(() {
   isSigningUp = false;
 });
-    if (register_user != null) {
+    if (firebaseUser != null) {
       showToast(message: "User is successfully created");
+      await FirebaseFirestore.instance.collection('users').doc(user_email).set({
+        'username': username,
+        'user': user_email,
+        'user_uid': firebaseUser.uid,
+        'age': age_data
+      });
       //Navigator.pushNamed(context, "/home");
-      Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(user: user, password: password)));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(user: user_email, password: password)));
 
     } else {
       showToast(message: "Some error happend");
