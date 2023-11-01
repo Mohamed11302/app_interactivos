@@ -26,264 +26,269 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            colors: [
-              Colors.orange.shade900,
-              Colors.orange.shade800,
-              Colors.orange.shade400
-            ]
-          )
-        ),
-          child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            SizedBox(height: 80,),
-            Padding(
-              padding: EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  FadeInUp(duration: Duration(milliseconds: 1000), child: Text("Findal", style: TextStyle(color: Colors.white, fontSize: 40),)),
-                  SizedBox(height: 10,),
-                  FadeInUp(duration: Duration(milliseconds: 1300), child: Text("Register", style: TextStyle(color: Colors.white, fontSize: 18),)),
-                ],
-              ),
-            ),
-            SizedBox(height: 20),
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(60), topRight: Radius.circular(60))
+      resizeToAvoidBottomInset: false,
+      //resizeToAvoidBottomPadding: false,
+      body: SingleChildScrollView(
+        child: Container(
+          height: 1200,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              colors: [
+                Colors.orange.shade900,
+                Colors.orange.shade800,
+                Colors.orange.shade400
+              ]
+            )
+          ),
+            child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(height: 80,),
+              Padding(
+                padding: EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    FadeInUp(duration: Duration(milliseconds: 1000), child: Text("Findal", style: TextStyle(color: Colors.white, fontSize: 40),)),
+                    SizedBox(height: 10,),
+                    FadeInUp(duration: Duration(milliseconds: 1300), child: Text("Register", style: TextStyle(color: Colors.white, fontSize: 18),)),
+                  ],
                 ),
-                child: Padding(
-                    padding: EdgeInsets.all(30),
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(height: 60,),
-                        FadeInUp(duration: Duration(milliseconds: 1400), child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [BoxShadow(
-                              color: Color.fromRGBO(225, 95, 27, .3),
-                              blurRadius: 20,
-                              offset: Offset(0, 10)
-                            )]
-                          ),
-                          child: Column(
-                            children: <Widget>[
-                              Container(
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  border: Border(bottom: BorderSide(color: Colors.grey.shade200))
-                                ),
-                                child: TextField(
-                                  onChanged: (text){
-                                    setState(() {
-                                      user_email_data = text;
-                                    });
-                                  },
-                                  keyboardType: TextInputType.emailAddress,
-                                  decoration: InputDecoration(
-                                    hintText: "Email or Phone number",
-                                    hintStyle: TextStyle(color: Colors.grey),
-                                    border: InputBorder.none
+              ),
+              SizedBox(height: 20),
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(60), topRight: Radius.circular(60))
+                  ),
+                  child: Padding(
+                      padding: EdgeInsets.all(30),
+                      child: Column(
+                        children: <Widget>[
+                          SizedBox(height: 60,),
+                          FadeInUp(duration: Duration(milliseconds: 1400), child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [BoxShadow(
+                                color: Color.fromRGBO(225, 95, 27, .3),
+                                blurRadius: 20,
+                                offset: Offset(0, 10)
+                              )]
+                            ),
+                            child: Column(
+                              children: <Widget>[
+                                Container(
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    border: Border(bottom: BorderSide(color: Colors.grey.shade200))
+                                  ),
+                                  child: TextField(
+                                    onChanged: (text){
+                                      setState(() {
+                                        user_email_data = text;
+                                      });
+                                    },
+                                    keyboardType: TextInputType.emailAddress,
+                                    decoration: InputDecoration(
+                                      labelText: "Email or Phone number",
+                                      hintStyle: TextStyle(color: Colors.grey),
+                                      border: InputBorder.none
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  border: Border(bottom: BorderSide(color: Colors.grey.shade200))
-                                ),
-                                child: TextField(
-                                  onChanged: (text){
-                                    setState(() {
-                                      username_data = text;
-                                    });
-                                  },
-                                  decoration: InputDecoration(
-                                    hintText: "Username",
-                                    hintStyle: TextStyle(color: Colors.grey),
-                                    border: InputBorder.none
+                                Container(
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    border: Border(bottom: BorderSide(color: Colors.grey.shade200))
+                                  ),
+                                  child: TextField(
+                                    onChanged: (text){
+                                      setState(() {
+                                        username_data = text;
+                                      });
+                                    },
+                                    decoration: InputDecoration(
+                                      labelText: "Username",
+                                      hintStyle: TextStyle(color: Colors.grey),
+                                      border: InputBorder.none
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  border: Border(bottom: BorderSide(color: Colors.grey.shade200))
-                                ),
-                                child: TextField(
-                                  onChanged: (text){
-                                    setState(() {
-                                      age_data = int.parse(text);
-                                    });
-                                  },
-                                  decoration: InputDecoration(
-                                    hintText: "Age",
-                                    hintStyle: TextStyle(color: Colors.grey),
-                                    border: InputBorder.none
-                                    
+                                Container(
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    border: Border(bottom: BorderSide(color: Colors.grey.shade200))
                                   ),
-                                  keyboardType: TextInputType.number,
+                                  child: TextField(
+                                    onChanged: (text){
+                                      setState(() {
+                                        age_data = int.parse(text);
+                                      });
+                                    },
+                                    decoration: InputDecoration(
+                                      labelText: "Age",
+                                      hintStyle: TextStyle(color: Colors.grey),
+                                      border: InputBorder.none
+                                      
+                                    ),
+                                    keyboardType: TextInputType.number,
+                                  ),
                                 ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  border: Border(bottom: BorderSide(color: Colors.grey.shade200))
-                                ),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: TextField(
-                                        onChanged: (text) {
-                                          setState(() {
-                                            password_data = text;
-                                          });
-                                        },
-                                        obscureText: _obscureText_password1,
-                                        decoration: InputDecoration(
-                                          hintText: "Password",
-                                          hintStyle: TextStyle(color: Colors.grey),
-                                          border: InputBorder.none,
+                                Container(
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    border: Border(bottom: BorderSide(color: Colors.grey.shade200))
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextField(
+                                          onChanged: (text) {
+                                            setState(() {
+                                              password_data = text;
+                                            });
+                                          },
+                                          obscureText: _obscureText_password1,
+                                          decoration: InputDecoration(
+                                            labelText: "Password",
+                                            hintStyle: TextStyle(color: Colors.grey),
+                                            border: InputBorder.none,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          _obscureText_password1 = !_obscureText_password1;
-                                        });
-                                      },
-                                      icon: Icon(
-                                        _obscureText_password1 ? Icons.visibility : Icons.visibility_off,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  border: Border(bottom: BorderSide(color: Colors.grey.shade200))
-                                ),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: TextField(
-                                        onChanged: (text) {
+                                      IconButton(
+                                        onPressed: () {
                                           setState(() {
-                                            password_confirmation_data = text;
+                                            _obscureText_password1 = !_obscureText_password1;
                                           });
                                         },
-                                        obscureText: _obscureText_password2,
-                                        decoration: InputDecoration(
-                                          hintText: "Confirm Password",
-                                          hintStyle: TextStyle(color: Colors.grey),
-                                          border: InputBorder.none,
+                                        icon: Icon(
+                                          _obscureText_password1 ? Icons.visibility : Icons.visibility_off,
+                                          color: Colors.grey,
                                         ),
                                       ),
-                                    ),
-                                    IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          _obscureText_password2 = !_obscureText_password2;
-                                        });
-                                      },
-                                      icon: Icon(
-                                        _obscureText_password2 ? Icons.visibility : Icons.visibility_off,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              )
+                                Container(
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    border: Border(bottom: BorderSide(color: Colors.grey.shade200))
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextField(
+                                          onChanged: (text) {
+                                            setState(() {
+                                              password_confirmation_data = text;
+                                            });
+                                          },
+                                          obscureText: _obscureText_password2,
+                                          decoration: InputDecoration(
+                                            labelText: "Confirm Password",
+                                            hintStyle: TextStyle(color: Colors.grey),
+                                            border: InputBorder.none,
+                                          ),
+                                        ),
+                                      ),
+                                      IconButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            _obscureText_password2 = !_obscureText_password2;
+                                          });
+                                        },
+                                        icon: Icon(
+                                          _obscureText_password2 ? Icons.visibility : Icons.visibility_off,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          )),
+                          SizedBox(height: 40,),
+                          FadeInUp(duration: Duration(milliseconds: 1500), child:
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text("Already have an account?"),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => RegisterLogin()),
+                                        (route) => false);
+                                  },
+                                  child: Text(
+                                    "Login",
+                                    style: TextStyle(
+                                        color: Colors.blue, fontWeight: FontWeight.bold),
+                                  ))
                             ],
                           ),
-                        )),
-                        SizedBox(height: 40,),
-                        FadeInUp(duration: Duration(milliseconds: 1500), child:
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text("Already have an account?"),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            GestureDetector(
-                                onTap: () {
-                                  Navigator.pushAndRemoveUntil(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => RegisterLogin()),
-                                      (route) => false);
-                                },
-                                child: Text(
-                                  "Login",
-                                  style: TextStyle(
-                                      color: Colors.blue, fontWeight: FontWeight.bold),
-                                ))
-                          ],
-                        ),
-                        ),
-                        SizedBox(height: 50,),
-                        FadeInUp(duration: Duration(milliseconds: 1500), child:
-                        GestureDetector(
-                          onTap:  (){
-                            if (password_data == password_confirmation_data){
-                              _signUp(username_data, user_email_data, password_data, age_data);
-
-                            }
-                            else{
-                              showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return AlertDialog(
-                                                title: Text('ERROR'),
-                                                content: Text('The passwords do not match'),
-                                                actions: [
-                                                  TextButton(
-                                                    onPressed: () => Navigator.of(context).pop(),
-                                                    child: Text('OK'),
-                                                  ),
-                                                ],
-                                              );
-                                            },
-                                          );
-                            }
-
-                          },
-                          child: Container(
-                            width: double.infinity,
-                            height: 45,
-                            decoration: BoxDecoration(
-                              color: Colors.orange[900],
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Center(
-                                child: isSigningUp ? CircularProgressIndicator(color: Colors.white,):Text(
-                              "Sign Up",
-                              style: TextStyle(
-                                  color: Colors.white, fontWeight: FontWeight.bold),
-                            )),
                           ),
-                        ),
-                        ),
-                      ],
+                          SizedBox(height: 50,),
+                          FadeInUp(duration: Duration(milliseconds: 1500), child:
+                          GestureDetector(
+                            onTap:  (){
+                              if (password_data == password_confirmation_data){
+                                _signUp(username_data, user_email_data, password_data, age_data);
+      
+                              }
+                              else{
+                                showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  title: Text('ERROR'),
+                                                  content: Text('The passwords do not match'),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () => Navigator.of(context).pop(),
+                                                      child: Text('OK'),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                              }
+      
+                            },
+                            child: Container(
+                              width: double.infinity,
+                              height: 45,
+                              decoration: BoxDecoration(
+                                color: Colors.orange[900],
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Center(
+                                  child: isSigningUp ? CircularProgressIndicator(color: Colors.white,):Text(
+                                "Sign Up",
+                                style: TextStyle(
+                                    color: Colors.white, fontWeight: FontWeight.bold),
+                              )),
+                            ),
+                          ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
+                ),
               ),
-            )
-          ],
-      ),
+            ],
+        ),
+        ),
       ),
     );
   }

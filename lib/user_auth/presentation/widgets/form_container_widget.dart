@@ -8,8 +8,8 @@ class FormContainerWidget extends StatefulWidget {
   final TextEditingController? controller;
   final Key? fieldKey;
   final bool? isPasswordField;
-  final String? hintText;
   final String? labelText;
+  //final String? labelText;
   final String? helperText;
   final FormFieldSetter<String>? onSaved;
   final FormFieldValidator<String>? validator;
@@ -20,8 +20,8 @@ class FormContainerWidget extends StatefulWidget {
     this.controller,
     this.isPasswordField,
     this.fieldKey,
-    this.hintText,
     this.labelText,
+    //this.labelText,
     this.helperText,
     this.onSaved,
     this.validator,
@@ -59,7 +59,7 @@ class _FormContainerWidgetState extends State<FormContainerWidget> {
         decoration: new InputDecoration(
           border: InputBorder.none,
           filled: true,
-          hintText: widget.hintText,
+          labelText: widget.labelText,
           hintStyle: TextStyle(color: Colors.black45),
           suffixIcon: new GestureDetector(
             onTap: () {

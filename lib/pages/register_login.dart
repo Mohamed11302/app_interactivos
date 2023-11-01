@@ -1,9 +1,12 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:app_interactivos/pages/home_page.dart';
 import 'package:app_interactivos/pages/register_page.dart';
 import 'package:app_interactivos/pages/forgot_password.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RegisterLogin extends StatefulWidget {
   const RegisterLogin({Key? key}) : super(key: key);
@@ -16,11 +19,11 @@ class _RegisterLoginState extends State<RegisterLogin> {
   String user_data = '';
   String password_data = '';
   bool _obscureText = true;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn googleSignIn = GoogleSignIn();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
+      resizeToAvoidBottomInset: false,
       body: Container(
         width: double.infinity,
         decoration: BoxDecoration(
@@ -85,7 +88,7 @@ class _RegisterLoginState extends State<RegisterLogin> {
                                   },
                                   keyboardType: TextInputType.emailAddress,
                                   decoration: InputDecoration(
-                                    hintText: "Email or Phone number",
+                                    labelText: "Email or Phone number",
                                     hintStyle: TextStyle(color: Colors.grey),
                                     border: InputBorder.none
                                   ),
@@ -107,7 +110,7 @@ class _RegisterLoginState extends State<RegisterLogin> {
                                         },
                                         obscureText: _obscureText,
                                         decoration: InputDecoration(
-                                          hintText: "Password",
+                                          labelText: "Password",
                                           hintStyle: TextStyle(color: Colors.grey),
                                           border: InputBorder.none,
                                         ),
@@ -193,16 +196,9 @@ class _RegisterLoginState extends State<RegisterLogin> {
                             SizedBox(width: 30,),
                             Expanded(
                               child: FadeInUp(duration: Duration(milliseconds: 1900), child: MaterialButton(
-                                /*onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => MenuPage(user: user_data, password: password_data)),
-                                  );
-                                },
-                                */
                                 onPressed: () async {
                                     try {
-                                        final UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+                                        final UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
                                           email: user_data,
                                           password: password_data,
                                         );
@@ -260,9 +256,49 @@ class _RegisterLoginState extends State<RegisterLogin> {
                                   child: Text("Login", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
                                 ),
                               )),
-                            )
+                            ),
                           ],
-                        )
+                        ),
+                         SizedBox(height: 30,),  
+                          FadeInUp(duration: Duration(milliseconds: 1500), child:GestureDetector(
+                          onTap:  () async{
+                                final user = await _signInWithGoogle();
+                                if (user != null) {
+                                  user_data = user.displayName.toString();
+                                  password_data = "Unknown. Login with google";
+                                  DocumentoDelUsuario(user.email.toString(), user_data, user.uid.toString());
+                                  Navigator.push(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => HomePage(user: user_data, password: password_data)),
+                                          );
+                                } else {
+                                  // Ocurrió un error en el registro
+                                  print('Error en el registro con Google');
+                                }
+                          },
+                          child: Container(
+                              width: double.infinity,
+                              height: 45,
+                              decoration: BoxDecoration(
+                                color: Colors.orange[700],
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                          child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                
+                                children: <Widget>[
+                                  Text(
+                                    'Login with Google',
+                                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(width: 8),
+                                  Image.asset('assets/google_logo.png'),
+                                ],
+                              ),
+                      ),
+                          ),
+                          ),
+                          
                       ],
                     ),
                   ),
@@ -272,5 +308,49 @@ class _RegisterLoginState extends State<RegisterLogin> {
         ),
       ),
     );
+
   }
+  Future<User?> _signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
+      if (googleSignInAccount == null) return null;
+
+      final GoogleSignInAuthentication googleSignInAuthentication =
+          await googleSignInAccount.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken,
+      );
+
+      final UserCredential authResult = await FirebaseAuth.instance.signInWithCredential(credential);
+      return authResult.user;
+    } catch (error) {
+      print(error);
+      return null;
+    }
+  }
+  Future<void> DocumentoDelUsuario(String user_data, String username_data, String user_uid_data) async {
+    //Si no existe un documento en la collection users del usuario al logearse con google, se crea
+    try {
+      final collectionReference = FirebaseFirestore.instance.collection('users');
+      final documentReference = collectionReference.doc(user_data);
+      final documentSnapshot = await documentReference.get();
+
+      if (documentSnapshot.exists) {
+        //
+      } else {
+        // El documento no existe
+        await documentReference.set({
+          'age': 0,
+          'user': user_data,
+          'user_uid': user_uid_data,
+          'username': username_data,
+    });
+      }
+    } catch (e) {
+      print('Error al verificar si el documento existe: $e');
+    }
+}
+
+
 }
