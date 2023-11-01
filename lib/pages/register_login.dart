@@ -4,6 +4,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:app_interactivos/pages/home_page.dart';
 import 'package:app_interactivos/pages/register_page.dart';
 import 'package:app_interactivos/pages/forgot_password.dart';
+import 'package:app_interactivos/pages/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -207,7 +208,7 @@ class _RegisterLoginState extends State<RegisterLogin> {
                                           // Credenciales válidas, navegar a la página del menú.
                                           Navigator.push(
                                             context,
-                                            MaterialPageRoute(builder: (context) => HomePage(user: user_data, password: password_data)),
+                                            MaterialPageRoute(builder: (context) => Example()),//HomePage(user: user_data, password: password_data)),
                                           );
                                         } else {
                                           // Las credenciales no son válidas, puedes mostrar un mensaje al usuario.
@@ -269,7 +270,7 @@ class _RegisterLoginState extends State<RegisterLogin> {
                                   DocumentoDelUsuario(user.email.toString(), user_data, user.uid.toString());
                                   Navigator.push(
                                             context,
-                                            MaterialPageRoute(builder: (context) => HomePage(user: user_data, password: password_data)),
+                                            MaterialPageRoute(builder: (context) => Example()),//HomePage(user: user_data, password: password_data)),
                                           );
                                 } else {
                                   // Ocurrió un error en el registro
