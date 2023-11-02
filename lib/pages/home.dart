@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:lilsne_icons/line_icons.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:nfc_manager/nfc_manager.dart';
 
 void main() {
