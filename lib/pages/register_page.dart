@@ -1,11 +1,13 @@
+import 'dart:convert';
 import 'package:app_interactivos/pages/register_login.dart';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:app_interactivos/pages/home_page.dart';
+import 'package:app_interactivos/pages/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:app_interactivos/global/common/toast.dart';
-import 'package:app_interactivos/user_auth/firebase_auth_implementation/firebase_auth_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:http/http.dart' as http;
+
+
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
 
@@ -27,33 +29,42 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      //resizeToAvoidBottomPadding: false,
       body: SingleChildScrollView(
         child: Container(
           height: 1200,
           width: double.infinity,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              colors: [
-                Colors.orange.shade900,
-                Colors.orange.shade800,
-                Colors.orange.shade400
-              ]
-            )
-          ),
-            child: Column(
+              gradient: LinearGradient(begin: Alignment.topCenter, colors: [
+            Colors.orange.shade900,
+            Colors.orange.shade800,
+            Colors.orange.shade400
+          ])),
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              SizedBox(height: 80,),
+              SizedBox(
+                height: 80,
+              ),
               Padding(
                 padding: EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    FadeInUp(duration: Duration(milliseconds: 1000), child: Text("Findal", style: TextStyle(color: Colors.white, fontSize: 40),)),
-                    SizedBox(height: 10,),
-                    FadeInUp(duration: Duration(milliseconds: 1300), child: Text("Register", style: TextStyle(color: Colors.white, fontSize: 18),)),
+                    FadeInUp(
+                        duration: Duration(milliseconds: 1000),
+                        child: Text(
+                          "Findal",
+                          style: TextStyle(color: Colors.white, fontSize: 40),
+                        )),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    FadeInUp(
+                        duration: Duration(milliseconds: 1300),
+                        child: Text(
+                          "Register",
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        )),
                   ],
                 ),
               ),
@@ -61,161 +72,182 @@ class _RegisterPageState extends State<RegisterPage> {
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(60), topRight: Radius.circular(60))
-                  ),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(60),
+                          topRight: Radius.circular(60))),
                   child: Padding(
-                      padding: EdgeInsets.all(30),
-                      child: Column(
-                        children: <Widget>[
-                          SizedBox(height: 60,),
-                          FadeInUp(duration: Duration(milliseconds: 1400), child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: [BoxShadow(
-                                color: Color.fromRGBO(225, 95, 27, .3),
-                                blurRadius: 20,
-                                offset: Offset(0, 10)
-                              )]
-                            ),
-                            child: Column(
-                              children: <Widget>[
-                                Container(
-                                  padding: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    border: Border(bottom: BorderSide(color: Colors.grey.shade200))
-                                  ),
-                                  child: TextField(
-                                    onChanged: (text){
-                                      setState(() {
-                                        user_email_data = text;
-                                      });
-                                    },
-                                    keyboardType: TextInputType.emailAddress,
-                                    decoration: InputDecoration(
-                                      labelText: "Email or Phone number",
-                                      hintStyle: TextStyle(color: Colors.grey),
-                                      border: InputBorder.none
+                    padding: EdgeInsets.all(30),
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(
+                          height: 60,
+                        ),
+                        FadeInUp(
+                            duration: Duration(milliseconds: 1400),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Color.fromRGBO(225, 95, 27, .3),
+                                        blurRadius: 20,
+                                        offset: Offset(0, 10))
+                                  ]),
+                              child: Column(
+                                children: <Widget>[
+                                  Container(
+                                    padding: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                        border: Border(
+                                            bottom: BorderSide(
+                                                color: Colors.grey.shade200))),
+                                    child: TextField(
+                                      onChanged: (text) {
+                                        setState(() {
+                                          user_email_data = text;
+                                        });
+                                      },
+                                      keyboardType: TextInputType.emailAddress,
+                                      decoration: InputDecoration(
+                                          labelText: "Email or Phone number",
+                                          hintStyle:
+                                              TextStyle(color: Colors.grey),
+                                          border: InputBorder.none),
                                     ),
                                   ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    border: Border(bottom: BorderSide(color: Colors.grey.shade200))
-                                  ),
-                                  child: TextField(
-                                    onChanged: (text){
-                                      setState(() {
-                                        username_data = text;
-                                      });
-                                    },
-                                    decoration: InputDecoration(
-                                      labelText: "Username",
-                                      hintStyle: TextStyle(color: Colors.grey),
-                                      border: InputBorder.none
+                                  Container(
+                                    padding: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                        border: Border(
+                                            bottom: BorderSide(
+                                                color: Colors.grey.shade200))),
+                                    child: TextField(
+                                      onChanged: (text) {
+                                        setState(() {
+                                          username_data = text;
+                                        });
+                                      },
+                                      decoration: InputDecoration(
+                                          labelText: "Username",
+                                          hintStyle:
+                                              TextStyle(color: Colors.grey),
+                                          border: InputBorder.none),
                                     ),
                                   ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    border: Border(bottom: BorderSide(color: Colors.grey.shade200))
-                                  ),
-                                  child: TextField(
-                                    onChanged: (text){
-                                      setState(() {
-                                        age_data = int.parse(text);
-                                      });
-                                    },
-                                    decoration: InputDecoration(
-                                      labelText: "Age",
-                                      hintStyle: TextStyle(color: Colors.grey),
-                                      border: InputBorder.none
-                                      
+                                  Container(
+                                    padding: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                        border: Border(
+                                            bottom: BorderSide(
+                                                color: Colors.grey.shade200))),
+                                    child: TextField(
+                                      onChanged: (text) {
+                                        setState(() {
+                                          age_data = int.parse(text);
+                                        });
+                                      },
+                                      decoration: InputDecoration(
+                                          labelText: "Age",
+                                          hintStyle:
+                                              TextStyle(color: Colors.grey),
+                                          border: InputBorder.none),
+                                      keyboardType: TextInputType.number,
                                     ),
-                                    keyboardType: TextInputType.number,
                                   ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    border: Border(bottom: BorderSide(color: Colors.grey.shade200))
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: TextField(
-                                          onChanged: (text) {
-                                            setState(() {
-                                              password_data = text;
-                                            });
-                                          },
-                                          obscureText: _obscureText_password1,
-                                          decoration: InputDecoration(
-                                            labelText: "Password",
-                                            hintStyle: TextStyle(color: Colors.grey),
-                                            border: InputBorder.none,
+                                  Container(
+                                    padding: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                        border: Border(
+                                            bottom: BorderSide(
+                                                color: Colors.grey.shade200))),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: TextField(
+                                            onChanged: (text) {
+                                              setState(() {
+                                                password_data = text;
+                                              });
+                                            },
+                                            obscureText: _obscureText_password1,
+                                            decoration: InputDecoration(
+                                              labelText: "Password",
+                                              hintStyle:
+                                                  TextStyle(color: Colors.grey),
+                                              border: InputBorder.none,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      IconButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            _obscureText_password1 = !_obscureText_password1;
-                                          });
-                                        },
-                                        icon: Icon(
-                                          _obscureText_password1 ? Icons.visibility : Icons.visibility_off,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    border: Border(bottom: BorderSide(color: Colors.grey.shade200))
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: TextField(
-                                          onChanged: (text) {
+                                        IconButton(
+                                          onPressed: () {
                                             setState(() {
-                                              password_confirmation_data = text;
+                                              _obscureText_password1 =
+                                                  !_obscureText_password1;
                                             });
                                           },
-                                          obscureText: _obscureText_password2,
-                                          decoration: InputDecoration(
-                                            labelText: "Confirm Password",
-                                            hintStyle: TextStyle(color: Colors.grey),
-                                            border: InputBorder.none,
+                                          icon: Icon(
+                                            _obscureText_password1
+                                                ? Icons.visibility
+                                                : Icons.visibility_off,
+                                            color: Colors.grey,
                                           ),
                                         ),
-                                      ),
-                                      IconButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            _obscureText_password2 = !_obscureText_password2;
-                                          });
-                                        },
-                                        icon: Icon(
-                                          _obscureText_password2 ? Icons.visibility : Icons.visibility_off,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                )
-                              ],
-                            ),
-                          )),
-                          SizedBox(height: 40,),
-                          FadeInUp(duration: Duration(milliseconds: 1500), child:
-                          Row(
+                                  Container(
+                                    padding: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                        border: Border(
+                                            bottom: BorderSide(
+                                                color: Colors.grey.shade200))),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: TextField(
+                                            onChanged: (text) {
+                                              setState(() {
+                                                password_confirmation_data =
+                                                    text;
+                                              });
+                                            },
+                                            obscureText: _obscureText_password2,
+                                            decoration: InputDecoration(
+                                              labelText: "Confirm Password",
+                                              hintStyle:
+                                                  TextStyle(color: Colors.grey),
+                                              border: InputBorder.none,
+                                            ),
+                                          ),
+                                        ),
+                                        IconButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              _obscureText_password2 =
+                                                  !_obscureText_password2;
+                                            });
+                                          },
+                                          icon: Icon(
+                                            _obscureText_password2
+                                                ? Icons.visibility
+                                                : Icons.visibility_off,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            )),
+                        SizedBox(
+                          height: 40,
+                        ),
+                        FadeInUp(
+                          duration: Duration(milliseconds: 1500),
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text("Already have an account?"),
@@ -227,43 +259,27 @@ class _RegisterPageState extends State<RegisterPage> {
                                     Navigator.pushAndRemoveUntil(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => RegisterLogin()),
+                                            builder: (context) =>
+                                                RegisterLogin()),
                                         (route) => false);
                                   },
                                   child: Text(
                                     "Login",
                                     style: TextStyle(
-                                        color: Colors.blue, fontWeight: FontWeight.bold),
+                                        color: Colors.blue,
+                                        fontWeight: FontWeight.bold),
                                   ))
                             ],
                           ),
-                          ),
-                          SizedBox(height: 50,),
-                          FadeInUp(duration: Duration(milliseconds: 1500), child:
-                          GestureDetector(
-                            onTap:  (){
-                              if (password_data == password_confirmation_data){
-                                _signUp(username_data, user_email_data, password_data, age_data);
-      
-                              }
-                              else{
-                                showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                return AlertDialog(
-                                                  title: Text('ERROR'),
-                                                  content: Text('The passwords do not match'),
-                                                  actions: [
-                                                    TextButton(
-                                                      onPressed: () => Navigator.of(context).pop(),
-                                                      child: Text('OK'),
-                                                    ),
-                                                  ],
-                                                );
-                                              },
-                                            );
-                              }
-      
+                        ),
+                        SizedBox(
+                          height: 50,
+                        ),
+                        FadeInUp(
+                          duration: Duration(milliseconds: 1500),
+                          child: GestureDetector(
+                            onTap: () async {
+                               _signUp();
                             },
                             child: Container(
                               width: double.infinity,
@@ -273,56 +289,138 @@ class _RegisterPageState extends State<RegisterPage> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Center(
-                                  child: isSigningUp ? CircularProgressIndicator(color: Colors.white,):Text(
-                                "Sign Up",
-                                style: TextStyle(
-                                    color: Colors.white, fontWeight: FontWeight.bold),
-                              )),
+                                  child: isSigningUp
+                                      ? CircularProgressIndicator(
+                                          color: Colors.white,
+                                        )
+                                      : Text(
+                                          "Sign Up",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        )),
                             ),
                           ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
+                  ),
                 ),
               ),
             ],
-        ),
+          ),
         ),
       ),
     );
   }
 
-  void _signUp(String username_data, String user_data, String password_data, int age_data) async {
+  void _signUp() async {
+    if (password_data == '' ||
+        password_confirmation_data == '' ||
+        username_data == '' ||
+        user_email_data == '') {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('ERROR'),
+            content: Text('No puedes dejar en blanco los campos del registro'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    } else if (password_data != password_confirmation_data) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('ERROR'),
+            content: Text('The passwords do not match'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      _signUp_user();
+      //sendEmail(user_email_data, username_data);
+    }
+  }
 
-setState(() {
-  isSigningUp = true;
-});
-
-    String username = username_data;
-    String user_email = user_data;
-    String password = password_data;
-    UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: user_data, password: password_data);
-    //User? register_user = await _auth.signUpWithEmailAndPassword(user, password);
+  void _signUp_user() async {
+    setState(() {
+      isSigningUp = true;
+    });
+    UserCredential userCredential = await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(
+            email: user_email_data, password: password_data);
     User? firebaseUser = userCredential.user;
-    
 
-setState(() {
-  isSigningUp = false;
-});
+    setState(() {
+      isSigningUp = false;
+    });
     if (firebaseUser != null) {
-      showToast(message: "User is successfully created");
-      await FirebaseFirestore.instance.collection('users').doc(user_email).set({
-        'username': username,
-        'user': user_email,
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('User is successfully created'),
+        ),
+      );
+      await FirebaseFirestore.instance.collection('users').doc(user_email_data).set({
+        'username': username_data,
+        'user': user_email_data,
         'user_uid': firebaseUser.uid,
         'age': age_data
       });
-      //Navigator.pushNamed(context, "/home");
-      Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(user: user_email, password: password)));
-
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => Example()));
     } else {
-      showToast(message: "Some error happend");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Some error happend'),
+        ),
+      );
     }
   }
+
+Future sendEmail(String email_destinatario, String nombre_destinatario)
+async{
+  final serviceId = 'service_yo8dgky';
+  final templateId = 'template_vzwrmos';
+  final userId = 'IPa2bddutyh-9tPIC';
+  final url = Uri.parse('https://api.emailjs.com/api/v1.0/email/send');
+  final response = await http.post(
+    url,
+    headers: {
+      'origin':'http://localhost',
+      'Content-Type':'application/json',
+    },
+    body: json.encode({
+      'service_id': serviceId,
+      'template_id': templateId,
+      'user_id': userId,
+      'template_params':{
+        'user_subject': 'Register in FindAll App',
+        'user_email': email_destinatario,
+        'user_name': nombre_destinatario,
+
+      }
+    }),
+  );
+  print("----");
+  print(response.body);
+  print("----");
+}
+
+
+
+
 }
