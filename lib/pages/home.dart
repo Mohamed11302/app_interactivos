@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:line_icons/line_icons.dart';
+import 'package:lilsne_icons/line_icons.dart';
+import 'package:nfc_manager/nfc_manager.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -23,8 +24,16 @@ class Example extends StatefulWidget {
 class _ExampleState extends State<Example> {
   int _selectedIndex = 0;
   bool showNFCTab = true; // Controla si mostrar la pestaña NFC o no
+  late List<Widget Function()> _widgetOptions; // Definir _widgetOptions
 
-  List<Widget Function()> _widgetOptions = [];
+  Future<void> _startNFCSession() async {
+    await NfcManager.instance.startSession(
+      onDiscovered: (NfcTag tag) {
+        // Procesar la etiqueta NFC aquí y mostrar la información en _buildNFCTab()
+        _buildNFCTab(tag);
+        },
+    );
+  }
 
   _ExampleState() {
     _widgetOptions = [
@@ -36,12 +45,14 @@ class _ExampleState extends State<Example> {
         'OBJETOS PERDIDOS',
         style: optionStyle,
       ),
-          () => _buildNFCTab(),
+          () => _buildNFCTab(null), // Inicializa con un valor nulo
           () => Text(
         'CHATS',
         style: optionStyle,
       ),
     ];
+
+    _startNFCSession();
   }
 
   static const TextStyle optionStyle =
@@ -98,7 +109,7 @@ class _ExampleState extends State<Example> {
     );
   }
 
-  Widget _buildNFCTab() {
+  Widget _buildNFCTab(NfcTag? tag) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -108,6 +119,11 @@ class _ExampleState extends State<Example> {
           'Acerca el teléfono al dispositivo NFC',
           style: optionStyle,
         ),
+        if (tag != null)
+          Text(
+            'Información NFC: ${tag.data}', // Personaliza cómo mostrar la información de la etiqueta
+            style: optionStyle,
+          ),
       ],
     );
   }
