@@ -426,7 +426,7 @@ class _RegisterLoginState extends State<RegisterLogin> {
         });
       }
     } catch (e) {
-ScaffoldMessenger.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error al verificar si el documento existe: $e'),
         ),

@@ -34,7 +34,6 @@ dependencies:
   line_icons: ^2.0.3
   nfc_manager: ^3.3.0
   permission_handler: ^11.0.1
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
