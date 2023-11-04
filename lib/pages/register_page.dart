@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:app_interactivos/pages/register_login.dart';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:app_interactivos/pages/home.dart';
+import 'package:app_interactivos/pages/tabbed_window.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;

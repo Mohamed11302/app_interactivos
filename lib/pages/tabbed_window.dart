@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:nfc_manager/nfc_manager.dart';
-import 'dart:convert';
+import 'package:app_interactivos/pages/nfc_methods.dart';
 
 class Example extends StatefulWidget {
   @override
@@ -15,30 +14,6 @@ class _ExampleState extends State<Example> {
   bool showNFCTab = true; // Controla si mostrar la pestaña NFC o no
   late List<Widget Function()> _widgetOptions; // Definir _widgetOptions
 
-  Future<void> _startNFCSession() async {
-
-    await NfcManager.instance.startSession(
-      onDiscovered: (NfcTag tag) {
-        try {
-          debugPrint(_selectedIndex.toString());
-
-          if(enableNFCReading) {
-            _buildNFCTab(tag);
-          }
-          return Future.value();
-        }catch(error){
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Error mientras se manejaba una etiqueta nfc. $error'),
-            ),
-          );
-          return Future.value();
-        }
-      },
-    );
-
-  }
-
   _ExampleState() {
     _widgetOptions = [
           () => Text(
@@ -49,14 +24,16 @@ class _ExampleState extends State<Example> {
         'OBJETOS PERDIDOS',
         style: optionStyle,
       ),
-          () => _buildNFCTab(null), // Inicializa con un valor nulo
+          () => Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Image.asset('assets/gif_nfc.gif'), SizedBox(height: 16), Text('Acerca el teléfono al dispositivo NFC'),],),//buildNFCTab(null, enableNFCReading,null), // Inicializa con un valor nulo
+          
           () => Text(
         'CHATS',
         style: optionStyle,
       ),
     ];
 
-    _startNFCSession();
+    
   }
 
   static const TextStyle optionStyle =
@@ -64,6 +41,7 @@ class _ExampleState extends State<Example> {
 
   @override
   Widget build(BuildContext context) {
+    startNFCSession(enableNFCReading,context);
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
@@ -117,36 +95,4 @@ class _ExampleState extends State<Example> {
       ),
     );
   }
-
-  Widget _buildNFCTab(NfcTag? tag) {
-    List<Widget> columnChildren = [
-      Image.asset('assets/gif_nfc.gif'),
-      SizedBox(height: 16),
-      Text(
-        'Acerca el teléfono al dispositivo NFC',
-        style: optionStyle,
-      ),
-    ];
-
-    if (tag != null && enableNFCReading) {
-      //quito los 3 primeros caracteres por ser unos añadidos en la lectura
-      var payloadText = (String.fromCharCodes(tag.data['ndef']['cachedMessage']['records'][0]['payload'])).substring(3);
-      print('Payload of the NFC tag detected: $payloadText');
-
-
-      columnChildren.add(
-        Text(
-          'Información NFC: ${tag.data}',
-          style: optionStyle,
-        ),
-      );
-    }
-
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: columnChildren,
-    );
-  }
-
-
 }
