@@ -34,6 +34,8 @@ dependencies:
   line_icons: ^2.0.3
   nfc_manager: ^3.3.0
   permission_handler: ^11.0.1
+  firebase_storage: ^11.4.1
+  image_picker: ^1.0.4
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -54,7 +56,9 @@ flutter:
   assets:
     - assets/google_logo.png
     - assets/gif_nfc.gif
-  #  - images/a_dot_ham.jpeg
+    - assets/bugatti-mistral_9880.webp
+    - assets/play5.jfif
+    
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

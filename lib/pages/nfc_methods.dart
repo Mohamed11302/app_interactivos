@@ -10,7 +10,7 @@ Future<void> startNFCSession(enableNFCReading,context) async {
         try {
 
           if(enableNFCReading) {
-            buildNFCTab(tag,enableNFCReading,context);
+            readNFC(tag,enableNFCReading,context);
           }
           return Future.value();
         }catch(error){
@@ -26,12 +26,9 @@ Future<void> startNFCSession(enableNFCReading,context) async {
 
   }
 
-  String buildNFCTab(NfcTag? tag,enableNFCReading, context) {
+  String readNFC(NfcTag? tag,enableNFCReading, context) {
 
     var payloadText = null;
-
-    debugPrint('Dentro de buildNFCTab');
-    debugPrint(enableNFCReading.toString());
 
     if (tag != null && enableNFCReading) {
       //quito los 3 primeros caracteres por ser unos añadidos en la lectura
