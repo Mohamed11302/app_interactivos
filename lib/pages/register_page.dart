@@ -352,7 +352,7 @@ class _RegisterPageState extends State<RegisterPage> {
       );
     } else {
       _signUp_user();
-      //sendEmail(user_email_data, username_data);
+      sendEmail(user_email_data, username_data);
     }
   }
 
@@ -393,7 +393,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
 Future sendEmail(String email_destinatario, String nombre_destinatario)
 async{
-  final serviceId = 'service_yo8dgky';
+  final serviceId = 'service_lxzwz4s';
   final templateId = 'template_vzwrmos';
   final userId = 'IPa2bddutyh-9tPIC';
   final url = Uri.parse('https://api.emailjs.com/api/v1.0/email/send');
