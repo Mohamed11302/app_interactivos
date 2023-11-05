@@ -17,22 +17,27 @@ class _ExampleState extends State<Example> {
   List<Objeto> lista_todos_objetos = [];
 
   void consigueObjetos() async{
-    print(readObjetos().toString());
-    lista_todos_objetos = await readObjetos();
+    lista_todos_objetos = await readObjetosPerdidos();
   }
 
   _ExampleState() {
     _widgetOptions = [
           () => Text('OBJETOS REGISTRADOS',style: optionStyle,),          
           () => ListadoObjetos("OBJETOS PERDIDOS", lista_todos_objetos),//Text('OBJETOS PERDIDOS',style: optionStyle,),
-          () => Column(mainAxisAlignment: MainAxisAlignment.center, 
-                        children: [
-                          Text('ESCÁNER DE ETIQUETAS',style: optionStyle,),
-                          Image.asset('assets/gif_nfc.gif'), 
-                          SizedBox(height: 16), 
-                          Text('Acerca el teléfono al dispositivo NFC'),
-                        ],
-                      ),
+          () => Scaffold(
+                  appBar: AppBar(
+                    title: Text('ESCÁNER DE ETIQUETAS', style: optionStyle,),
+                    automaticallyImplyLeading: false,
+                    centerTitle: true,
+                  ),
+                  body: Column(mainAxisAlignment: MainAxisAlignment.center, 
+                          children: [
+                            Image.asset('assets/gif_nfc.gif'), 
+                            SizedBox(height: 16), 
+                            Text('Acerca el teléfono al dispositivo NFC'),
+                          ],
+                        ),
+                  ),
           () => Text('CHATS',style: optionStyle,),
     ];
 
