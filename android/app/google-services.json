@@ -12,7 +12,20 @@
           "package_name": "com.DisSistInteractivos.Findal"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "870192772334-tfjdcki8f938je98vc04idfjph4c0joo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.DisSistInteractivos.Findal",
+            "certificate_hash": "edf54fd64a4c0ba54e0befdf0d53972b7c0f8629"
+          }
+        },
+        {
+          "client_id": "870192772334-2s2gi65c3l7koid2s26l0on9f5sddg5r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDKeipkVa3ru7OnQ0u0x4npX5iNXbQr51s"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "870192772334-2d33n3vr61qem68o63ml9viivjgtocdr.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "870192772334-gqqcmajidosujnvob9lh9btcmr1iduca.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.appInteractivos"
+              }
+            }
+          ]
         }
       }
     }
