@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -16,52 +16,118 @@ class Objeto extends StatelessWidget{
   final String descripcion;
   final bool perdido;
   final Image imagen; // image: Image.network('URL_DE_LA_IMAGEN'),
+  final String localizacion_perdida;
+  final DateTime fecha_perdida;
 
-  const Objeto(this.nombre, this.propietario, this.descripcion, this.perdido, this.imagen) : super();
+  const Objeto(this.nombre, this.propietario, this.descripcion, this.perdido, this.imagen, this.localizacion_perdida, this.fecha_perdida) : super();
 
   @override
-  Widget build(BuildContext context){
-    return Card(
+Widget build(BuildContext context) {
+  return GestureDetector(
+    onTap: () {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return IntrinsicWidth( 
+            child: AlertDialog(
+            title: Text(('Más detalles sobre "' + this.nombre + '"').toUpperCase(),
+            style: TextStyle(fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,),
+            content: SingleChildScrollView(
+              child: Container(
+                //width: 250, // Ajusta el ancho según tus necesidades
+                //height: 200, // Ajusta la altura según tus necesidades
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text.rich(
+                      TextSpan(
+                        children: <InlineSpan>[
+                          TextSpan(
+                            text: 'Descripción: ',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold // Subraya el texto
+                            ),
+                          ),
+                          TextSpan(
+                            text: this.descripcion+"\n",
+                          ),
+                        ],
+                      ),
+                    ),
+                    Text.rich(
+                      TextSpan(
+                        children: <InlineSpan>[
+                          TextSpan(
+                            text: 'Fecha de desaparición confirmada: ',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold // Subraya el texto
+                            ),
+                          ),
+                          TextSpan(
+                            text: DateFormat('yyyy-MM-dd HH:mm:ss').format(this.fecha_perdida).toString(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Cerrar'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          )
+          );
+        },
+      );
+    },
+    child: Card(
       child: Container(
         height: 150,
         child: Row(
           children: <Widget>[
             Container(
-            width: 150,  // Establece el ancho deseado para la imagen
-            height: 150, // Establece el alto deseado para la imagen
-            child: this.imagen,
-          ),
+              width: 150,  // Establece el ancho deseado para la imagen
+              height: 150, // Establece el alto deseado para la imagen
+              child: this.imagen, // Cambia esto por tu imagen
+            ),
             Expanded(
-              child : Column(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                Text(this.nombre, style: TextStyle(fontWeight: FontWeight.bold)),
-                Text('Propietario: '+this.propietario),
-                //Text("Detalles : " + this.descripcion)
-              ]
-            )
-            )
+                  Text(this.nombre, style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text('Propietario: ' + this.propietario),
+                ],
+              ),
+            ),
           ],
-        )
-      )
-    );
-  }
+        ),
+      ),
+    ),
+  );
+}
+
+
 }
 
 class ListadoObjetos extends StatelessWidget {
 
-  final String titulo;
   final List<Objeto> objetos;
 
-  const ListadoObjetos(this.titulo, this.objetos) : super();
+  const ListadoObjetos(this.objetos) : super();
 
   @override
   Widget build(BuildContext context){
-    const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.w600);
+    
     return Scaffold(
-      appBar: AppBar(
-        title: Text(this.titulo, style: optionStyle,),
-      ),
+      
       body: ListView(
         children: this.objetos,
       )
@@ -69,7 +135,7 @@ class ListadoObjetos extends StatelessWidget {
   }
 }
 
-Future<List<Objeto>> readObjetos() async {
+Future<List<Objeto>> readObjetosPerdidos(String provincia) async {
 
   List<Objeto> objetos_future = [];
 
@@ -78,13 +144,20 @@ Future<List<Objeto>> readObjetos() async {
 
   queryObjetos.docs.forEach((documento) {
     Map<String, dynamic> data = documento.data()as Map<String, dynamic>;
-    String descripcion = data['"descripcion"'];
-    String propietario = data['"propietario"'];
-    String nombre = data['"nombre"'];
     bool perdido = data['"perdido"'];
-    String imagen = data['"imagen"'];
+    String localizacion_perdida = data['"localizacion_perdida"'];
     
-    objetos_future.add(Objeto(nombre, propietario, descripcion, perdido, Image.network(imagen)));
+    if (perdido && provincia == localizacion_perdida){
+      String descripcion = data['"descripcion"'];
+      String propietario = data['"propietario"'];
+      String nombre = data['"nombre"'];
+      String imagen = data['"imagen"'];
+      DateTime fecha_perdida = DateTime.parse(data['"fecha_perdida"']);
+      objetos_future.add(Objeto(nombre, propietario, descripcion, perdido, Image.network(imagen),localizacion_perdida, fecha_perdida));
+    }
+    
+    objetos_future.sort((a, b) => b.fecha_perdida.compareTo(a.fecha_perdida));
+
   });
 
   return objetos_future;
@@ -105,11 +178,10 @@ Future<String> subirImagen(File imagen) async {
   return url_descarga;
 }
 
-
 void getDownloadURL() async {
   final imagen = await seleccionarImagen();
   if (imagen != null){
-    final url_descarga = await subirImagen(File(imagen!.path));
+    final url_descarga = await subirImagen(File(imagen.path));
     print(url_descarga);
   }
 

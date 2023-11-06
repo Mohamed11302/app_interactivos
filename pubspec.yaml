@@ -36,6 +36,7 @@ dependencies:
   permission_handler: ^11.0.1
   firebase_storage: ^11.4.1
   image_picker: ^1.0.4
+  intl: ^0.18.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
