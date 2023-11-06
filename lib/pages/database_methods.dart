@@ -16,10 +16,10 @@ class Objeto extends StatelessWidget{
   final String descripcion;
   final bool perdido;
   final Image imagen; // image: Image.network('URL_DE_LA_IMAGEN'),
-  final String localizacion;
+  final String localizacion_perdida;
   final DateTime fecha_perdida;
 
-  const Objeto(this.nombre, this.propietario, this.descripcion, this.perdido, this.imagen, this.localizacion, this.fecha_perdida) : super();
+  const Objeto(this.nombre, this.propietario, this.descripcion, this.perdido, this.imagen, this.localizacion_perdida, this.fecha_perdida) : super();
 
   @override
 Widget build(BuildContext context) {
@@ -119,20 +119,15 @@ Widget build(BuildContext context) {
 
 class ListadoObjetos extends StatelessWidget {
 
-  final String titulo;
   final List<Objeto> objetos;
 
-  const ListadoObjetos(this.titulo, this.objetos) : super();
+  const ListadoObjetos(this.objetos) : super();
 
   @override
   Widget build(BuildContext context){
-    const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.w600);
+    
     return Scaffold(
-      appBar: AppBar(
-        title: Text(this.titulo, style: optionStyle,),
-        automaticallyImplyLeading: false,
-        centerTitle: true,
-      ),
+      
       body: ListView(
         children: this.objetos,
       )
@@ -140,7 +135,7 @@ class ListadoObjetos extends StatelessWidget {
   }
 }
 
-Future<List<Objeto>> readObjetosPerdidos() async {
+Future<List<Objeto>> readObjetosPerdidos(String provincia) async {
 
   List<Objeto> objetos_future = [];
 
@@ -150,16 +145,19 @@ Future<List<Objeto>> readObjetosPerdidos() async {
   queryObjetos.docs.forEach((documento) {
     Map<String, dynamic> data = documento.data()as Map<String, dynamic>;
     bool perdido = data['"perdido"'];
-    if (perdido){
+    String localizacion_perdida = data['"localizacion_perdida"'];
+    
+    if (perdido && provincia == localizacion_perdida){
       String descripcion = data['"descripcion"'];
       String propietario = data['"propietario"'];
       String nombre = data['"nombre"'];
       String imagen = data['"imagen"'];
-      String localizacion = data['"localizacion"'];
       DateTime fecha_perdida = DateTime.parse(data['"fecha_perdida"']);
-      objetos_future.add(Objeto(nombre, propietario, descripcion, perdido, Image.network(imagen),localizacion, fecha_perdida));
+      objetos_future.add(Objeto(nombre, propietario, descripcion, perdido, Image.network(imagen),localizacion_perdida, fecha_perdida));
     }
     
+    objetos_future.sort((a, b) => b.fecha_perdida.compareTo(a.fecha_perdida));
+
   });
 
   return objetos_future;
@@ -180,11 +178,10 @@ Future<String> subirImagen(File imagen) async {
   return url_descarga;
 }
 
-
 void getDownloadURL() async {
   final imagen = await seleccionarImagen();
   if (imagen != null){
-    final url_descarga = await subirImagen(File(imagen!.path));
+    final url_descarga = await subirImagen(File(imagen.path));
     print(url_descarga);
   }
 
