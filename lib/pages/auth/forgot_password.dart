@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:app_interactivos/pages/register_login.dart';
+import 'package:app_interactivos/pages/auth/register_login.dart';
 import 'package:animate_do/animate_do.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
@@ -193,7 +193,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   }
 
   Future<void> _resetPassword() async {
-
     if (recovery_email.isNotEmpty) {
       setState(() {
         _isResettingPassword = true;

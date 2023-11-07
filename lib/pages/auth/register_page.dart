@@ -1,12 +1,11 @@
 import 'dart:convert';
-import 'package:app_interactivos/pages/register_login.dart';
+import 'package:app_interactivos/pages/auth/register_login.dart';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:app_interactivos/pages/tabbed_window.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
-
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -279,7 +278,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           duration: Duration(milliseconds: 1500),
                           child: GestureDetector(
                             onTap: () async {
-                               _signUp();
+                              _signUp();
                             },
                             child: Container(
                               width: double.infinity,
@@ -374,7 +373,10 @@ class _RegisterPageState extends State<RegisterPage> {
           content: Text('User is successfully created'),
         ),
       );
-      await FirebaseFirestore.instance.collection('users').doc(user_email_data).set({
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user_email_data)
+          .set({
         'username': username_data,
         'user': user_email_data,
         'user_uid': firebaseUser.uid,
@@ -391,36 +393,31 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
-Future sendEmail(String email_destinatario, String nombre_destinatario)
-async{
-  final serviceId = 'service_lxzwz4s';
-  final templateId = 'template_vzwrmos';
-  final userId = 'IPa2bddutyh-9tPIC';
-  final url = Uri.parse('https://api.emailjs.com/api/v1.0/email/send');
-  final response = await http.post(
-    url,
-    headers: {
-      'origin':'http://localhost',
-      'Content-Type':'application/json',
-    },
-    body: json.encode({
-      'service_id': serviceId,
-      'template_id': templateId,
-      'user_id': userId,
-      'template_params':{
-        'user_subject': 'Register in FindAll App',
-        'user_email': email_destinatario,
-        'user_name': nombre_destinatario,
-
-      }
-    }),
-  );
-  print("----");
-  print(response.body);
-  print("----");
-}
-
-
-
-
+  Future sendEmail(
+      String email_destinatario, String nombre_destinatario) async {
+    final serviceId = 'service_lxzwz4s';
+    final templateId = 'template_vzwrmos';
+    final userId = 'IPa2bddutyh-9tPIC';
+    final url = Uri.parse('https://api.emailjs.com/api/v1.0/email/send');
+    final response = await http.post(
+      url,
+      headers: {
+        'origin': 'http://localhost',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'service_id': serviceId,
+        'template_id': templateId,
+        'user_id': userId,
+        'template_params': {
+          'user_subject': 'Register in FindAll App',
+          'user_email': email_destinatario,
+          'user_name': nombre_destinatario,
+        }
+      }),
+    );
+    print("----");
+    print(response.body);
+    print("----");
+  }
 }
