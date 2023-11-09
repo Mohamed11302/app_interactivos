@@ -42,7 +42,13 @@ class _ExampleState extends State<Example> {
 
   _ExampleState() {
     _widgetOptions = [
-          () => Text('OBJETOS REGISTRADOS',style: optionStyle,),          
+          () => Scaffold(
+             appBar: AppBar(
+                    title: Text('OBJETOS REGISTRADOS', style: optionStyle,),
+                    automaticallyImplyLeading: false,
+                    centerTitle: true,
+                  ),    
+          ),      
           () => Scaffold(
              appBar: AppBar(
                     title: Text('OBJETOS PERDIDOS', style: optionStyle,),
