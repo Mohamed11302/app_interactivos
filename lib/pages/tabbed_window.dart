@@ -1,3 +1,6 @@
+import 'package:app_interactivos/pages/api/api.dart';
+import 'package:app_interactivos/pages/helper/chat_screen.dart';
+import 'package:app_interactivos/pages/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:line_icons/line_icons.dart';
@@ -156,7 +159,8 @@ class _ExampleState extends State<Example> {
               ],
             ),
           ),
-      () => mAPP().build(context), //Text('CHATS',style: optionStyle,),
+      () => HomeScreen(),
+      //mAPP().build(context), //Text('CHATS',style: optionStyle,),
     ];
   }
 

@@ -296,62 +296,6 @@ class _RegisterLoginState extends State<RegisterLogin> {
     );
   }
 
-/*
-  Future<void> _signInWithEmailAndPassword() async {
-    try {
-      final UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: user_data,
-        password: password_data,
-      );
-
-      if (userCredential.user != null) {
-        // Credenciales válidas, navegar a la página del menú.
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => Example()),
-        );
-      } else {
-        // Las credenciales no son válidas, puedes mostrar un mensaje al usuario.
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text('Credenciales incorrectas'),
-              content: Text(
-                  'El usuario o la contraseña no son válidos. Por favor, inténtelo de nuevo.'),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
-      }
-    } catch (e) {
-      // Ocurrió un error al iniciar sesión con Firebase.
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Error de inicio de sesión'),
-            content: Text(
-                'Ocurrió un error al iniciar sesión. Por favor, inténtelo de nuevo.'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
-*/
-
   _signOut() async {
     try {
       await FirebaseAuth.instance.signOut();
@@ -364,14 +308,23 @@ class _RegisterLoginState extends State<RegisterLogin> {
   Future<void> _signInWithEmail() async {
     Dialogs.showProgressBar(context);
     await _signOut(); //MOHA
-    await APIs.auth
-        .signInWithEmailAndPassword(
-      email: user_data,
-      password: password_data,
-    )
-        .then((user) async {
-      _signIn(user);
-    });
+    try {
+      await APIs.auth
+          .signInWithEmailAndPassword(
+        email: user_data,
+        password: password_data,
+      )
+          .then((user) async {
+        _signIn(user);
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Some error happend: ${e}'),
+        ),
+      );
+    }
+    Navigator.pop(context);
   }
 
   Future<void> _signInWithGoogle() async {
@@ -417,7 +370,7 @@ class _RegisterLoginState extends State<RegisterLogin> {
       log('\nUser: ${us.user}');
       log('\nUserAdditionalInfo: ${us.additionalUserInfo}');
 
-      if ((await APIs.userExists())) {
+      if ((await APIs.userExists(us.user!.email!))) {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (_) => Example()));
       } else {
