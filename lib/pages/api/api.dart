@@ -322,6 +322,26 @@ class APIs {
     });
   }
 
+  static Future<String?> getRegistroUser(String registro) async {
+    try {
+      // Accede a la colección 'users' y recupera el documento correspondiente al usuario
+      DocumentSnapshot<Map<String, dynamic>> userSnapshot =
+          await firestore.collection('users').doc(user.email).get();
+
+      // Verifica si el documento existe
+      if (userSnapshot.exists) {
+        // Accede al campo 'image' y devuelve su valor
+        return userSnapshot.data()?[registro] as String?;
+      } else {
+        // El documento no existe
+        return null;
+      }
+    } catch (e) {
+      print('Error al obtener la imagen del usuario: $e');
+      return null;
+    }
+  }
+
   static Future<void> updateActiveStatus(bool isOnline) async {
     firestore.collection('users').doc(user.email).update({
       'is_online': isOnline,

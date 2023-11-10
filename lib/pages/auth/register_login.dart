@@ -324,7 +324,6 @@ class _RegisterLoginState extends State<RegisterLogin> {
         ),
       );
     }
-    Navigator.pop(context);
   }
 
   Future<void> _signInWithGoogle() async {

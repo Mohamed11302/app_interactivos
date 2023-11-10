@@ -470,6 +470,8 @@ class _RegisterPageState extends State<RegisterPage> {
         final us = user.user;
         if (us != null) {
           try {
+            await us.updatePhotoURL(imagen);
+            await us.updateDisplayName(username_data);
             await APIs.createUser(
                 us.uid, username_data, user_email_data, imagen);
             ScaffoldMessenger.of(context).showSnackBar(
