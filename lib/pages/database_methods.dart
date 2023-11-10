@@ -133,8 +133,8 @@ Widget build(BuildContext context) {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  Text(this.nombre, style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text('Propietario: ' + this.propietario),
+                  Text(this.nombre, style: TextStyle(fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
+                  Text('Propietario: ' + this.propietario, textAlign: TextAlign.center,),
                 ],
               ),
             ),
@@ -185,7 +185,7 @@ Future<List<Objeto>> readObjetosPerdidos(String provincia) async {
       String nombre = data['"nombre"'];
       String imagen = data['"imagen"'];
       DateTime fecha_perdida = DateTime.parse(data['"fecha_perdida"']);
-      List<String> coordenadas = data['"coordenadas"'].split(",");
+      List<String> coordenadas = data['"coordenadas_perdida"'].split(",");
       List<double> coordenadas_perdida = [double.parse(coordenadas[0]),double.parse(coordenadas[1])];
   
       //List<String> provincia =  await obtener_Provincia_y_Pais(double.parse(coordenadas[0]), double.parse(coordenadas[1]));
@@ -200,13 +200,25 @@ Future<List<Objeto>> readObjetosPerdidos(String provincia) async {
   return objetos_future;
 }
 
-Future<XFile?> seleccionarImagen() async{
-  final ImagePicker picker = ImagePicker();
-  final XFile? imagen = await picker.pickImage(source:ImageSource.gallery); //si pones camera en vez de gallery se hace foto con la camara
-  return imagen;
+Future<void> registrarObjeto(String nombre_objeto, String descripcion_objeto, XFile imagen_objeto) async{
+
+  String url_descarga_imagen_objeto = await subir_imagen_a_storage(File(imagen_objeto.path));
+  await db.collection("objetos").add(
+    {
+      '"coordenadas_perdida"': "",
+      '"descripcion"': descripcion_objeto,
+      '"fecha_perdida"': "",
+      '"imagen"': url_descarga_imagen_objeto,
+      '"nombre"': nombre_objeto,
+      '"perdido"': false,
+      '"propietario"': "EAPrimo",
+      '"provincia_perdida"': "",
+    }
+  );
 }
 
-Future<String> subirImagen(File imagen) async {
+
+Future<String> subir_imagen_a_storage(File imagen) async {
   final String nombre_imagen = imagen.path.split("/").last;
   final Reference ref = storage.ref().child("imagenes_objetos").child(nombre_imagen);
   final UploadTask uploadTask = ref.putFile(imagen);
@@ -215,13 +227,8 @@ Future<String> subirImagen(File imagen) async {
   return url_descarga;
 }
 
-void getDownloadURL() async {
-  final imagen = await seleccionarImagen();
-  if (imagen != null){
-    final url_descarga = await subirImagen(File(imagen.path));
-    print(url_descarga);
-  }
 
-}
+
+
 
 
