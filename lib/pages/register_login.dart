@@ -305,7 +305,7 @@ class _RegisterLoginState extends State<RegisterLogin> {
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  Example()),
+                  Tabbed_Window(user_data)),
         );
       } else {
         // Las credenciales no son válidas, puedes mostrar un mensaje al usuario.
@@ -365,7 +365,7 @@ class _RegisterLoginState extends State<RegisterLogin> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => Example(),
+            builder: (context) => Tabbed_Window(user_data),
           ),
         );
       } else {

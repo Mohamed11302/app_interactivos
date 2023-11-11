@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:app_interactivos/pages/new_object_form.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
@@ -5,12 +7,25 @@ import 'package:line_icons/line_icons.dart';
 import 'package:app_interactivos/pages/nfc_methods.dart';
 import 'package:app_interactivos/pages/database_methods.dart';
 
-class Example extends StatefulWidget {
+class Tabbed_Window extends StatefulWidget {
+
+  final String cuenta_usuario;
+
+  Tabbed_Window(this.cuenta_usuario) : super();
+
   @override
-  _ExampleState createState() => _ExampleState();
+  _Tabbed_Window createState() => _Tabbed_Window(this.cuenta_usuario);
+
 }
 
-class _ExampleState extends State<Example> {
+class _Tabbed_Window extends State<Tabbed_Window> {
+
+  @override
+  void initState(){
+    consigueObjetosRegistrados();
+  }
+
+  String cuenta_usuario;
   bool enableNFCReading = false;
   int _selectedIndex = 0;
   List<String> lista_provincias_espana = [
@@ -22,11 +37,17 @@ class _ExampleState extends State<Example> {
   ];
   String provincia_seleccionada = "<Ninguna>";
   bool lectura_objetos_perdidos_acabada = true;
-
+  bool lectura_objetos_registrados_usuario_acabada = false;
+  bool registro_nuevo_objeto_acabado = true;
 
   late List<Widget Function()> _widgetOptions; 
 
-  List<Objeto> lista_objetos_perdidos = [];
+  List<Objeto_Perdido> lista_objetos_perdidos = [];
+  List<Objeto_Registrado> lista_objetos_registrados_usuario = [];
+
+  void callback_borrar_objeto (){
+    setState(() {});
+  }
 
   void consigueObjetosPerdidos(String provincia) async{
     
@@ -41,7 +62,21 @@ class _ExampleState extends State<Example> {
     });
   }
 
-  _ExampleState() {
+  void consigueObjetosRegistrados() async{
+
+    setState(() {
+    lectura_objetos_registrados_usuario_acabada = false;
+    });
+
+    lista_objetos_registrados_usuario = await readObjetosRegistrados(this.cuenta_usuario, consigueObjetosRegistrados);
+
+    setState(() {
+    lectura_objetos_registrados_usuario_acabada = true;
+    });
+    
+  }
+
+  _Tabbed_Window(this.cuenta_usuario) {
     _widgetOptions = [
           () => Scaffold(
             appBar: AppBar(
@@ -60,19 +95,22 @@ class _ExampleState extends State<Example> {
                           color: Colors.blue, // Color del rectángulo
                         ),
                         child: ElevatedButton(
-                          onPressed: () async{
-                            // Aquí debes abrir la nueva ventana o realizar la acción deseada
-                            // Por ejemplo, puedes usar Navigator.push para navegar a una nueva pantalla
-                            Resultado_Formulario resultado_formulario = await  Navigator.of(context).push(
+                          onPressed: () async {
+                            await Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) {
-                                  // Coloca aquí el widget de la nueva ventana
-                                  // Puedes personalizarla como desees
-                                  return Formulario_Objeto(); // 400 metros de radio el circulo
+                                  return Formulario_Objeto(); 
                                 },
                               ),
-                            );
-                            registrarObjeto(resultado_formulario.nombre_objeto, resultado_formulario.descripcion_objeto, resultado_formulario.imagen_objeto!);
+                            ).then((resultado_formulario) async{
+                              
+                              if (resultado_formulario != null) {
+                                registro_nuevo_objeto_acabado = false;
+                                await registrarObjeto(resultado_formulario.nombre_objeto, resultado_formulario.descripcion_objeto, resultado_formulario.imagen_objeto, this.cuenta_usuario);
+                                registro_nuevo_objeto_acabado = true;
+                                consigueObjetosRegistrados();
+                              }
+                            });
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.blue, // Color del botón
@@ -81,7 +119,11 @@ class _ExampleState extends State<Example> {
                         ),
                       )
                   ),
-
+                  SizedBox(height: 32,),
+                  Expanded(
+                    child: (lectura_objetos_registrados_usuario_acabada && registro_nuevo_objeto_acabado) 
+                    ? Listado_Objetos_Registrados(lista_objetos_registrados_usuario) : Center(child: CircularProgressIndicator()),
+                  ),
                 ]
               ),
                 
@@ -121,7 +163,7 @@ class _ExampleState extends State<Example> {
                     ],
                   ),
                   Expanded(
-                    child: !lectura_objetos_perdidos_acabada ? Center(child: CircularProgressIndicator()) : ListadoObjetos(lista_objetos_perdidos),
+                    child: lectura_objetos_perdidos_acabada ? Listado_Objetos_Perdidos(lista_objetos_perdidos) : Center(child: CircularProgressIndicator()),
                   ),
                 ],
               ),
