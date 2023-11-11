@@ -27,150 +27,141 @@ class Objeto_Perdido extends StatelessWidget{
 
   @override
 Widget build(BuildContext context) {
-  return Card(
+  return GestureDetector(
+    onTap: () {
+      showDialog(
+        context: context,
+        builder: (context) {
+        return IntrinsicWidth(
+          child: AlertDialog(
+            title: Text(('Más detalles sobre "' + this.nombre + '"').toUpperCase(),
+              style: TextStyle(fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            content: Container(
+            width: double.infinity,
+            constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height - 100),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: <Widget>[
+                    this.imagen,
+                    SizedBox(height: 20),
+                    /*Text.rich(
+                      TextSpan(
+                        children: <InlineSpan>[
+                          TextSpan(
+                            text: 'Propietario: ',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          TextSpan(
+                            text: this.propietario + "\n",
+                          ),
+                        ],
+                      ),
+                    ),*/
+                    //Text('Propietario: ' + this.propietario, textAlign: TextAlign.center,),
+                    Text.rich(
+                      TextSpan(
+                        children: <InlineSpan>[
+                          TextSpan(
+                            text: 'Descripción: ',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          TextSpan(
+                            text: this.descripcion + "\n",
+                          ),
+                        ],
+                      ),
+                    ),
+                    Text.rich(
+                      TextSpan(
+                        children: <InlineSpan>[
+                          TextSpan(
+                            text: 'Fecha de desaparición confirmada: ',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          TextSpan(
+                            text: DateFormat('yyyy-MM-dd HH:mm:ss').format(this.fecha_perdida).toString(),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 20), // Espacio entre el texto y el botón
+                    Container(
+                      width: double.infinity, // Ancho del botón al ancho completo
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8), // Bordes redondeados
+                        color: Colors.blue, // Color del rectángulo
+                      ),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // Aquí debes abrir la nueva ventana o realizar la acción deseada
+                          // Por ejemplo, puedes usar Navigator.push para navegar a una nueva pantalla
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) {
+                                // Coloca aquí el widget de la nueva ventana
+                                // Puedes personalizarla como desees
+                                return MapScreen(this.coordenadas_perdida[0],this.coordenadas_perdida[1],400); // 400 metros de radio el circulo
+                              },
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue, // Color del botón
+                        ),
+                        child: Text('Ver ubicación de pérdida'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Cerrar'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+        },
+      );
+    },
+    child: 
+    Card(
       child: Container(
-        height: 150,
-        child: Row(
+          width: 200,
+          height: 225,
+        child: Column(
           children: <Widget>[
+            SizedBox(height: 20,),
             Container(
               width: 150,  // Establece el ancho deseado para la imagen
               height: 150, // Establece el alto deseado para la imagen
               child: this.imagen, // Cambia esto por tu imagen
             ),
+            SizedBox(height: 20,),
             Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
+              child: 
                   Text(this.nombre, style: TextStyle(fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                            return IntrinsicWidth(
-                              child: AlertDialog(
-                                title: Text(('Más detalles sobre "' + this.nombre + '"').toUpperCase(),
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                  textAlign: TextAlign.center,
-                                ),
-                                content: SingleChildScrollView(
-                                  child: Container(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        /*Text.rich(
-                                          TextSpan(
-                                            children: <InlineSpan>[
-                                              TextSpan(
-                                                text: 'Propietario: ',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              TextSpan(
-                                                text: this.propietario + "\n",
-                                              ),
-                                            ],
-                                          ),
-                                        ),*/
-                                        //Text('Propietario: ' + this.propietario, textAlign: TextAlign.center,),
-                                        Text.rich(
-                                          TextSpan(
-                                            children: <InlineSpan>[
-                                              TextSpan(
-                                                text: 'Descripción: ',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              TextSpan(
-                                                text: this.descripcion + "\n",
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Text.rich(
-                                          TextSpan(
-                                            children: <InlineSpan>[
-                                              TextSpan(
-                                                text: 'Fecha de desaparición confirmada: ',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              TextSpan(
-                                                text: DateFormat('yyyy-MM-dd HH:mm:ss').format(this.fecha_perdida).toString(),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(height: 20), // Espacio entre el texto y el botón
-                                        Container(
-                                          width: double.infinity, // Ancho del botón al ancho completo
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(8), // Bordes redondeados
-                                            color: Colors.blue, // Color del rectángulo
-                                          ),
-                                          child: ElevatedButton(
-                                            onPressed: () {
-                                              // Aquí debes abrir la nueva ventana o realizar la acción deseada
-                                              // Por ejemplo, puedes usar Navigator.push para navegar a una nueva pantalla
-                                              Navigator.of(context).push(
-                                                MaterialPageRoute(
-                                                  builder: (context) {
-                                                    // Coloca aquí el widget de la nueva ventana
-                                                    // Puedes personalizarla como desees
-                                                    return MapScreen(this.coordenadas_perdida[0],this.coordenadas_perdida[1],400); // 400 metros de radio el circulo
-                                                  },
-                                                ),
-                                              );
-                                            },
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: Colors.blue, // Color del botón
-                                            ),
-                                            child: Text('Ver ubicación de pérdida'),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                actions: <Widget>[
-                                  TextButton(
-                                    child: Text('Cerrar'),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
-                              ),
-                            );
-                            },
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green, // Color del botón
-                          ),
-                        child: Column (
-                            children: [
-                              Icon(Icons.info),
-                              //Text("Información")
-                            ],
-                          ),
-                      )
-                    ],
-                  )
-                ],
-              ),
             ),
           ],
         ),
       ),
-    );
+    ),
+  );
 }
 
 
@@ -186,10 +177,33 @@ class Listado_Objetos_Perdidos extends StatelessWidget {
   Widget build(BuildContext context){
     
     return Scaffold(
-      
-      body: ListView(
-        children: this.objetos,
-      )
+      body: SafeArea(
+        child: Container(
+          child: ListView.builder(
+            scrollDirection: Axis.vertical, // Columna vertical
+            itemCount: (this.objetos.length / 2).ceil(), // Divide por 2 y redondea hacia arriba
+            itemBuilder: (BuildContext context, index) {
+              final firstIndex = index * 2;
+              final secondIndex = firstIndex + 1;
+
+              return Row(
+                children: [
+                  if (firstIndex < this.objetos.length)
+                    Container(
+                      width: MediaQuery.of(context).size.width / 2,
+                      child: this.objetos[firstIndex],
+                    ),
+                  if (secondIndex < this.objetos.length)
+                    Container(
+                      width: MediaQuery.of(context).size.width / 2,
+                      child: this.objetos[secondIndex],
+                    ),
+                ],
+              );
+            },
+          ),
+        ),
+      ),
     );
   }
 }
@@ -212,217 +226,210 @@ class Objeto_Registrado extends StatelessWidget{
 
   @override
 Widget build(BuildContext context) {
-  return Card(
-      child: Container(
-        height: 150,
-        child: Row(
-          children: <Widget>[
-            Container(
-              width: 150,  // Establece el ancho deseado para la imagen
-              height: 150, // Establece el alto deseado para la imagen
-              child: this.imagen, // Cambia esto por tu imagen
-            ),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Text(this.nombre, style: TextStyle(fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                          onPressed: () async {
-                            showDialog(
-                              context: context,
+  return GestureDetector(
+  onTap: () {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(('Más detalles sobre "' + this.nombre + '"').toUpperCase(),
+            style: TextStyle(fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
+          content: Container(
+            width: double.infinity,
+            constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height - 100),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: <Widget>[
+                    this.imagen,
+                    SizedBox(height: 20),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Text.rich(
+                        TextSpan(
+                          children: <InlineSpan>[
+                            TextSpan(
+                              text: 'Descripción: ',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            TextSpan(
+                              text: this.descripcion + "\n",
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    this.perdido ? Text.rich(
+                      TextSpan(
+                        children: <InlineSpan>[
+                          TextSpan(
+                            text: 'Fecha de desaparición confirmada: ',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          TextSpan(
+                            text: DateFormat('yyyy-MM-dd HH:mm:ss').format(this.fecha_perdida).toString(),
+                          ),
+                        ],
+                      ),
+                    ) : SizedBox(height: 0),
+                    this.perdido ? SizedBox(height: 20) : SizedBox(height: 0),
+                    this.perdido ? Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: Colors.blue,
+                      ),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
                               builder: (context) {
-                              return IntrinsicWidth(
-                                child: AlertDialog(
-                                  title: Text(('Más detalles sobre "' + this.nombre + '"').toUpperCase(),
-                                    style: TextStyle(fontWeight: FontWeight.bold),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  content: SingleChildScrollView(
-                                    child: Container(
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          SizedBox(height: 20),
-                                          Align(
-                                            alignment: Alignment.center,
-                                            child:Text.rich(
-                                              TextSpan(
-                                                children: <InlineSpan>[
-                                                  TextSpan(
-                                                    text: 'Descripción: ',
-                                                    style: TextStyle(
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  TextSpan(
-                                                    text: this.descripcion + "\n",
-                                                  ),
-                                                ],
-                                              ),
+                                return MapScreen(this.coordenadas_perdida[0], this.coordenadas_perdida[1], 400);
+                              },
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                        ),
+                        child: Text('Ver ubicación de pérdida'),
+                      ),
+                    ) : SizedBox(height: 0),
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(width: 10),
+                        ElevatedButton(
+                            onPressed: () async {
+                              // Lógica para el botón
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.yellow,
+                            ),
+                            child: Column (
+                              children: [
+                                Icon(Icons.warning),
+                                Text("Perdido")
+                              ],
+                            ),
+                          ),
+                        SizedBox(width: 10),
+                        ElevatedButton(
+                            onPressed: (){
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: Text(
+                                      '¿Desea borrar los datos sobre el objeto "' + this.nombre + '"?',
+                                      style: TextStyle(fontWeight: FontWeight.bold),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    actions: <Widget>[
+                                      Row(   
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          TextButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.blue,
                                             ),
+                                            child: Text('No', style: TextStyle(color: Colors.white)),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
                                           ),
-                                          this.perdido ?
-                                            Text.rich(
-                                              TextSpan(
-                                                children: <InlineSpan>[
-                                                  TextSpan(
-                                                    text: 'Fecha de desaparición confirmada: ',
-                                                    style: TextStyle(
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  TextSpan(
-                                                    text: DateFormat('yyyy-MM-dd HH:mm:ss').format(this.fecha_perdida).toString(),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          : SizedBox(height: 0),
-                                          this.perdido ? SizedBox(height: 20) : SizedBox(height: 0), // Espacio entre el texto y el botón
-                                          this.perdido ? 
-                                            Container(
-                                              width: double.infinity, // Ancho del botón al ancho completo
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(8), // Bordes redondeados
-                                                color: Colors.blue, // Color del rectángulo
-                                              ),
-                                              child: ElevatedButton(
-                                                onPressed: () {
-                                                  // Aquí debes abrir la nueva ventana o realizar la acción deseada
-                                                  // Por ejemplo, puedes usar Navigator.push para navegar a una nueva pantalla
-                                                  Navigator.of(context).push(
-                                                    MaterialPageRoute(
-                                                      builder: (context) {
-                                                        // Coloca aquí el widget de la nueva ventana
-                                                        // Puedes personalizarla como desees
-                                                        return MapScreen(this.coordenadas_perdida[0],this.coordenadas_perdida[1],400); // 400 metros de radio el circulo
-                                                      },
-                                                    ),
-                                                  );
-                                                },
-                                                style: ElevatedButton.styleFrom(
-                                                  backgroundColor: Colors.blue, // Color del botón
-                                                ),
-                                                child: Text('Ver ubicación de pérdida'),
-                                              ),
-                                            )
-                                          : SizedBox(height: 0),
+                                          TextButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.white, 
+                                            ),
+                                            child: Text('Sí'),
+                                            onPressed: () {
+                                              borrar_imagen_storage(this.url_descarga_imagen);
+                                              borrar_objeto_firestore(id_objeto);
+                                              callback_borrar();
+                                              Navigator.of(context).pop();
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
                                         ],
                                       ),
-                                    ),
-                                  ),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      child: Text('Cerrar'),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
-                                ),
+                                    ],
+                                  );
+                                },
                               );
-                              },
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green, // Color del botón
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                            ),
+                            child: Column (
+                              children: [
+                                Icon(Icons.delete),
+                                Text("Eliminar"),
+                              ],
+                            ),
                           ),
-                          child: Column (
-                            children: [
-                              Icon(Icons.info),
-                              /*Text("Información", 
-                                style: TextStyle(fontSize: 10,),
-                              )*/
-                            ],
-                          ),
-                        ),
-                      SizedBox(width: 10),
-                      ElevatedButton(
-                          onPressed: () async {
-                            
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.yellow, // Color del botón
-                          ),
-                          child: Column (
-                            children: [
-                              Icon(Icons.warning),
-                              //Text("Perdido")
-                            ],
-                          ),//Text('Registrar nuevo objeto'),
-                        ),
-                      SizedBox(width: 10),
-                      ElevatedButton(
-                          onPressed: (){
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: Text(
-                                    '¿Desea borrar los datos sobre el objeto "' + this.nombre + '"?',
-                                    style: TextStyle(fontWeight: FontWeight.bold),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  actions: <Widget>[
-                                    Row(   
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        TextButton(
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.blue, // Color de fondo para resaltar "Sí" como peligroso
-                                          ),
-                                          child: Text('No', style: TextStyle(color: Colors.white)),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                        TextButton(
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.white, // Color de fondo para resaltar "Sí" como peligroso
-                                          ),
-                                          child: Text('Sí'),
-                                          onPressed: () {
-                                            borrar_imagen_storage(this.url_descarga_imagen);
-                                            borrar_objeto_firestore(id_objeto);
-                                            callback_borrar();
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red, // Color del botón
-                          ),
-                          child: Column (
-                            children: [
-                              Icon(Icons.delete),
-                              //Text("Eliminar"),
-                            ],
-                          ),//Text('Registrar nuevo objeto'),
-                        ),
-                    ],
-                  )
-                ],
+                      ],
+                    )
+                  ],
+                ),
               ),
             ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cerrar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
           ],
-        ),
-      ),
+        );
+      },
     );
+  },
+  child: Card(
+  child: Container(
+    width: 200,
+    height: 225,
+    child: Column(
+      children: <Widget>[
+        SizedBox(height: 20),
+        Container(
+          width: 150,  // Ancho deseado para la imagen
+          height: 150, // Alto deseado para la imagen
+          child: this.imagen, // Cambia esto por tu imagen
+        ),
+        SizedBox(height: 20),
+        Expanded(
+          child: Text(
+            this.nombre,
+            style: TextStyle(fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ],
+    ),
+  ),
+),
+
+
+);
+
+
+  }
+
+  
 }
 
 
-}
 
 class Listado_Objetos_Registrados extends StatelessWidget {
 
@@ -434,11 +441,35 @@ class Listado_Objetos_Registrados extends StatelessWidget {
   Widget build(BuildContext context){
     
     return Scaffold(
-      
-      body: ListView(
-        children: this.objetos,
-      )
+      body: SafeArea(
+        child: Container(
+          child: ListView.builder(
+            scrollDirection: Axis.vertical, // Columna vertical
+            itemCount: (this.objetos.length / 2).ceil(), // Divide por 2 y redondea hacia arriba
+            itemBuilder: (BuildContext context, index) {
+              final firstIndex = index * 2;
+              final secondIndex = firstIndex + 1;
+
+              return Row(
+                children: [
+                  if (firstIndex < this.objetos.length)
+                    Container(
+                      width: MediaQuery.of(context).size.width / 2,
+                      child: this.objetos[firstIndex],
+                    ),
+                  if (secondIndex < this.objetos.length)
+                    Container(
+                      width: MediaQuery.of(context).size.width / 2,
+                      child: this.objetos[secondIndex],
+                    ),
+                ],
+              );
+            },
+          ),
+        ),
+      ),
     );
+
   }
 }
 
