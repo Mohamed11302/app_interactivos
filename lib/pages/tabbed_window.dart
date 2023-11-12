@@ -1,15 +1,30 @@
+import 'package:app_interactivos/pages/new_object_form.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:app_interactivos/pages/nfc_methods.dart';
 import 'package:app_interactivos/pages/database_methods.dart';
 
-class Example extends StatefulWidget {
+class Tabbed_Window extends StatefulWidget {
+
+  final String cuenta_usuario;
+
+  Tabbed_Window(this.cuenta_usuario) : super();
+
   @override
-  _ExampleState createState() => _ExampleState();
+  _Tabbed_Window createState() => _Tabbed_Window(this.cuenta_usuario);
+
 }
 
-class _ExampleState extends State<Example> {
+class _Tabbed_Window extends State<Tabbed_Window> {
+
+  @override
+  void initState(){
+    super.initState();
+    consigueObjetosRegistrados();
+  }
+
+  String cuenta_usuario;
   bool enableNFCReading = false;
   int _selectedIndex = 0;
   List<String> lista_provincias_espana = [
@@ -21,11 +36,13 @@ class _ExampleState extends State<Example> {
   ];
   String provincia_seleccionada = "<Ninguna>";
   bool lectura_objetos_perdidos_acabada = true;
-
+  bool lectura_objetos_registrados_usuario_acabada = false;
+  bool registro_nuevo_objeto_acabado = true;
 
   late List<Widget Function()> _widgetOptions; 
 
-  List<Objeto> lista_objetos_perdidos = [];
+  List<Objeto_Perdido> lista_objetos_perdidos = [];
+  List<Objeto_Registrado> lista_objetos_registrados_usuario = [];
 
   void consigueObjetosPerdidos(String provincia) async{
     
@@ -40,9 +57,77 @@ class _ExampleState extends State<Example> {
     });
   }
 
-  _ExampleState() {
+  void consigueObjetosRegistrados() async{
+
+    setState(() {
+    lectura_objetos_registrados_usuario_acabada = false;
+    });
+
+    lista_objetos_registrados_usuario = await readObjetosRegistrados(this.cuenta_usuario, callback_borrar_objetos);
+
+    setState(() {
+    lectura_objetos_registrados_usuario_acabada = true;
+    });
+    
+  }
+
+  void callback_borrar_objetos(){
+    consigueObjetosRegistrados();
+    consigueObjetosPerdidos(provincia_seleccionada);
+  }
+
+  _Tabbed_Window(this.cuenta_usuario) {
     _widgetOptions = [
-          () => Text('OBJETOS REGISTRADOS',style: optionStyle,),          
+          () => Scaffold(
+            appBar: AppBar(
+                  title: Text('OBJETOS REGISTRADOS', style: optionStyle,),
+                  automaticallyImplyLeading: false,
+                  centerTitle: true,
+                ),
+            body: Column(      
+                children: [
+                  SizedBox(height: 32), 
+                  Center(
+                    child: Container(
+                        width: 75, // Ancho del botón al ancho completo
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8), // Bordes redondeados
+                          color: Colors.blue, // Color del rectángulo
+                        ),
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return Formulario_Objeto("", "", ""); 
+                                },
+                              ), 
+                            ).then((resultado_formulario) async{
+                              
+                              if (resultado_formulario != null) {
+                                registro_nuevo_objeto_acabado = false;
+                                await registrarObjeto(resultado_formulario.nombre_objeto, resultado_formulario.descripcion_objeto, resultado_formulario.imagen_objeto, this.cuenta_usuario);
+                                registro_nuevo_objeto_acabado = true;
+                                consigueObjetosRegistrados();
+                              }
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue, // Color del botón
+                          ),
+                          child: Icon(Icons.add),//Text('Registrar nuevo objeto'),
+                        ),
+                      )
+                  ),
+                  SizedBox(height: 32,),
+                  Expanded(
+                    child: (lectura_objetos_registrados_usuario_acabada && registro_nuevo_objeto_acabado) 
+                    ? Listado_Objetos_Registrados(lista_objetos_registrados_usuario) : Center(child: CircularProgressIndicator()),
+                  ),
+                ]
+              ),
+                
+          ),      
           () => Scaffold(
              appBar: AppBar(
                     title: Text('OBJETOS PERDIDOS', style: optionStyle,),
@@ -78,7 +163,7 @@ class _ExampleState extends State<Example> {
                     ],
                   ),
                   Expanded(
-                    child: !lectura_objetos_perdidos_acabada ? Center(child: CircularProgressIndicator()) : ListadoObjetos(lista_objetos_perdidos),
+                    child: lectura_objetos_perdidos_acabada ? Listado_Objetos_Perdidos(lista_objetos_perdidos,() => consigueObjetosPerdidos(provincia_seleccionada)) : Center(child: CircularProgressIndicator()),
                   ),
                 ],
               ),

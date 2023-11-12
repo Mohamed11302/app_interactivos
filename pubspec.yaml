@@ -23,7 +23,7 @@ dependencies:
   animate_do: ^3.1.2
   flutter_keyboard_visibility: ^5.0.3
   cupertino_icons: ^1.0.2
-  http: ^0.13.3
+  http: ^0.13.6
   
   firebase_core: ^2.20.0
   firebase_analytics: ^10.6.2
@@ -36,8 +36,11 @@ dependencies:
   permission_handler: ^11.0.1
   firebase_storage: ^11.4.1
   image_picker: ^1.0.4
-  intl: ^0.18.1
+  intl: ^0.17.0
   geolocator: ^10.1.0
+  flutter_map: ^0.13.0
+  latlong2: 0.8.2
+  path_provider: ^2.1.1
 
 dev_dependencies:
   flutter_test:
@@ -59,8 +62,6 @@ flutter:
   assets:
     - assets/google_logo.png
     - assets/gif_nfc.gif
-    - assets/bugatti-mistral_9880.webp
-    - assets/play5.jfif
     
 
   # An image asset can refer to one or more resolution-specific "variants", see

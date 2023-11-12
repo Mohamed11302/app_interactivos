@@ -381,7 +381,7 @@ class _RegisterPageState extends State<RegisterPage> {
         'age': age_data
       });
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Example()));
+          context, MaterialPageRoute(builder: (context) => Tabbed_Window(user_email_data)));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
