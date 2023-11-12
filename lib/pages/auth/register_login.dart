@@ -318,10 +318,22 @@ class _RegisterLoginState extends State<RegisterLogin> {
         _signIn(user);
       });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Some error happend: ${e}'),
-        ),
+      Navigator.pop(context);
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Credenciales incorrectas'),
+            content: Text(
+                'El usuario o la contraseña no son válidos. Por favor, inténtelo de nuevo.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
       );
     }
   }
