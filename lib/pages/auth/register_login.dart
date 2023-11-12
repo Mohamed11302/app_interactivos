@@ -1,11 +1,16 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:app_interactivos/pages/register_page.dart';
-import 'package:app_interactivos/pages/forgot_password.dart';
+import 'package:app_interactivos/pages/auth/register_page.dart';
+import 'package:app_interactivos/pages/auth/forgot_password.dart';
 import 'package:app_interactivos/pages/tabbed_window.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:app_interactivos/pages/api/api.dart';
+import 'package:app_interactivos/pages/chat/helper/dialogs.dart';
 
 class RegisterLogin extends StatefulWidget {
   const RegisterLogin({Key? key}) : super(key: key);
@@ -221,7 +226,7 @@ class _RegisterLoginState extends State<RegisterLogin> {
                                 duration: Duration(milliseconds: 1000),
                                 child: MaterialButton(
                                   onPressed: () async {
-                                    await _signInWithEmailAndPassword();
+                                    await _signInWithEmail();
                                   },
                                   height: 50,
                                   shape: RoundedRectangleBorder(
@@ -291,50 +296,105 @@ class _RegisterLoginState extends State<RegisterLogin> {
     );
   }
 
-  Future<void> _signInWithEmailAndPassword() async {
+  _signOut_Simple() async {
     try {
-      final UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
+      //await FirebaseAuth.instance.signOut();
+      await GoogleSignIn().signOut();
+    } catch (e) {
+      log('+++++++ Error: ${e}');
+    }
+  }
+
+  Future<void> _signInWithEmail() async {
+    Dialogs.showProgressBar(context);
+    await _signOut_Simple(); //MOHA
+    try {
+      await APIs.auth
+          .signInWithEmailAndPassword(
         email: user_data,
         password: password_data,
+      )
+          .then((user) async {
+        _signIn(user);
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Some error happend: ${e}'),
+        ),
+      );
+    }
+  }
+
+  Future<void> _signInWithGoogle() async {
+    Dialogs.showProgressBar(context);
+    await _signOut_Simple(); //MOHA
+    _signInWithGoogle_user().then((user) async {
+      _signIn(user);
+    });
+  }
+
+  Future<UserCredential?> _signInWithGoogle_user() async {
+    try {
+      //await InternetAddress.lookup('google.com');
+      // Trigger the authentication flow
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
+
+      // Create a new credential
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
       );
 
-      if (userCredential.user != null) {
-        // Credenciales válidas, navegar a la página del menú.
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  Tabbed_Window(user_data)),
-        );
-      } else {
-        // Las credenciales no son válidas, puedes mostrar un mensaje al usuario.
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text('Credenciales incorrectas'),
-              content: Text(
-                  'El usuario o la contraseña no son válidos. Por favor, inténtelo de nuevo.'),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
-      }
+      // Once signed in, return the UserCredential
+      return await APIs.auth.signInWithCredential(credential);
     } catch (e) {
-      // Ocurrió un error al iniciar sesión con Firebase.
+      print("-----");
+      log('\n_signInWithGoogle: $e');
+      print("-----");
+      Dialogs.showSnackbar(context, 'Something Went Wrong');
+      return null;
+    }
+  }
+
+  Future<void> _signIn(UserCredential? user) async {
+    //for hiding progress bar
+    Navigator.pop(context);
+    final us = user;
+    if (us != null) {
+      log('\nUser: ${us.user}');
+      log('\nUserAdditionalInfo: ${us.additionalUserInfo}');
+
+      if ((await APIs.userExists(us.user!.email!))) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => Tabbed_Window()));
+      } else {
+        final create_user = us.user;
+        if (create_user != null) {
+          await APIs.createUser(
+                  create_user.uid,
+                  create_user.displayName.toString(),
+                  create_user.email.toString(),
+                  create_user.photoURL.toString())
+              .then((value) {
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (_) => Tabbed_Window()));
+          });
+        }
+      }
+    } else {
+      // Las credenciales no son válidas, puedes mostrar un mensaje al usuario.
       showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('Error de inicio de sesión'),
+            title: Text('Credenciales incorrectas'),
             content: Text(
-                'Ocurrió un error al iniciar sesión. Por favor, inténtelo de nuevo.'),
+                'El usuario o la contraseña no son válidos. Por favor, inténtelo de nuevo.'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
@@ -343,93 +403,6 @@ class _RegisterLoginState extends State<RegisterLogin> {
             ],
           );
         },
-      );
-    }
-  }
-
-  Future<void> _signInWithGoogle() async {
-    if (!_isLoginWithGoogle) {
-      setState(() {
-        _isLoginWithGoogle = true; // Establecer el estado como login en proceso
-      });
-      final user = await _signInWithGoogle_user();
-
-      if (user != null) {
-        user_data = user.displayName.toString();
-        password_data = "Unknown. Login with Google";
-        CrearDocumentoDelUsuario(
-            user.email.toString(), user_data, user.uid.toString());
-        setState(() {
-          _isLoginWithGoogle = false; // Restablecer el estado
-        });
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Tabbed_Window(user_data),
-          ),
-        );
-      } else {
-        setState(() {
-          _isLoginWithGoogle = false; // Restablecer el estado
-        });
-        // Ocurrió un error en el registro
-      }
-    }
-  }
-
-  Future<User?> _signInWithGoogle_user() async {
-    try {
-      _isLoginWithGoogle = true;
-      await googleSignIn.signOut();
-      final GoogleSignInAccount? googleSignInAccount =
-          await googleSignIn.signIn();
-      if (googleSignInAccount == null) return null;
-
-      final GoogleSignInAuthentication googleSignInAuthentication =
-          await googleSignInAccount.authentication;
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleSignInAuthentication.accessToken,
-        idToken: googleSignInAuthentication.idToken,
-      );
-
-      final UserCredential authResult =
-          await FirebaseAuth.instance.signInWithCredential(credential);
-      return authResult.user;
-    } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error al hacer login con Google. $error'),
-        ),
-      );
-      return null;
-    }
-  }
-
-  Future<void> CrearDocumentoDelUsuario(
-      String user_data, String username_data, String user_uid_data) async {
-    //Si no existe un documento en la collection users del usuario al logearse con google, se crea
-    try {
-      final collectionReference =
-          FirebaseFirestore.instance.collection('users');
-      final documentReference = collectionReference.doc(user_data);
-      final documentSnapshot = await documentReference.get();
-
-      if (documentSnapshot.exists) {
-        //
-      } else {
-        // El documento no existe
-        await documentReference.set({
-          'age': 0,
-          'user': user_data,
-          'user_uid': user_uid_data,
-          'username': username_data,
-        });
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error al verificar si el documento existe: $e'),
-        ),
       );
     }
   }

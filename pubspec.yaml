@@ -36,6 +36,10 @@ dependencies:
   permission_handler: ^11.0.1
   firebase_storage: ^11.4.1
   image_picker: ^1.0.4
+  firebase_messaging: ^14.2.0
+  cached_network_image: ^3.3.0
+  gallery_saver: ^2.3.2
+  emoji_picker_flutter: ^1.6.3
   intl: ^0.17.0
   geolocator: ^10.1.0
   flutter_map: ^0.13.0
@@ -62,7 +66,11 @@ flutter:
   assets:
     - assets/google_logo.png
     - assets/gif_nfc.gif
-    
+    - assets/bugatti-mistral_9880.webp
+    - assets/play5.jfif
+    - assets/default_profile_picture.jpeg
+    - assets/add_image.png
+    - assets/camera.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
