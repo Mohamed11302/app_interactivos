@@ -461,7 +461,7 @@ class _RegisterPageState extends State<RegisterPage> {
       _image = await getImageFileFromAssets();
       print(_image.toString());
     }
-    String imagen = await subirImagen(_image!);
+    String imagen = await subir_imagen_a_storage(_image!);
     try {
       await APIs.auth
           .createUserWithEmailAndPassword(
@@ -479,8 +479,8 @@ class _RegisterPageState extends State<RegisterPage> {
                 content: Text('User is successfully created'),
               ),
             );
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => Example()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => Tabbed_Window()));
           } catch (e) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(

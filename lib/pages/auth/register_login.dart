@@ -371,7 +371,7 @@ class _RegisterLoginState extends State<RegisterLogin> {
 
       if ((await APIs.userExists(us.user!.email!))) {
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (_) => Example()));
+            context, MaterialPageRoute(builder: (_) => Tabbed_Window()));
       } else {
         final create_user = us.user;
         if (create_user != null) {
@@ -382,7 +382,7 @@ class _RegisterLoginState extends State<RegisterLogin> {
                   create_user.photoURL.toString())
               .then((value) {
             Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (_) => Example()));
+                context, MaterialPageRoute(builder: (_) => Tabbed_Window()));
           });
         }
       }

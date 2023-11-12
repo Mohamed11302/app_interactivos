@@ -128,7 +128,7 @@ class NavigDrawer extends StatelessWidget {
     switch (index) {
       case INICIO:
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Example()));
+            context, MaterialPageRoute(builder: (context) => Tabbed_Window()));
         break;
       case PERFIL:
         Navigator.push(

@@ -12,12 +12,10 @@ import 'package:app_interactivos/pages/database_methods.dart';
 import 'package:app_interactivos/pages/side_bar/side_menu.dart';
 
 class Tabbed_Window extends StatefulWidget {
-  final String cuenta_usuario;
-
-  Tabbed_Window(this.cuenta_usuario) : super();
+  Tabbed_Window({Key? key}) : super(key: key);
 
   @override
-  _Tabbed_Window createState() => _Tabbed_Window(this.cuenta_usuario);
+  _Tabbed_Window createState() => _Tabbed_Window();
 }
 
 class _Tabbed_Window extends State<Tabbed_Window> {
@@ -27,7 +25,7 @@ class _Tabbed_Window extends State<Tabbed_Window> {
     consigueObjetosRegistrados();
   }
 
-  String cuenta_usuario;
+  String cuenta_usuario = APIs.auth.currentUser!.email.toString();
   bool enableNFCReading = false;
   int _selectedIndex = 0;
   List<String> lista_provincias_espana = [
@@ -268,9 +266,10 @@ class _Tabbed_Window extends State<Tabbed_Window> {
                   ],
                 ),
                 Expanded(
-                  child: !lectura_objetos_perdidos_acabada
-                      ? Center(child: CircularProgressIndicator())
-                      : ListadoObjetos(lista_objetos_perdidos),
+                  child: lectura_objetos_perdidos_acabada
+                      ? Listado_Objetos_Perdidos(lista_objetos_perdidos,
+                          () => consigueObjetosPerdidos(provincia_seleccionada))
+                      : Center(child: CircularProgressIndicator()),
                 ),
               ],
             ),
