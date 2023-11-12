@@ -65,6 +65,8 @@ flutter:
     - assets/bugatti-mistral_9880.webp
     - assets/play5.jfif
     - assets/default_profile_picture.jpeg
+    - assets/add_image.png
+    - assets/camera.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

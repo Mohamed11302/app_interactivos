@@ -3,8 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:app_interactivos/main.dart';
-import 'package:app_interactivos/pages/helper/chat_user.dart';
-import 'package:app_interactivos/pages/helper/view_profile_screen.dart';
+import 'package:app_interactivos/pages/chat/data/chat_user.dart';
+import 'package:app_interactivos/pages/chat/view_profile_screen.dart';
 
 class ProfileDialog extends StatelessWidget {
   const ProfileDialog({super.key, required this.user});

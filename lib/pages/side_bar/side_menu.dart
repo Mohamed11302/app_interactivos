@@ -1,18 +1,28 @@
 import 'dart:developer';
 
 import 'package:app_interactivos/pages/auth/register_login.dart';
+import 'package:app_interactivos/pages/chat/helper/dialogs.dart';
+import 'package:app_interactivos/pages/options/about.dart';
+import 'package:app_interactivos/pages/tabbed_window.dart';
 import 'package:flutter/material.dart';
+import 'package:app_interactivos/pages/options/settings.dart';
 import 'package:app_interactivos/pages/side_bar/drawer_item.dart';
-import 'package:app_interactivos/pages/side_bar/people.dart';
 import 'package:app_interactivos/pages/api/api.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:app_interactivos/pages/options/profile_screen.dart';
 
 class NavigDrawer extends StatelessWidget {
+  static const String INICIO = 'Inicio';
+  static const String CONFIGURACION = 'Configuracion';
+  static const String PERFIL = 'Perfil';
+  static const String ACERCADE = 'Acerca de';
+  static const String CERRARSESION = 'Cerrar Sesion';
+
   NavigDrawer({Key? key}) : super(key: key);
-  String? name = APIs.auth.currentUser?.displayName;
+  String? name = APIs.me.name.toString();
   String? email = APIs.auth.currentUser?.email;
-  String? profile_picture = APIs.auth.currentUser?.photoURL;
+  String? profile_picture = APIs.me.image.toString();
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -37,7 +47,7 @@ class NavigDrawer extends StatelessWidget {
               DrawerItem(
                 name: 'Inicio',
                 icon: Icons.people,
-                onPressed: () => onItemPressed(context, index: 0),
+                onPressed: () => onItemPressed(context, index: INICIO),
               ),
               const SizedBox(
                 height: 30,
@@ -45,14 +55,15 @@ class NavigDrawer extends StatelessWidget {
               DrawerItem(
                   name: 'Perfil',
                   icon: Icons.account_box_rounded,
-                  onPressed: () => onItemPressed(context, index: 1)),
+                  onPressed: () => onItemPressed(context, index: PERFIL)),
               const SizedBox(
                 height: 30,
               ),
               DrawerItem(
-                  name: 'Ajustes',
+                  name: 'Configuracion',
                   icon: Icons.settings,
-                  onPressed: () => onItemPressed(context, index: 4)),
+                  onPressed: () =>
+                      onItemPressed(context, index: CONFIGURACION)),
               const SizedBox(
                 height: 30,
               ),
@@ -67,22 +78,14 @@ class NavigDrawer extends StatelessWidget {
               DrawerItem(
                   name: 'Acerca de',
                   icon: Icons.info,
-                  onPressed: () => onItemPressed(context, index: 3)),
+                  onPressed: () => onItemPressed(context, index: ACERCADE)),
               const SizedBox(
                 height: 30,
               ),
               DrawerItem(
                   name: 'Log out',
                   icon: Icons.logout,
-                  onPressed: () {
-                    onItemPressed(context, index: 5);
-                    _signOut();
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => RegisterLogin()),
-                        (route) => false);
-                  }),
+                  onPressed: () => onItemPressed(context, index: CERRARSESION)),
             ],
           ),
         ),
@@ -90,34 +93,70 @@ class NavigDrawer extends StatelessWidget {
     );
   }
 
-  _signOut() async {
+  _signOut(BuildContext context) async {
     try {
-      await FirebaseAuth.instance.signOut();
-      await GoogleSignIn().signOut();
+      //for showing progress dialog
+      Dialogs.showProgressBar(context);
+      await APIs.updateActiveStatus(false);
+
+      //sign out from app
+      await APIs.auth.signOut().then((value) async {
+        await GoogleSignIn().signOut().then((value) {
+          //for hiding progress dialog
+          Navigator.pop(context);
+
+          //for moving to home screen
+          Navigator.pop(context);
+
+          APIs.auth = FirebaseAuth.instance;
+
+          //replacing home screen with login screen
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (_) => const RegisterLogin()));
+        });
+      });
+      //await FirebaseAuth.instance.signOut();
+      //await GoogleSignIn().signOut();
     } catch (e) {
       log('+++++++ Error: ${e}');
     }
   }
 
-  void onItemPressed(BuildContext context, {required int index}) {
+  void onItemPressed(BuildContext context, {required String index}) {
     Navigator.pop(context);
 
     switch (index) {
-      case 0:
+      case INICIO:
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const People()));
+            context, MaterialPageRoute(builder: (context) => Example()));
+        break;
+      case PERFIL:
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ProfileScreen(user: APIs.me)));
+        break;
+      case CONFIGURACION:
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => SettingsPage()));
+        break;
+      case ACERCADE:
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => AboutPage()));
+        break;
+      case CERRARSESION:
+        _signOut(context);
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => RegisterLogin()));
         break;
     }
   }
 
   Widget headerWidget() {
-    //const url =
-    // 'https://media.istockphoto.com/photos/learn-to-love-yourself-first-picture-id1291208214?b=1&k=20&m=1291208214&s=170667a&w=0&h=sAq9SonSuefj3d4WKy4KzJvUiLERXge9VgZO-oqKUOo=';
     return Row(
       children: [
         CircleAvatar(
           radius: 40,
-          //backgroundImage: AssetImage('assets/default_profile_picture.jpeg'),
           backgroundImage: NetworkImage(profile_picture.toString()),
         ),
         const SizedBox(

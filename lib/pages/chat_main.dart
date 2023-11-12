@@ -1,18 +1,18 @@
 import 'dart:developer';
 
-import 'package:app_interactivos/pages/helper/profile_screen.dart';
+import 'package:app_interactivos/pages/options/profile_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:app_interactivos/pages/api/api.dart';
-import 'package:app_interactivos/pages/helper/dialogs.dart';
+import 'package:app_interactivos/pages/chat/helper/dialogs.dart';
 import 'package:app_interactivos/main.dart';
-import 'package:app_interactivos/pages/helper/chat_user.dart';
+import 'package:app_interactivos/pages/chat/data/chat_user.dart';
 
-import 'package:app_interactivos/pages/helper/chat_user_card.dart';
+import 'package:app_interactivos/pages/chat/helper/chat_user_card.dart';
 
-import 'package:app_interactivos/pages/helper/profile_dialog.dart';
+import 'package:app_interactivos/pages/chat/helper/profile_dialog.dart';
 
 //home screen -- where all available contacts are shown
 class HomeScreen extends StatefulWidget {
@@ -76,7 +76,6 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Scaffold(
           //app bar
           appBar: AppBar(
-            leading: const Icon(CupertinoIcons.home),
             title: _isSearching
                 ? TextField(
                     decoration: const InputDecoration(
@@ -99,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       }
                     },
                   )
-                : const Text('Chats'),
+                : const Text(''),
             actions: [
               //search user button
               IconButton(
@@ -111,16 +110,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   icon: Icon(_isSearching
                       ? CupertinoIcons.clear_circled_solid
                       : Icons.search)),
-
-              //more features button
-              IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => ProfileScreen(user: APIs.me)));
-                  },
-                  icon: const Icon(Icons.more_vert))
             ],
           ),
 

@@ -2,13 +2,13 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:app_interactivos/pages/helper/chat_user.dart';
+import 'package:app_interactivos/pages/chat/data/chat_user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart';
-import 'package:app_interactivos/pages/helper/message.dart';
+import 'package:app_interactivos/pages/chat/data/message.dart';
 
 class APIs {
   // for authentication
@@ -107,7 +107,7 @@ class APIs {
       ChatUser chatUser, String msg, Type type) async {
     await firestore
         .collection('users')
-        .doc(chatUser.id)
+        .doc(chatUser.email)
         .collection('my_users')
         .doc(user.email)
         .set({}).then((value) => sendMessage(chatUser, msg, type));
@@ -120,15 +120,15 @@ class APIs {
 
     //message to send
     final Message message = Message(
-        toId: chatUser.id,
+        toId: chatUser.email,
         msg: msg,
         read: '',
         type: type,
-        fromId: user.uid,
+        fromId: user.email.toString(),
         sent: time);
 
     final ref = firestore
-        .collection('chats/${getConversationID(chatUser.id)}/messages/');
+        .collection('chats/${getConversationID(chatUser.email)}/messages/');
     await ref.doc(time).set(message.toJson()).then((value) =>
         sendPushNotification(chatUser, type == Type.text ? msg : 'image'));
   }
@@ -184,7 +184,7 @@ class APIs {
   static Stream<QuerySnapshot<Map<String, dynamic>>> getLastMessage(
       ChatUser user) {
     return firestore
-        .collection('chats/${getConversationID(user.id)}/messages/')
+        .collection('chats/${getConversationID(user.email)}/messages/')
         .orderBy('sent', descending: true)
         .limit(1)
         .snapshots();
@@ -192,15 +192,16 @@ class APIs {
   // chats (collection) --> conversation_id (doc) --> messages (collection) --> message (doc)
 
   // useful for getting conversation id
-  static String getConversationID(String id) => user.uid.hashCode <= id.hashCode
-      ? '${user.uid}_$id'
-      : '${id}_${user.uid}';
+  static String getConversationID(String id) =>
+      user.email.hashCode <= id.hashCode
+          ? '${user.email}_$id'
+          : '${id}_${user.email}';
 
   // for getting all messages of a specific conversation from firestore database
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllMessages(
       ChatUser user) {
     return firestore
-        .collection('chats/${getConversationID(user.id)}/messages/')
+        .collection('chats/${getConversationID(user.email)}/messages/')
         .orderBy('sent', descending: true)
         .snapshots();
   }
@@ -237,7 +238,7 @@ class APIs {
     log('Extension: $ext');
 
     //storage file ref with path
-    final ref = storage.ref().child('profile_pictures/${user.uid}.$ext');
+    final ref = storage.ref().child('profile_pictures/${user.email}.$ext');
 
     //uploading image
     await ref
@@ -278,7 +279,7 @@ class APIs {
       ChatUser chatUser) {
     return firestore
         .collection('users')
-        .where('id', isEqualTo: chatUser.id)
+        .where('email', isEqualTo: chatUser.email)
         .snapshots();
   }
 
@@ -288,7 +289,7 @@ class APIs {
 
     //storage file ref with path
     final ref = storage.ref().child(
-        'images/${getConversationID(chatUser.id)}/${DateTime.now().millisecondsSinceEpoch}.$ext');
+        'images/${getConversationID(chatUser.email)}/${DateTime.now().millisecondsSinceEpoch}.$ext');
 
     //uploading image
     await ref

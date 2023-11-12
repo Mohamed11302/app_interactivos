@@ -1,8 +1,8 @@
 import 'dart:developer';
 
 import 'package:app_interactivos/pages/api/api.dart';
-import 'package:app_interactivos/pages/helper/chat_screen.dart';
-import 'package:app_interactivos/pages/home_screen.dart';
+import 'package:app_interactivos/pages/chat/chat_screen.dart';
+import 'package:app_interactivos/pages/chat_main.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:line_icons/line_icons.dart';
@@ -192,8 +192,7 @@ class _ExampleState extends State<Example> {
         actions: [
           IconButton(
             icon: CircleAvatar(
-                backgroundImage: NetworkImage(APIs.auth.currentUser!.photoURL
-                    .toString())), // Reemplaza 'tu_ruta_de_imagen' con la ruta correcta
+                backgroundImage: Image.network(APIs.me.image.toString()).image),
             onPressed: () {
               // Lógica que se ejecuta al presionar el botón de la imagen
               print('Botón de imagen presionado');

@@ -8,11 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:app_interactivos/pages/api/api.dart';
-import '../helper/my_date_util.dart';
+import 'package:app_interactivos/pages/chat/helper/my_date_util.dart';
 import 'package:app_interactivos/main.dart';
-import 'package:app_interactivos/pages/helper/chat_user.dart';
-import 'package:app_interactivos/pages/helper/message.dart';
-import 'package:app_interactivos/pages/helper/message_card.dart';
+import 'package:app_interactivos/pages/chat/data/chat_user.dart';
+import 'package:app_interactivos/pages/chat/data/message.dart';
+import 'package:app_interactivos/pages/chat/helper/message_card.dart';
 import 'view_profile_screen.dart';
 
 class ChatScreen extends StatefulWidget {

@@ -11,9 +11,9 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:app_interactivos/pages/api/api.dart';
-import '../helper/dialogs.dart';
+import 'package:app_interactivos/pages/chat/helper/dialogs.dart';
 import 'package:app_interactivos/main.dart';
-import 'package:app_interactivos/pages/helper/chat_user.dart';
+import 'package:app_interactivos/pages/chat/data/chat_user.dart';
 import 'package:app_interactivos/pages/auth/register_login.dart';
 
 //profile screen -- to show signed in user info
@@ -256,7 +256,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Navigator.pop(context);
                         }
                       },
-                      child: Image.asset('images/add_image.png')),
+                      child: Image.asset('assets/add_image.png')),
 
                   //take picture from camera button
                   ElevatedButton(
@@ -281,7 +281,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Navigator.pop(context);
                         }
                       },
-                      child: Image.asset('images/camera.png')),
+                      child: Image.asset('assets/camera.png')),
                 ],
               )
             ],

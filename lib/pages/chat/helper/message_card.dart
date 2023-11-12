@@ -6,10 +6,10 @@ import 'package:flutter/services.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 
 import 'package:app_interactivos/pages/api/api.dart';
-import '../helper/dialogs.dart';
-import '../helper/my_date_util.dart';
+import 'package:app_interactivos/pages/chat/helper/dialogs.dart';
+import 'package:app_interactivos/pages/chat/helper/my_date_util.dart';
 import 'package:app_interactivos/main.dart';
-import 'package:app_interactivos/pages/helper/message.dart';
+import 'package:app_interactivos/pages/chat/data/message.dart';
 
 // for showing single message details
 class MessageCard extends StatefulWidget {
@@ -24,7 +24,7 @@ class MessageCard extends StatefulWidget {
 class _MessageCardState extends State<MessageCard> {
   @override
   Widget build(BuildContext context) {
-    bool isMe = APIs.user.uid == widget.message.fromId;
+    bool isMe = APIs.user.email == widget.message.fromId;
     return InkWell(
         onLongPress: () {
           _showBottomSheet(isMe);

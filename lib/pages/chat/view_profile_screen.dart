@@ -2,10 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../helper/my_date_util.dart';
+import 'package:app_interactivos/pages/chat/helper/my_date_util.dart';
 import 'package:app_interactivos/main.dart';
 
-import 'package:app_interactivos/pages/helper/chat_user.dart';
+import 'package:app_interactivos/pages/chat/data/chat_user.dart';
 
 //view profile screen -- to view profile of user
 class ViewProfileScreen extends StatefulWidget {

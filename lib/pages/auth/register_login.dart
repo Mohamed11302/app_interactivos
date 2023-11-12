@@ -10,7 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:app_interactivos/pages/api/api.dart';
-import 'package:app_interactivos/pages/helper/dialogs.dart';
+import 'package:app_interactivos/pages/chat/helper/dialogs.dart';
 
 class RegisterLogin extends StatefulWidget {
   const RegisterLogin({Key? key}) : super(key: key);
@@ -296,9 +296,9 @@ class _RegisterLoginState extends State<RegisterLogin> {
     );
   }
 
-  _signOut() async {
+  _signOut_Simple() async {
     try {
-      await FirebaseAuth.instance.signOut();
+      //await FirebaseAuth.instance.signOut();
       await GoogleSignIn().signOut();
     } catch (e) {
       log('+++++++ Error: ${e}');
@@ -307,7 +307,7 @@ class _RegisterLoginState extends State<RegisterLogin> {
 
   Future<void> _signInWithEmail() async {
     Dialogs.showProgressBar(context);
-    await _signOut(); //MOHA
+    await _signOut_Simple(); //MOHA
     try {
       await APIs.auth
           .signInWithEmailAndPassword(
@@ -328,7 +328,7 @@ class _RegisterLoginState extends State<RegisterLogin> {
 
   Future<void> _signInWithGoogle() async {
     Dialogs.showProgressBar(context);
-    await _signOut(); //MOHA
+    await _signOut_Simple(); //MOHA
     _signInWithGoogle_user().then((user) async {
       _signIn(user);
     });

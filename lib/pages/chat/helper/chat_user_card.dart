@@ -3,13 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:app_interactivos/pages/api/api.dart';
-import '../helper/my_date_util.dart';
+import 'package:app_interactivos/pages/chat/helper/my_date_util.dart';
 import 'package:app_interactivos/main.dart';
 
-import 'package:app_interactivos/pages/helper/chat_user.dart';
-import 'package:app_interactivos/pages/helper/message.dart';
-import 'package:app_interactivos/pages/helper/chat_screen.dart';
-import 'package:app_interactivos/pages/helper/profile_dialog.dart';
+import 'package:app_interactivos/pages/chat/data/chat_user.dart';
+import 'package:app_interactivos/pages/chat/data/message.dart';
+import 'package:app_interactivos/pages/chat/chat_screen.dart';
+import 'package:app_interactivos/pages/chat/helper/profile_dialog.dart';
 
 //card to represent a single user in home screen
 class ChatUserCard extends StatefulWidget {
@@ -84,7 +84,7 @@ class _ChatUserCardState extends State<ChatUserCard> {
                 trailing: _message == null
                     ? null //show nothing when no message is sent
                     : _message!.read.isEmpty &&
-                            _message!.fromId != APIs.user.uid
+                            _message!.fromId != APIs.user.email
                         ?
                         //show for unread message
                         Container(
