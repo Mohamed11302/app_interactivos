@@ -51,7 +51,7 @@ class _RegisterLoginState extends State<RegisterLogin> {
                   FadeInUp(
                       duration: Duration(milliseconds: 1000),
                       child: Text(
-                        "Findal",
+                        "Findall",
                         style: TextStyle(color: Colors.white, fontSize: 40),
                       )),
                   SizedBox(
