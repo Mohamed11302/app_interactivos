@@ -99,9 +99,9 @@ class _Tabbed_Window extends State<Tabbed_Window> {
                             await Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) {
-                                  return Formulario_Objeto(); 
+                                  return Formulario_Objeto("", "", ""); 
                                 },
-                              ),
+                              ), 
                             ).then((resultado_formulario) async{
                               
                               if (resultado_formulario != null) {

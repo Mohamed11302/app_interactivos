@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:app_interactivos/pages/map_lost_object.dart';
+import 'package:app_interactivos/pages/new_object_form.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -208,7 +210,7 @@ class Listado_Objetos_Perdidos extends StatelessWidget {
   }
 }
 
-class Objeto_Registrado extends StatelessWidget{
+class Objeto_Registrado extends StatefulWidget{
 
   final String id_objeto;
   final String nombre;
@@ -223,9 +225,29 @@ class Objeto_Registrado extends StatelessWidget{
   final Function callback_borrar;
 
   const Objeto_Registrado(this.id_objeto,this.nombre, this.propietario, this.descripcion, this.perdido, this.imagen, this.provincia_perdida, this.fecha_perdida, this.coordenadas_perdida, this.url_descarga_imagen,{required this.callback_borrar}) : super();
+    
+   @override
+  _Objeto_Registrado createState() => _Objeto_Registrado(this.id_objeto,this.nombre, this.propietario, this.descripcion, this.perdido, this.imagen, this.provincia_perdida, this.fecha_perdida, this.coordenadas_perdida, this.url_descarga_imagen,callback_borrar: callback_borrar);
+}
+
+class _Objeto_Registrado extends State<Objeto_Registrado>{
+
+  final String id_objeto;
+  final String nombre;
+  final String propietario;
+  final String descripcion;
+  final bool perdido;
+  final Image imagen; // image: Image.network('URL_DE_LA_IMAGEN'),
+  final String provincia_perdida;
+  final DateTime fecha_perdida;
+  final List<double> coordenadas_perdida;
+  final String url_descarga_imagen;
+  final Function callback_borrar;
+
+  _Objeto_Registrado(this.id_objeto,this.nombre, this.propietario, this.descripcion, this.perdido, this.imagen, this.provincia_perdida, this.fecha_perdida, this.coordenadas_perdida, this.url_descarga_imagen,{required this.callback_borrar}) : super();
 
   @override
-Widget build(BuildContext context) {
+  Widget build(BuildContext context) {
   return GestureDetector(
   onTap: () {
     showDialog(
@@ -306,7 +328,46 @@ Widget build(BuildContext context) {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SizedBox(width: 10),
+                        ElevatedButton(
+                            onPressed: () async {
+                              await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return Formulario_Objeto(this.nombre, this.descripcion,this.url_descarga_imagen); 
+                                },
+                              ),
+                              ).then((resultado_formulario) async{
+
+                              if (resultado_formulario != null) {
+
+                                String url_usar = this.url_descarga_imagen;
+                                if (resultado_formulario.nueva_imagen){
+                                  url_usar = await subir_imagen_a_storage(resultado_formulario.imagen_objeto);
+                                  borrar_imagen_storage(this.url_descarga_imagen); //se borra la foto que tenía el objeto para no colapsar el storage
+                                }
+                                final objeto_aux = Objeto_Registrado(
+                                  this.id_objeto, resultado_formulario.nombre_objeto, this.propietario, resultado_formulario.descripcion_objeto, 
+                                  this.perdido, Image.file(resultado_formulario.imagen_objeto), this.provincia_perdida, 
+                                  this.fecha_perdida, this.coordenadas_perdida, url_usar, callback_borrar: this.callback_borrar);
+                                Navigator.of(context).pop();
+                                await actualizar_objeto_firestore(objeto_aux);
+                                objeto_aux.callback_borrar();
+                                
+                                
+                              }
+                            });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue,
+                            ),
+                            child: Column (
+                              children: [
+                                Icon(Icons.edit),
+                                Text("Editar")
+                              ],
+                            ),
+                          ),
+                        SizedBox(width: 5.5),
                         ElevatedButton(
                             onPressed: () async {
                               // Lógica para el botón
@@ -321,7 +382,7 @@ Widget build(BuildContext context) {
                               ],
                             ),
                           ),
-                        SizedBox(width: 10),
+                        SizedBox(width: 5.5),
                         ElevatedButton(
                             onPressed: (){
                               showDialog(
@@ -372,7 +433,7 @@ Widget build(BuildContext context) {
                             child: Column (
                               children: [
                                 Icon(Icons.delete),
-                                Text("Eliminar"),
+                                Text("Borrar"),
                               ],
                             ),
                           ),
@@ -426,7 +487,6 @@ Widget build(BuildContext context) {
 
   }
 
-  
 }
 
 
@@ -511,9 +571,9 @@ Future<List<Objeto_Perdido>> readObjetosPerdidos(String provincia) async {
   return objetos_future;
 }
 
-Future<void> registrarObjeto(String nombre_objeto, String descripcion_objeto, XFile imagen_objeto, String cuenta_usuario) async{
+Future<void> registrarObjeto(String nombre_objeto, String descripcion_objeto, File imagen_objeto, String cuenta_usuario) async{
 
-  String url_descarga_imagen_objeto = await subir_imagen_a_storage(File(imagen_objeto.path));
+  String url_descarga_imagen_objeto = await subir_imagen_a_storage(imagen_objeto);
 
   await db.collection("objetos").add(
     {
@@ -583,7 +643,7 @@ Future<List<Objeto_Registrado>> readObjetosRegistrados(String cuenta_usuario, Fu
 }
 
 /*
-Metodo para BORRAR los objetos del usuario
+Método para modificar datos de un objeto registrado
 Metodo para marcar un objeto como perdido 
   Metodo para seleccionar un punto concreto del mapa en España
 Método para marcar como recuperado un objeto perdido 
@@ -610,8 +670,20 @@ void borrar_objeto_firestore(String id_objeto){
   });
 }
 
-
-
+Future<void> actualizar_objeto_firestore(Objeto_Registrado objeto) async{
+  await db.collection("objetos").doc(objeto.id_objeto).set(
+    {
+      '"coordenadas_perdida"': objeto.coordenadas_perdida[0].toString() + "," +  objeto.coordenadas_perdida[0].toString(),
+      '"descripcion"': objeto.descripcion,
+      '"fecha_perdida"': objeto.fecha_perdida,
+      '"imagen"': objeto.url_descarga_imagen,
+      '"nombre"': objeto.nombre,
+      '"perdido"': objeto.perdido,
+      '"propietario"': objeto.propietario,
+      '"provincia_perdida"': objeto.provincia_perdida,
+    }
+  );
+}
 
 
 
