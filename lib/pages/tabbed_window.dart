@@ -20,6 +20,7 @@ class _Tabbed_Window extends State<Tabbed_Window> {
 
   @override
   void initState(){
+    super.initState();
     consigueObjetosRegistrados();
   }
 
@@ -62,12 +63,17 @@ class _Tabbed_Window extends State<Tabbed_Window> {
     lectura_objetos_registrados_usuario_acabada = false;
     });
 
-    lista_objetos_registrados_usuario = await readObjetosRegistrados(this.cuenta_usuario, consigueObjetosRegistrados);
+    lista_objetos_registrados_usuario = await readObjetosRegistrados(this.cuenta_usuario, callback_borrar_objetos);
 
     setState(() {
     lectura_objetos_registrados_usuario_acabada = true;
     });
     
+  }
+
+  void callback_borrar_objetos(){
+    consigueObjetosRegistrados();
+    consigueObjetosPerdidos(provincia_seleccionada);
   }
 
   _Tabbed_Window(this.cuenta_usuario) {

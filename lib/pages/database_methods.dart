@@ -1,12 +1,11 @@
 import 'dart:io';
-import 'dart:typed_data';
+import 'package:app_interactivos/pages/lost_object_form.dart';
 import 'package:app_interactivos/pages/map_lost_object.dart';
 import 'package:app_interactivos/pages/new_object_form.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 
 
@@ -253,7 +252,9 @@ class _Objeto_Registrado extends State<Objeto_Registrado>{
   final String url_descarga_imagen;
   final Function callback_borrar;
 
+
   _Objeto_Registrado(this.id_objeto,this.nombre, this.propietario, this.descripcion, this.perdido, this.imagen, this.provincia_perdida, this.fecha_perdida, this.coordenadas_perdida, this.url_descarga_imagen,{required this.callback_borrar}) : super();
+
 
   @override
   Widget build(BuildContext context) {
@@ -359,7 +360,7 @@ class _Objeto_Registrado extends State<Objeto_Registrado>{
                                   this.perdido, Image.file(resultado_formulario.imagen_objeto), this.provincia_perdida, 
                                   this.fecha_perdida, this.coordenadas_perdida, url_usar, callback_borrar: this.callback_borrar);
                                 Navigator.of(context).pop();
-                                await actualizar_objeto_firestore(objeto_aux);
+                                actualizar_objeto_firestore(objeto_aux);
                                 objeto_aux.callback_borrar();
                                 
                                 
@@ -377,9 +378,45 @@ class _Objeto_Registrado extends State<Objeto_Registrado>{
                             ),
                           ),
                         SizedBox(width: 5.5),
+                        this.perdido ?
                         ElevatedButton(
                             onPressed: () async {
-                              // Lógica para el botón
+                              Objeto_Registrado objeto_aux = Objeto_Registrado(this.id_objeto, this.nombre, this.propietario, this.descripcion, false, this.imagen, "", DateTime.now(), [0,0], this.url_descarga_imagen, callback_borrar: callback_borrar);
+                              actualizar_objeto_firestore(objeto_aux);
+                              Navigator.of(context).pop();
+                              objeto_aux.callback_borrar();        
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green,
+                            ),
+                            child: Column (
+                              children: [
+                                Icon(Icons.check),
+                                Text("Hallado")
+                              ],
+                            ),
+                          )
+                        : 
+                        ElevatedButton(
+                            onPressed: () async {
+                              await Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    // Coloca aquí el widget de la nueva ventana
+                                    // Puedes personalizarla como desees
+                                    return MapSelector(400); // 400 metros de radio el circulo
+                                  },
+                                ),
+                              ).then((resultado_mapa) async{
+
+                                if (resultado_mapa != null) {
+                                  Objeto_Registrado objeto_aux = Objeto_Registrado(this.id_objeto, this.nombre, this.propietario, this.descripcion, true, this.imagen, resultado_mapa["province"], DateTime.now(), [resultado_mapa["location"].latitude, resultado_mapa["location"].longitude], this.url_descarga_imagen, callback_borrar: callback_borrar);
+                                  actualizar_objeto_firestore(objeto_aux);
+                                  Navigator.of(context).pop();
+                                  objeto_aux.callback_borrar();
+                                }
+
+                            });
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.yellow,
@@ -652,11 +689,6 @@ Future<List<Objeto_Registrado>> readObjetosRegistrados(String cuenta_usuario, Fu
 }
 
 /*
-Método para recargar la pestaña de objetos perdidos cuando deslices hacia abajo llegando al limite de la pantalla el dedo
-Metodo para marcar un objeto como perdido 
-  Se coge el momento en el que se declare como perdido el objeto para asignarlo como fecha_perdida
-  Metodo para seleccionar un punto concreto del mapa en España
-Método para marcar como recuperado un objeto perdido 
 MÉTODO PARA ESCRIBIR EN ETIQUETAS NFC REFERENCIAS QUE PUEDAN LEERSE PARA IDENTIFICAR OBJETO Y PROPIETARIO (en la pestaña 3)
 */
 
@@ -683,9 +715,9 @@ void borrar_objeto_firestore(String id_objeto){
 Future<void> actualizar_objeto_firestore(Objeto_Registrado objeto) async{
   await db.collection("objetos").doc(objeto.id_objeto).set(
     {
-      '"coordenadas_perdida"': objeto.coordenadas_perdida[0].toString() + "," +  objeto.coordenadas_perdida[0].toString(),
+      '"coordenadas_perdida"': objeto.coordenadas_perdida[0].toString() + "," +  objeto.coordenadas_perdida[1].toString(),
       '"descripcion"': objeto.descripcion,
-      '"fecha_perdida"': objeto.fecha_perdida,
+      '"fecha_perdida"': objeto.fecha_perdida.toString(),
       '"imagen"': objeto.url_descarga_imagen,
       '"nombre"': objeto.nombre,
       '"perdido"': objeto.perdido,

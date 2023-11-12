@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'dart:math'; 
 
+// ignore: must_be_immutable
 class Formulario_Objeto extends StatefulWidget {
 
   String nombre_objeto;
@@ -183,7 +184,7 @@ class _Formulario_Objeto extends State<Formulario_Objeto> {
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
-                              child: Text("OK"),
+                              child: Text("De acuerdo"),
                             ),
                           ],
                         );
