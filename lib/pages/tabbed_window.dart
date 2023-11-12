@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:app_interactivos/pages/new_object_form.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
@@ -44,10 +42,6 @@ class _Tabbed_Window extends State<Tabbed_Window> {
 
   List<Objeto_Perdido> lista_objetos_perdidos = [];
   List<Objeto_Registrado> lista_objetos_registrados_usuario = [];
-
-  void callback_borrar_objeto (){
-    setState(() {});
-  }
 
   void consigueObjetosPerdidos(String provincia) async{
     
@@ -163,7 +157,7 @@ class _Tabbed_Window extends State<Tabbed_Window> {
                     ],
                   ),
                   Expanded(
-                    child: lectura_objetos_perdidos_acabada ? Listado_Objetos_Perdidos(lista_objetos_perdidos) : Center(child: CircularProgressIndicator()),
+                    child: lectura_objetos_perdidos_acabada ? Listado_Objetos_Perdidos(lista_objetos_perdidos,() => consigueObjetosPerdidos(provincia_seleccionada)) : Center(child: CircularProgressIndicator()),
                   ),
                 ],
               ),

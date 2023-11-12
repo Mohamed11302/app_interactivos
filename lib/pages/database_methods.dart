@@ -170,45 +170,54 @@ Widget build(BuildContext context) {
 }
 
 class Listado_Objetos_Perdidos extends StatelessWidget {
-
   final List<Objeto_Perdido> objetos;
+  final Function callback_refrescar; // Callback para recargar
 
-  const Listado_Objetos_Perdidos(this.objetos) : super();
+  Listado_Objetos_Perdidos(this.objetos,this.callback_refrescar);
+
+   Future<void> _handleRefresh() {
+    return Future.delayed(Duration(seconds: 1), () {
+      callback_refrescar();
+    });
+  }
 
   @override
-  Widget build(BuildContext context){
-    
+  Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Container(
-          child: ListView.builder(
-            scrollDirection: Axis.vertical, // Columna vertical
-            itemCount: (this.objetos.length / 2).ceil(), // Divide por 2 y redondea hacia arriba
-            itemBuilder: (BuildContext context, index) {
-              final firstIndex = index * 2;
-              final secondIndex = firstIndex + 1;
+        child: RefreshIndicator(
+          onRefresh: _handleRefresh, // Llama a la función de callback al deslizar hacia abajo
+          child: Container(
+            child: ListView.builder(
+              scrollDirection: Axis.vertical,
+              itemCount: (this.objetos.length / 2).ceil(),
+              itemBuilder: (BuildContext context, index) {
+                final firstIndex = index * 2;
+                final secondIndex = firstIndex + 1;
 
-              return Row(
-                children: [
-                  if (firstIndex < this.objetos.length)
-                    Container(
-                      width: MediaQuery.of(context).size.width / 2,
-                      child: this.objetos[firstIndex],
-                    ),
-                  if (secondIndex < this.objetos.length)
-                    Container(
-                      width: MediaQuery.of(context).size.width / 2,
-                      child: this.objetos[secondIndex],
-                    ),
-                ],
-              );
-            },
+                return Row(
+                  children: [
+                    if (firstIndex < this.objetos.length)
+                      Container(
+                        width: MediaQuery.of(context).size.width / 2,
+                        child: this.objetos[firstIndex],
+                      ),
+                    if (secondIndex < this.objetos.length)
+                      Container(
+                        width: MediaQuery.of(context).size.width / 2,
+                        child: this.objetos[secondIndex],
+                      ),
+                  ],
+                );
+              },
+            ),
           ),
         ),
       ),
     );
   }
 }
+
 
 class Objeto_Registrado extends StatefulWidget{
 
@@ -643,8 +652,9 @@ Future<List<Objeto_Registrado>> readObjetosRegistrados(String cuenta_usuario, Fu
 }
 
 /*
-Método para modificar datos de un objeto registrado
+Método para recargar la pestaña de objetos perdidos cuando deslices hacia abajo llegando al limite de la pantalla el dedo
 Metodo para marcar un objeto como perdido 
+  Se coge el momento en el que se declare como perdido el objeto para asignarlo como fecha_perdida
   Metodo para seleccionar un punto concreto del mapa en España
 Método para marcar como recuperado un objeto perdido 
 MÉTODO PARA ESCRIBIR EN ETIQUETAS NFC REFERENCIAS QUE PUEDAN LEERSE PARA IDENTIFICAR OBJETO Y PROPIETARIO (en la pestaña 3)
