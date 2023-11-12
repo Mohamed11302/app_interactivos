@@ -15,14 +15,14 @@ import 'package:app_interactivos/pages/chat/helper/chat_user_card.dart';
 import 'package:app_interactivos/pages/chat/helper/profile_dialog.dart';
 
 //home screen -- where all available contacts are shown
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class ChatMainScreen extends StatefulWidget {
+  const ChatMainScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<ChatMainScreen> createState() => _ChatMainScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _ChatMainScreenState extends State<ChatMainScreen> {
   // for storing all users
   List<ChatUser> _list = [];
 

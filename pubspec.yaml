@@ -66,8 +66,6 @@ flutter:
   assets:
     - assets/google_logo.png
     - assets/gif_nfc.gif
-    - assets/bugatti-mistral_9880.webp
-    - assets/play5.jfif
     - assets/default_profile_picture.jpeg
     - assets/add_image.png
     - assets/camera.png
