@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'package:app_interactivos/pages/lost_object_form.dart';
-import 'package:app_interactivos/pages/map_lost_object.dart';
+import 'package:app_interactivos/pages/selector_lost_area.dart';
+import 'package:app_interactivos/pages/lost_object_map.dart';
 import 'package:app_interactivos/pages/new_object_form.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -23,8 +23,9 @@ class Objeto_Perdido extends StatelessWidget{
   final String provincia_perdida;
   final DateTime fecha_perdida;
   final List<double> coordenadas_perdida;
+  final double radio_area_perdida;
 
-  const Objeto_Perdido(this.id_objeto,this.nombre, this.propietario, this.descripcion, this.perdido, this.imagen, this.provincia_perdida, this.fecha_perdida, this.coordenadas_perdida) : super();
+  const Objeto_Perdido(this.id_objeto,this.nombre, this.propietario, this.descripcion, this.perdido, this.imagen, this.provincia_perdida, this.fecha_perdida, this.coordenadas_perdida, this.radio_area_perdida) : super();
 
   @override
 Widget build(BuildContext context) {
@@ -49,22 +50,6 @@ Widget build(BuildContext context) {
                   children: <Widget>[
                     this.imagen,
                     SizedBox(height: 20),
-                    /*Text.rich(
-                      TextSpan(
-                        children: <InlineSpan>[
-                          TextSpan(
-                            text: 'Propietario: ',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          TextSpan(
-                            text: this.propietario + "\n",
-                          ),
-                        ],
-                      ),
-                    ),*/
-                    //Text('Propietario: ' + this.propietario, textAlign: TextAlign.center,),
                     Text.rich(
                       TextSpan(
                         children: <InlineSpan>[
@@ -111,7 +96,7 @@ Widget build(BuildContext context) {
                               builder: (context) {
                                 // Coloca aquí el widget de la nueva ventana
                                 // Puedes personalizarla como desees
-                                return MapScreen(this.coordenadas_perdida[0],this.coordenadas_perdida[1],400); // 400 metros de radio el circulo
+                                return MapScreen(this.coordenadas_perdida[0],this.coordenadas_perdida[1],this.radio_area_perdida); // 400 metros de radio el circulo
                               },
                             ),
                           );
@@ -231,11 +216,12 @@ class Objeto_Registrado extends StatefulWidget{
   final List<double> coordenadas_perdida;
   final String url_descarga_imagen;
   final Function callback_borrar;
+  final double radio_area_perdida;
 
-  const Objeto_Registrado(this.id_objeto,this.nombre, this.propietario, this.descripcion, this.perdido, this.imagen, this.provincia_perdida, this.fecha_perdida, this.coordenadas_perdida, this.url_descarga_imagen,{required this.callback_borrar}) : super();
+  const Objeto_Registrado(this.id_objeto,this.nombre, this.propietario, this.descripcion, this.perdido, this.imagen, this.provincia_perdida, this.fecha_perdida, this.coordenadas_perdida, this.url_descarga_imagen, this.callback_borrar, this.radio_area_perdida) : super();
     
    @override
-  _Objeto_Registrado createState() => _Objeto_Registrado(this.id_objeto,this.nombre, this.propietario, this.descripcion, this.perdido, this.imagen, this.provincia_perdida, this.fecha_perdida, this.coordenadas_perdida, this.url_descarga_imagen,callback_borrar: callback_borrar);
+  _Objeto_Registrado createState() => _Objeto_Registrado(this.id_objeto,this.nombre, this.propietario, this.descripcion, this.perdido, this.imagen, this.provincia_perdida, this.fecha_perdida, this.coordenadas_perdida, this.url_descarga_imagen,this.callback_borrar, this.radio_area_perdida);
 }
 
 class _Objeto_Registrado extends State<Objeto_Registrado>{
@@ -245,15 +231,16 @@ class _Objeto_Registrado extends State<Objeto_Registrado>{
   final String propietario;
   final String descripcion;
   final bool perdido;
-  final Image imagen; // image: Image.network('URL_DE_LA_IMAGEN'),
+  final Image imagen;
   final String provincia_perdida;
   final DateTime fecha_perdida;
   final List<double> coordenadas_perdida;
   final String url_descarga_imagen;
   final Function callback_borrar;
+  final double radio_area_perdida;
 
 
-  _Objeto_Registrado(this.id_objeto,this.nombre, this.propietario, this.descripcion, this.perdido, this.imagen, this.provincia_perdida, this.fecha_perdida, this.coordenadas_perdida, this.url_descarga_imagen,{required this.callback_borrar}) : super();
+  _Objeto_Registrado(this.id_objeto,this.nombre, this.propietario, this.descripcion, this.perdido, this.imagen, this.provincia_perdida, this.fecha_perdida, this.coordenadas_perdida, this.url_descarga_imagen,this.callback_borrar, this.radio_area_perdida) : super();
 
 
   @override
@@ -323,7 +310,7 @@ class _Objeto_Registrado extends State<Objeto_Registrado>{
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) {
-                                return MapScreen(this.coordenadas_perdida[0], this.coordenadas_perdida[1], 400);
+                                return MapScreen(this.coordenadas_perdida[0], this.coordenadas_perdida[1], this.radio_area_perdida);
                               },
                             ),
                           );
@@ -358,7 +345,7 @@ class _Objeto_Registrado extends State<Objeto_Registrado>{
                                 final objeto_aux = Objeto_Registrado(
                                   this.id_objeto, resultado_formulario.nombre_objeto, this.propietario, resultado_formulario.descripcion_objeto, 
                                   this.perdido, Image.file(resultado_formulario.imagen_objeto), this.provincia_perdida, 
-                                  this.fecha_perdida, this.coordenadas_perdida, url_usar, callback_borrar: this.callback_borrar);
+                                  this.fecha_perdida, this.coordenadas_perdida, url_usar, this.callback_borrar, this.radio_area_perdida);
                                 Navigator.of(context).pop();
                                 actualizar_objeto_firestore(objeto_aux);
                                 objeto_aux.callback_borrar();
@@ -381,7 +368,7 @@ class _Objeto_Registrado extends State<Objeto_Registrado>{
                         this.perdido ?
                         ElevatedButton(
                             onPressed: () async {
-                              Objeto_Registrado objeto_aux = Objeto_Registrado(this.id_objeto, this.nombre, this.propietario, this.descripcion, false, this.imagen, "", DateTime.now(), [0,0], this.url_descarga_imagen, callback_borrar: callback_borrar);
+                              Objeto_Registrado objeto_aux = Objeto_Registrado(this.id_objeto, this.nombre, this.propietario, this.descripcion, false, this.imagen, "", DateTime.now(), [0,0], this.url_descarga_imagen, callback_borrar, this.radio_area_perdida);
                               actualizar_objeto_firestore(objeto_aux);
                               Navigator.of(context).pop();
                               objeto_aux.callback_borrar();        
@@ -408,9 +395,9 @@ class _Objeto_Registrado extends State<Objeto_Registrado>{
                                   },
                                 ),
                               ).then((resultado_mapa) async{
-
+                                
                                 if (resultado_mapa != null) {
-                                  Objeto_Registrado objeto_aux = Objeto_Registrado(this.id_objeto, this.nombre, this.propietario, this.descripcion, true, this.imagen, resultado_mapa["province"], DateTime.now(), [resultado_mapa["location"].latitude, resultado_mapa["location"].longitude], this.url_descarga_imagen, callback_borrar: callback_borrar);
+                                  Objeto_Registrado objeto_aux = Objeto_Registrado(this.id_objeto, this.nombre, this.propietario, this.descripcion, true, this.imagen, resultado_mapa["province"], DateTime.now(), [resultado_mapa["location"].latitude, resultado_mapa["location"].longitude], this.url_descarga_imagen, callback_borrar, resultado_mapa['radius']);
                                   actualizar_objeto_firestore(objeto_aux);
                                   Navigator.of(context).pop();
                                   objeto_aux.callback_borrar();
@@ -604,10 +591,9 @@ Future<List<Objeto_Perdido>> readObjetosPerdidos(String provincia) async {
       DateTime fecha_perdida = DateTime.parse(data['"fecha_perdida"']);
       List<String> coordenadas = data['"coordenadas_perdida"'].split(",");
       List<double> coordenadas_perdida = [double.parse(coordenadas[0]),double.parse(coordenadas[1])];
-  
-      //List<String> provincia =  await obtener_Provincia_y_Pais(double.parse(coordenadas[0]), double.parse(coordenadas[1]));
+      double radio_area_perdida = double.parse(data['"radio_area_perdida"']);
       
-      objetos_future.add(Objeto_Perdido(id_objeto,nombre, propietario, descripcion, perdido, Image.network(imagen),provincia_perdida, fecha_perdida, coordenadas_perdida));
+      objetos_future.add(Objeto_Perdido(id_objeto,nombre, propietario, descripcion, perdido, Image.network(imagen),provincia_perdida, fecha_perdida, coordenadas_perdida,radio_area_perdida));
     }
     
     objetos_future.sort((a, b) => b.fecha_perdida.compareTo(a.fecha_perdida));
@@ -631,6 +617,7 @@ Future<void> registrarObjeto(String nombre_objeto, String descripcion_objeto, Fi
       '"perdido"': false,
       '"propietario"': cuenta_usuario,
       '"provincia_perdida"': "",
+      '"radio_area_perdida"' : "",
     }
   );
 }
@@ -671,14 +658,15 @@ Future<List<Objeto_Registrado>> readObjetosRegistrados(String cuenta_usuario, Fu
         String provincia_perdida = data['"provincia_perdida"'];
         List<String> coordenadas = data['"coordenadas_perdida"'].split(",");
         List<double> coordenadas_perdida = [double.parse(coordenadas[0]),double.parse(coordenadas[1])];
+        double radio_area_perdida = double.parse(data['"radio_area_perdida"']);
 
         objetos_future.add(Objeto_Registrado(id_objeto,nombre, propietario, descripcion, perdido, Image.network(imagen),provincia_perdida, fecha_perdida, coordenadas_perdida,imagen,
-          callback_borrar: funcion_callback_borrar,
+          funcion_callback_borrar,radio_area_perdida
         ));
     
       }else{
         objetos_future.add(Objeto_Registrado(id_objeto,nombre, propietario, descripcion, perdido, Image.network(imagen),"", DateTime.now(), [0,0], imagen,
-          callback_borrar: funcion_callback_borrar,
+           funcion_callback_borrar, 0
         ));
       }
     }
@@ -687,10 +675,6 @@ Future<List<Objeto_Registrado>> readObjetosRegistrados(String cuenta_usuario, Fu
 
   return objetos_future;
 }
-
-/*
-MÉTODO PARA ESCRIBIR EN ETIQUETAS NFC REFERENCIAS QUE PUEDAN LEERSE PARA IDENTIFICAR OBJETO Y PROPIETARIO (en la pestaña 3)
-*/
 
 void borrar_imagen_storage(String url_descarga){
 
@@ -723,6 +707,7 @@ Future<void> actualizar_objeto_firestore(Objeto_Registrado objeto) async{
       '"perdido"': objeto.perdido,
       '"propietario"': objeto.propietario,
       '"provincia_perdida"': objeto.provincia_perdida,
+      '"radio_area_perdida"': objeto.radio_area_perdida.toString(),
     }
   );
 }

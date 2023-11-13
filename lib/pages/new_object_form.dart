@@ -1,3 +1,4 @@
+import 'package:app_interactivos/main.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -76,6 +77,7 @@ class _Formulario_Objeto extends State<Formulario_Objeto> {
                 ),
               SizedBox(height: 20),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Expanded(
                     child: ElevatedButton(
@@ -94,20 +96,17 @@ class _Formulario_Objeto extends State<Formulario_Objeto> {
                           });
                         }
                       },
-                      style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
-                      child: Row (
-                        children: [
-                          Icon(Icons.photo),
-                          Expanded(
-                            child: Text("Ver galería", textAlign: TextAlign.center),
-                          ),
-                        ],
-                      ),
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          shape: const CircleBorder(),
+                          fixedSize: Size(mq.width * .12, mq.height * .12)),
+                        child: Image.asset('assets/add_image.png',width: 65, height: 65),
                     ),
                   ),
                   SizedBox(width: 8,),
                   Expanded(
-                    child: ElevatedButton(
+                    child: 
+                    ElevatedButton(
                       onPressed: () async {
                         XFile? xfile_imagen_seleccionada = await seleccionarImagen(true);
                         
@@ -120,19 +119,16 @@ class _Formulario_Objeto extends State<Formulario_Objeto> {
                           });
                         }
                       },
-                      style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
-                      child: Row (
-                        children: [
-                          Icon(Icons.camera_alt),
-                          Expanded(
-                            child: Text("Usar cámara", textAlign: TextAlign.center),
-                          ),
-                        ],
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          shape: const CircleBorder(),
+                          fixedSize: Size(mq.width * .12, mq.height * .12)),
+                      child: Image.asset('assets/camera.png',width: 65, height: 65),
+                         
                       ),
                     ),
-                  ),
-                ],
-              ),
+                ]
+              ),    
               SizedBox(height: 20),
               TextFormField(
                 controller:  controlador_nombre,
