@@ -712,5 +712,27 @@ Future<void> actualizar_objeto_firestore(Objeto_Registrado objeto) async{
   );
 }
 
+Future<void> leer_objeto_concreto(String id_documento, context) async {
+  try {
+
+    DocumentSnapshot documento = await FirebaseFirestore.instance.collection('objetos').doc(id_documento).get();
+
+    if (documento.exists) {
+      Map<String, dynamic> datos = documento.data() as Map<String, dynamic>;
+      print("Propietario del objeto: " + datos['"propietario"']);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+         SnackBar(content: Text('El objeto ya no se ha encuentra registrado'))
+      );
+    }
+  } catch (e) {
+    print("Error al leer el objeto desde la base de datos: $e");
+  }
+}
+
+
+
+
+
 
 
