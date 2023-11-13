@@ -24,11 +24,11 @@ class _MapSelectorState extends State<MapSelector> {
   bool zona_correcta = true;
 
   List<String> lista_provincias_espana = [
-  'Álava', 'Albacete', 'Alicante', 'Almería','Asturias', 'Ávila', 'Badajoz', 'Barcelona', 'Burgos', 'Cáceres', 'Cádiz', 'Cantabria',
-  'Castellón', 'Ciudad Real', 'Córdoba', 'Cuenca', 'Gerona', 'Granada', 'Guadalajara', 'Guipúzcoa', 'Huelva', 'Huesca', 'Islas Balears',
-  'Jaén', 'La Coruña', 'La Rioja', 'Las Palmas', 'León', 'Lérida', 'Lugo', 'Madrid', 'Málaga', 'Murcia', 'Navarra', 'Orense', 'Palencia', 
-  'Pontevedra', 'Salamanca', 'Santa Cruz de Tenerife', 'Segovia', 'Sevilla', 'Soria', 'Tarragona', 'Teruel', 'Toledo', 'Valencia', 
-  'Valladolid', 'Vizcaya', 'Zamora', 'Zaragoza',"<Ninguna>"
+    'Álava', 'Albacete', 'Alicante', 'Almería', 'Asturias', 'Ávila', 'Badajoz', 'Barcelona', 'Burgos', 'Cáceres', 'Cádiz', 'Cantabria',
+    'Castellón', 'Ciudad Real', 'Córdoba', 'Cuenca', 'Gerona', 'Granada', 'Guadalajara', 'Guipúzcoa', 'Huelva', 'Huesca', 'Islas Balears',
+    'Jaén', 'La Coruña', 'La Rioja', 'Las Palmas', 'León', 'Lérida', 'Lugo', 'Madrid', 'Málaga', 'Murcia', 'Navarra', 'Orense', 'Palencia',
+    'Pontevedra', 'Salamanca', 'Santa Cruz de Tenerife', 'Segovia', 'Sevilla', 'Soria', 'Tarragona', 'Teruel', 'Toledo', 'Valencia',
+    'Valladolid', 'Vizcaya', 'Zamora', 'Zaragoza', "<Ninguna>"
   ];
   String provincia_final = "";
 
@@ -41,13 +41,12 @@ class _MapSelectorState extends State<MapSelector> {
     actualizar_info_punto_seleccionado();
   }
 
-  String buscar_provincia(String a, String b){
+  String buscar_provincia(String a, String b) {
     for (int i = 0; i < lista_provincias_espana.length; i++) {
-      print("'"+a+"'"+" ? "+"'"+lista_provincias_espana[i]+"'");
-      print(b+" ? "+lista_provincias_espana[i]);
-      if (lista_provincias_espana[i] == a){
+      
+      if (lista_provincias_espana[i] == a) {
         return a;
-      }else if (lista_provincias_espana[i] == b){
+      } else if (lista_provincias_espana[i] == b) {
         return b;
       }
     }
@@ -55,20 +54,19 @@ class _MapSelectorState extends State<MapSelector> {
   }
 
   void actualizar_info_punto_seleccionado() async {
-
     late bool zona_correcta_aux;
     setState(() {
       info_actualizada = false;
     });
     final info = await obtener_Provincia_y_Pais(selectedLocation.latitude, selectedLocation.longitude);
-    if (info.length > 0){
+    if (info.length > 0) {
       info_localizacion = info[2] + ", " + info[1] + ", " + info[0];
       zona_correcta_aux = true;
-    }else{
+    } else {
       info_localizacion = "Ubicación fuera de España";
       zona_correcta_aux = false;
     }
-    setState((){
+    setState(() {
       info_actualizada = true;
       zona_correcta = zona_correcta_aux;
     });
@@ -143,38 +141,69 @@ class _MapSelectorState extends State<MapSelector> {
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: info_actualizada ? Text(
-              info_localizacion,
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ) : Center(child: CircularProgressIndicator()),
+            child: Column(
+              children: [
+                info_actualizada
+                    ? Text(
+                        info_localizacion,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      )
+                    : Center(child: CircularProgressIndicator()),
+                SizedBox(height: 20.0),
+                Text(
+                  'Radio seleccionado: ${radiusInMeters.toStringAsFixed(2)} metros',
+                  //style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+          Slider(
+            value: radiusInMeters,
+            onChanged: (value) {
+              setState(() {
+                this.radiusInMeters = value;
+                this.circlePoints = calculateCirclePoints(360);
+              });
+            },
+            min: 100.0, // Valor mínimo del radio
+            max: 1000.0, // Valor máximo del radio
+            divisions: 100, // Cantidad de divisiones
           ),
           ElevatedButton(
             onPressed: () {
-              if (zona_correcta){
+              if (zona_correcta) {
                 Navigator.of(context).pop({
-                  'location': selectedLocation, 
-                  'province': buscar_provincia(info_localizacion.split(",")[1].substring(2), info_localizacion.split(",")[0].substring(1))
+                  'radius': radiusInMeters,
+                  'location': selectedLocation,
+                  'province': buscar_provincia(
+                      info_localizacion.split(",")[1].substring(2),
+                      info_localizacion.split(",")[0].substring(1))
                 });
-              }else{
+              } else {
                 showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text("Error", textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold)),
-                          content: Text("Debes seleccionar una zona perteneciente a España."),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text("De acuerdo"),
-                            ),
-                          ],
-                        );
-                      },
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text(
+                        "Error",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      content: Text(
+                        "Debes seleccionar una zona perteneciente a España.",
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text("De acuerdo"),
+                        ),
+                      ],
                     );
+                  },
+                );
               }
-              
             },
             child: Text('Guardar ubicación'),
           ),
@@ -193,15 +222,14 @@ Future<List<String>> obtener_Provincia_y_Pais(
 
   if (response.statusCode == 200) {
     final Map<String, dynamic> data = json.decode(response.body);
-    try{
-    List<String> info_localizacion = data['display_name'].split(",");
-    String pais = info_localizacion.last;
-    if (pais.substring(1) != "España")
-      return [];
-    String comunidad_autonoma = info_localizacion[info_localizacion.length - 3];
-    String provincia = info_localizacion[info_localizacion.length - 4];
-    return [pais, comunidad_autonoma, provincia];
-    }catch (e) {
+    try {
+      List<String> info_localizacion = data['display_name'].split(",");
+      String pais = info_localizacion.last;
+      if (pais.substring(1) != "España") return [];
+      String comunidad_autonoma = info_localizacion[info_localizacion.length - 3];
+      String provincia = info_localizacion[info_localizacion.length - 4];
+      return [pais, comunidad_autonoma, provincia];
+    } catch (e) {
       return [];
     }
   } else {
@@ -210,4 +238,3 @@ Future<List<String>> obtener_Provincia_y_Pais(
     return ["error"];
   }
 }
-
