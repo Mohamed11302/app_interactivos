@@ -1,3 +1,7 @@
+import 'dart:developer';
+
+import 'package:app_interactivos/pages/api/api.dart';
+import 'package:app_interactivos/pages/tabbed_window.dart';
 import 'package:flutter/material.dart';
 import 'package:app_interactivos/pages/auth/register_login.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -17,7 +21,18 @@ class MyApp extends StatelessWidget {
     mq = MediaQuery.of(context).size;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: RegisterLogin(),
+      home: Already_Loged() ? Tabbed_Window() : RegisterLogin(),
     );
   }
+}
+
+bool Already_Loged() {
+  bool AlreadyLoged;
+  if (APIs.auth.currentUser != null) {
+    log('\nUser: ${APIs.auth.currentUser}');
+    AlreadyLoged = true;
+  } else {
+    AlreadyLoged = false;
+  }
+  return AlreadyLoged;
 }

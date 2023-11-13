@@ -202,55 +202,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                           border: InputBorder.none),
                                     ),
                                   ),
-                                  /*Container(
-                                    padding: EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                        border: Border(
-                                            bottom: BorderSide(
-                                                color: Colors.grey.shade200))),
-                                    /*child: TextField(
-                                      onChanged: (text) {
-                                        setState(() {
-                                          age_data = int.parse(text);
-                                        });
-                                      },
-                                      decoration: InputDecoration(
-                                          labelText: "Age",
-                                          hintStyle:
-                                              TextStyle(color: Colors.grey),
-                                          border: InputBorder.none),
-                                      keyboardType: TextInputType.number,
-                                    ),*/
-                                    child: Column(
-                                      children: [
-                                        Text(
-                                          "Profile Picture",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18,
-                                          ),
-                                        ),
-                                        SizedBox(height: 10),
-                                        if (_image != null)
-                                          Image.file(
-                                            _image!,
-                                            width: 100,
-                                            height: 100,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        if (_image == null)
-                                          ElevatedButton(
-                                            onPressed: _getImageFromGallery,
-                                            child: Text("Select from Gallery"),
-                                          ),
-                                        if (_image == null)
-                                          ElevatedButton(
-                                            onPressed: _getImageFromCamera,
-                                            child: Text("Take a Photo"),
-                                          ),
-                                      ],
-                                    ),
-                                  ),*/
                                   Container(
                                     padding: EdgeInsets.all(10),
                                     decoration: BoxDecoration(

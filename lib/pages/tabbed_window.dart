@@ -5,6 +5,7 @@ import 'package:app_interactivos/pages/app_bar.dart';
 import 'package:app_interactivos/pages/chat/chat_screen.dart';
 import 'package:app_interactivos/pages/chat_main.dart';
 import 'package:app_interactivos/pages/new_object_form.dart';
+import 'package:app_interactivos/pages/side_bar/side_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:line_icons/line_icons.dart';
@@ -263,7 +264,7 @@ class _Tabbed_Window extends State<Tabbed_Window> {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       appBar: MyAppBarDrawer(),
-      drawer: NavigDrawer(),
+      drawer: NavBar(),
       body: Center(
         child: _widgetOptions[_selectedIndex](),
       ),

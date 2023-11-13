@@ -37,41 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
           //app bar
-          appBar: AppBar(title: const Text('Profile Screen')),
-
-          //floating button to log out
-          floatingActionButton: Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: FloatingActionButton.extended(
-                backgroundColor: Colors.redAccent,
-                onPressed: () async {
-                  //for showing progress dialog
-                  Dialogs.showProgressBar(context);
-
-                  await APIs.updateActiveStatus(false);
-
-                  //sign out from app
-                  await APIs.auth.signOut().then((value) async {
-                    await GoogleSignIn().signOut().then((value) {
-                      //for hiding progress dialog
-                      Navigator.pop(context);
-
-                      //for moving to home screen
-                      Navigator.pop(context);
-
-                      APIs.auth = FirebaseAuth.instance;
-
-                      //replacing home screen with login screen
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const RegisterLogin()));
-                    });
-                  });
-                },
-                icon: const Icon(Icons.logout),
-                label: const Text('Logout')),
-          ),
+          appBar: AppBar(title: const Text('Perfil')),
 
           //body
           body: Form(
@@ -157,7 +123,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12)),
                           hintText: 'eg. Happy Singh',
-                          label: const Text('Name')),
+                          label: const Text('Nombre de usuario')),
                     ),
 
                     // for adding some space
@@ -176,7 +142,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12)),
                           hintText: 'eg. Feeling Happy',
-                          label: const Text('About')),
+                          label: const Text('Acerca de mi')),
                     ),
 
                     // for adding some space
@@ -192,13 +158,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           _formKey.currentState!.save();
                           APIs.updateUserInfo().then((value) {
                             Dialogs.showSnackbar(
-                                context, 'Profile Updated Successfully!');
+                                context, 'Los datos han sido actualizados');
                           });
                         }
                       },
                       icon: const Icon(Icons.edit, size: 28),
-                      label:
-                          const Text('UPDATE', style: TextStyle(fontSize: 16)),
+                      label: const Text('ACTUALIZAR',
+                          style: TextStyle(fontSize: 16)),
                     )
                   ],
                 ),

@@ -16,7 +16,7 @@ class _AboutPageState extends State<AboutPage> {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       appBar: MyAppBarDrawer(),
-      drawer: NavigDrawer(),
+      drawer: NavBar(),
       body: Center(
         child: Text('Pestaña Acerca De'),
       ),

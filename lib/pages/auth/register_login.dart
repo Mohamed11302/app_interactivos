@@ -296,6 +296,7 @@ class _RegisterLoginState extends State<RegisterLogin> {
     );
   }
 
+  /*
   _signOut_Simple() async {
     try {
       //await FirebaseAuth.instance.signOut();
@@ -304,10 +305,10 @@ class _RegisterLoginState extends State<RegisterLogin> {
       log('+++++++ Error: ${e}');
     }
   }
-
+  */
   Future<void> _signInWithEmail() async {
     Dialogs.showProgressBar(context);
-    await _signOut_Simple(); //MOHA
+    //await _signOut_Simple(); //MOHA
     try {
       await APIs.auth
           .signInWithEmailAndPassword(
@@ -340,7 +341,7 @@ class _RegisterLoginState extends State<RegisterLogin> {
 
   Future<void> _signInWithGoogle() async {
     Dialogs.showProgressBar(context);
-    await _signOut_Simple(); //MOHA
+    //await _signOut_Simple(); //MOHA
     _signInWithGoogle_user().then((user) async {
       _signIn(user);
     });
@@ -380,6 +381,10 @@ class _RegisterLoginState extends State<RegisterLogin> {
     if (us != null) {
       log('\nUser: ${us.user}');
       log('\nUserAdditionalInfo: ${us.additionalUserInfo}');
+      print("---");
+      print('\nUser: ${us.user}');
+      print('\nUserAdditionalInfo: ${us.additionalUserInfo}');
+      print("---");
 
       if ((await APIs.userExists(us.user!.email!))) {
         Navigator.pushReplacement(

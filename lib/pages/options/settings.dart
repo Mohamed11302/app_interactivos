@@ -16,7 +16,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       appBar: MyAppBarDrawer(),
-      drawer: NavigDrawer(),
+      drawer: NavBar(),
       body: Center(
         child: Text('Pestaña Settings'),
       ),
