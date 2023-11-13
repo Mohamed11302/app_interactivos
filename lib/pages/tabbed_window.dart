@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:app_interactivos/pages/api/api.dart';
+import 'package:app_interactivos/pages/app_bar.dart';
 import 'package:app_interactivos/pages/chat/chat_screen.dart';
 import 'package:app_interactivos/pages/chat_main.dart';
 import 'package:app_interactivos/pages/new_object_form.dart';
@@ -260,37 +261,9 @@ class _Tabbed_Window extends State<Tabbed_Window> {
       log("Ha ocurrido un error con el NFC");
     }
     return Scaffold(
-      drawer: NavigDrawer(),
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
-      appBar: AppBar(
-        elevation: 20,
-        title: Text(
-          'FindAll',
-          style: TextStyle(color: Colors.white),
-        ),
-        leading: Builder(
-          builder: (BuildContext innerContext) {
-            return IconButton(
-              icon: Icon(Icons.menu),
-              onPressed: () {
-                Scaffold.of(innerContext).openDrawer();
-              },
-            );
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: CircleAvatar(
-                backgroundImage: Image.network(APIs.me.image.toString()).image),
-            onPressed: () {
-              // Lógica que se ejecuta al presionar el botón de la imagen
-              print('Botón de imagen presionado');
-              //log(APIs.user.uid.toString());
-            },
-          ),
-        ],
-        centerTitle: true,
-      ),
+      appBar: MyAppBarDrawer(),
+      drawer: NavigDrawer(),
       body: Center(
         child: _widgetOptions[_selectedIndex](),
       ),

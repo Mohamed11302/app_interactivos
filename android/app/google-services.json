@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "870192772334-pg781k6utu5vjvbfcl41tajnu59sqc64.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.DisSistInteractivos.Findal",
+            "certificate_hash": "16a9abb22c558b652f697e50689d7e13b2f62147"
+          }
+        },
+        {
           "client_id": "870192772334-tfjdcki8f938je98vc04idfjph4c0joo.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
