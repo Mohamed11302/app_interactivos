@@ -3,6 +3,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:app_interactivos/pages/tabbed_window.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -37,7 +38,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
           //app bar
-          appBar: AppBar(title: const Text('Perfil')),
+          appBar: AppBar(
+            title: Text('Perfil'),
+            // Personaliza la flecha hacia atrás
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                // Navega de vuelta a la pantalla de inicio
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (_) => Tabbed_Window()));
+              },
+            ),
+          ),
 
           //body
           body: Form(
