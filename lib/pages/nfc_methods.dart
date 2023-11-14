@@ -1,3 +1,4 @@
+import 'package:app_interactivos/pages/database_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:nfc_manager/nfc_manager.dart';
 
@@ -39,6 +40,8 @@ Future<void> startNFCSession(enableNFCReading,context) async {
       ScaffoldMessenger.of(context).showSnackBar(
          SnackBar(content: Text('Información NFC: $payloadText'))
       );
+
+      leer_objeto_concreto(payloadText, context);
     }
    return payloadText;
   }
