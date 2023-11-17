@@ -134,7 +134,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               const Icon(Icons.person, color: Colors.blue),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12)),
-                          hintText: 'eg. Happy Singh',
+                          hintText: 'eg. User123123',
                           label: const Text('Nombre de usuario')),
                     ),
 
