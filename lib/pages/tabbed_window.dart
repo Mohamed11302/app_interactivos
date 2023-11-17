@@ -1,8 +1,9 @@
 import 'dart:developer';
 
+//import 'package:app_interactivos/main.dart';
 import 'package:app_interactivos/pages/api/api.dart';
 import 'package:app_interactivos/pages/app_bar.dart';
-import 'package:app_interactivos/pages/chat/chat_screen.dart';
+//import 'package:app_interactivos/pages/chat/chat_screen.dart';
 import 'package:app_interactivos/pages/chat_main.dart';
 import 'package:app_interactivos/pages/new_object_form.dart';
 import 'package:app_interactivos/pages/side_bar/side_menu.dart';
@@ -11,7 +12,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:app_interactivos/pages/nfc_methods.dart';
 import 'package:app_interactivos/pages/database_methods.dart';
-import 'package:app_interactivos/pages/side_bar/side_menu.dart';
+//import 'package:app_interactivos/pages/side_bar/side_menu.dart';
 
 class Tabbed_Window extends StatefulWidget {
   Tabbed_Window({Key? key}) : super(key: key);
@@ -123,6 +124,14 @@ class _Tabbed_Window extends State<Tabbed_Window> {
     consigueObjetosPerdidos(provincia_seleccionada);
   }
 
+  void callback_lectura_tarjeta_nfc(bool cambiar_tab, bool habilitar_nfc){
+    setState(() {
+      if (cambiar_tab)
+        this._selectedIndex = 3; //se pasa a la pestaña de chats para evitar poder seguir leyendo nfcs 
+      this.enableNFCReading = habilitar_nfc;
+    });
+  }
+
   _Tabbed_Window() {
     _widgetOptions = [
       () => Scaffold(
@@ -230,23 +239,36 @@ class _Tabbed_Window extends State<Tabbed_Window> {
             ),
           ),
       () => Scaffold(
-            appBar: AppBar(
-              title: Text(
-                'ESCÁNER DE ETIQUETAS',
-                style: optionStyle,
-              ),
-              automaticallyImplyLeading: false,
-              centerTitle: true,
-            ),
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset('assets/gif_nfc.gif'),
-                SizedBox(height: 50),
-                Text('Acerca el teléfono al dispositivo NFC'),
-              ],
-            ),
-          ),
+  appBar: AppBar(
+    title: Text(
+      'ESCÁNER DE ETIQUETAS',
+      style: optionStyle,
+    ),
+    automaticallyImplyLeading: false,
+    centerTitle: true,
+  ),
+  body: Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Text(
+        'Acerca el teléfono al dispositivo NFC ...',
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+      ),
+      SizedBox(height: 30,),
+      Image.asset('assets/gif_nfc.gif'),
+      SizedBox(height: 30,),
+      Text(
+        '¡Podrás contactar con el propietario ',
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+      ),
+      Text(
+        'del objeto encontrado!',
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+      ),
+    ],
+  ),
+),
+
       () => ChatMainScreen(),
     ];
   }
@@ -257,9 +279,9 @@ class _Tabbed_Window extends State<Tabbed_Window> {
   @override
   Widget build(BuildContext context) {
     try {
-      startNFCSession(enableNFCReading, context);
+      startNFCSessionReading(enableNFCReading, context, callback_lectura_tarjeta_nfc);
     } catch (e) {
-      log("Ha ocurrido un error con el NFC");
+      log("Ha ocurrido un error con la lectura NFC");
     }
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 255, 255, 255),

@@ -69,6 +69,7 @@ flutter:
     - assets/default_profile_picture.jpeg
     - assets/add_image.png
     - assets/camera.png
+    - assets/tick.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

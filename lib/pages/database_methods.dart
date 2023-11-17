@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:app_interactivos/pages/api/api.dart';
 import 'package:app_interactivos/pages/chat/chat_screen.dart';
 import 'package:app_interactivos/pages/chat/data/chat_user.dart';
+import 'package:app_interactivos/pages/nfc_methods.dart';
 import 'package:app_interactivos/pages/selector_lost_area.dart';
 import 'package:app_interactivos/pages/lost_object_map.dart';
 import 'package:app_interactivos/pages/new_object_form.dart';
@@ -97,34 +98,32 @@ class Objeto_Perdido extends StatelessWidget {
                             ),
                           ),
                           SizedBox(
-                              height: 20), // Espacio entre el texto y el botón
+                              height: 20), 
                           Container(
                             width: double
-                                .infinity, // Ancho del botón al ancho completo
+                                .infinity,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(
-                                  8), // Bordes redondeados
-                              color: Colors.blue, // Color del rectángulo
+                                  8), 
+                              color: Colors.black, 
                             ),
                             child: ElevatedButton(
                               onPressed: () {
-                                // Aquí debes abrir la nueva ventana o realizar la acción deseada
-                                // Por ejemplo, puedes usar Navigator.push para navegar a una nueva pantalla
+                                
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (context) {
-                                      // Coloca aquí el widget de la nueva ventana
-                                      // Puedes personalizarla como desees
+                                      
                                       return MapScreen(
                                           this.coordenadas_perdida[0],
                                           this.coordenadas_perdida[1],
-                                          this.radio_area_perdida); // 400 metros de radio el circulo
+                                          this.radio_area_perdida); 
                                     },
                                   ),
                                 );
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue, // Color del botón
+                                backgroundColor: const Color.fromARGB(255, 0, 0, 0), // Color del botón
                               ),
                               child: Text('Ver ubicación de pérdida'),
                             ),
@@ -303,8 +302,22 @@ class _Objeto_Registrado extends State<Objeto_Registrado> {
       this.radio_area_perdida)
       : super();
 
+  bool enableNFCWriting = false;
+  String mensaje_escribir_nfc = "";
+  bool escritura_acabada = false;
+
+  void ajusta_valores_escritura(bool permitir_escritura, String contenido_escribir){
+    setState(() {
+      this.enableNFCWriting = permitir_escritura;
+      this.mensaje_escribir_nfc = contenido_escribir;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    
+    startNFCSessionWriting(enableNFCWriting, this.id_objeto, context, ajusta_valores_escritura);
+
     return GestureDetector(
       onTap: () {
         showDialog(
@@ -373,7 +386,7 @@ class _Objeto_Registrado extends State<Objeto_Registrado> {
                                 width: double.infinity,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8),
-                                  color: Colors.blue,
+                                  color: Colors.black,
                                 ),
                                 child: ElevatedButton(
                                   onPressed: () {
@@ -389,7 +402,7 @@ class _Objeto_Registrado extends State<Objeto_Registrado> {
                                     );
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.blue,
+                                    backgroundColor: Colors.black,
                                   ),
                                   child: Text('Ver ubicación de pérdida'),
                                 ),
@@ -399,199 +412,258 @@ class _Objeto_Registrado extends State<Objeto_Registrado> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            ElevatedButton(
-                              onPressed: () async {
-                                await Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) {
-                                      return Formulario_Objeto(
-                                          this.nombre,
-                                          this.descripcion,
-                                          this.url_descarga_imagen);
-                                    },
-                                  ),
-                                ).then((resultado_formulario) async {
-                                  if (resultado_formulario != null) {
-                                    String url_usar = this.url_descarga_imagen;
-                                    if (resultado_formulario.nueva_imagen) {
-                                      url_usar = await subir_imagen_a_storage(
-                                          resultado_formulario.imagen_objeto);
-                                      borrar_imagen_storage(this
-                                          .url_descarga_imagen); //se borra la foto que tenía el objeto para no colapsar el storage
+                            Expanded(
+                              child : ElevatedButton(
+                                onPressed: () async {
+                                  await Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return Formulario_Objeto(
+                                            this.nombre,
+                                            this.descripcion,
+                                            this.url_descarga_imagen);
+                                      },
+                                    ),
+                                  ).then((resultado_formulario) async {
+                                    if (resultado_formulario != null) {
+                                      String url_usar = this.url_descarga_imagen;
+                                      if (resultado_formulario.nueva_imagen) {
+                                        url_usar = await subir_imagen_a_storage(
+                                            resultado_formulario.imagen_objeto);
+                                        borrar_imagen_storage(this
+                                            .url_descarga_imagen); //se borra la foto que tenía el objeto para no colapsar el storage
+                                      }
+                                      final objeto_aux = Objeto_Registrado(
+                                          this.id_objeto,
+                                          resultado_formulario.nombre_objeto,
+                                          this.propietario,
+                                          resultado_formulario.descripcion_objeto,
+                                          this.perdido,
+                                          Image.file(
+                                              resultado_formulario.imagen_objeto),
+                                          this.provincia_perdida,
+                                          this.fecha_perdida,
+                                          this.coordenadas_perdida,
+                                          url_usar,
+                                          this.callback_borrar,
+                                          this.radio_area_perdida);
+                                      Navigator.of(context).pop();
+                                      actualizar_objeto_firestore(objeto_aux);
+                                      objeto_aux.callback_borrar();
                                     }
-                                    final objeto_aux = Objeto_Registrado(
-                                        this.id_objeto,
-                                        resultado_formulario.nombre_objeto,
-                                        this.propietario,
-                                        resultado_formulario.descripcion_objeto,
-                                        this.perdido,
-                                        Image.file(
-                                            resultado_formulario.imagen_objeto),
-                                        this.provincia_perdida,
-                                        this.fecha_perdida,
-                                        this.coordenadas_perdida,
-                                        url_usar,
-                                        this.callback_borrar,
-                                        this.radio_area_perdida);
-                                    Navigator.of(context).pop();
-                                    actualizar_objeto_firestore(objeto_aux);
-                                    objeto_aux.callback_borrar();
-                                  }
-                                });
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue,
-                              ),
-                              child: Column(
-                                children: [Icon(Icons.edit), Text("Editar")],
+                                  });
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blue,
+                                ),
+                                child: Column(
+                                  children: [Icon(Icons.edit), Text("Editar")],
+                                ),
                               ),
                             ),
                             SizedBox(width: 5.5),
-                            this.perdido
-                                ? ElevatedButton(
-                                    onPressed: () async {
-                                      Objeto_Registrado objeto_aux =
-                                          Objeto_Registrado(
-                                              this.id_objeto,
-                                              this.nombre,
-                                              this.propietario,
-                                              this.descripcion,
-                                              false,
-                                              this.imagen,
-                                              "",
-                                              DateTime.now(),
-                                              [0, 0],
-                                              this.url_descarga_imagen,
-                                              callback_borrar,
-                                              this.radio_area_perdida);
-                                      actualizar_objeto_firestore(objeto_aux);
-                                      Navigator.of(context).pop();
-                                      objeto_aux.callback_borrar();
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.green,
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        Icon(Icons.check),
-                                        Text("Hallado")
-                                      ],
-                                    ),
-                                  )
-                                : ElevatedButton(
-                                    onPressed: () async {
-                                      await Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) {
-                                            // Coloca aquí el widget de la nueva ventana
-                                            // Puedes personalizarla como desees
-                                            return MapSelector(
-                                                400); // 400 metros de radio el circulo
-                                          },
+                            !this.perdido 
+                            ? Expanded(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  ajusta_valores_escritura(true, this.id_objeto);
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: Text(
+                                          'Acerque el dispositivo NFC para realizar su escritura',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                          textAlign: TextAlign.center,
                                         ),
-                                      ).then((resultado_mapa) async {
-                                        if (resultado_mapa != null) {
+                                        content: 
+                                          Row(
+                                            mainAxisAlignment:  MainAxisAlignment.center,
+                                            children: [
+                                              CircularProgressIndicator()                                              
+                                              ]
+                                          ),
+                                        actions: <Widget>[ 
+                                              TextButton(
+                                                child: Text('Cancelar'),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                  ajusta_valores_escritura(false, "");
+                                                },
+                                              ), 
+                                        ],
+                                      );
+                                    },
+                                  );
+                                  
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Color.fromARGB(255, 0, 0, 0),
+                                ),
+                                child: Column(
+                                  children: [Icon(Icons.wifi), Text("Pasar a NFC")],
+                                )
+                              ),
+                            )
+                            : SizedBox(width: 0),
+                          ],
+                        ),
+                        SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            this.perdido
+                                  ? Expanded(
+                                      child: ElevatedButton(
+                                        onPressed: () async {
                                           Objeto_Registrado objeto_aux =
                                               Objeto_Registrado(
                                                   this.id_objeto,
                                                   this.nombre,
                                                   this.propietario,
                                                   this.descripcion,
-                                                  true,
+                                                  false,
                                                   this.imagen,
-                                                  resultado_mapa["province"],
+                                                  "",
                                                   DateTime.now(),
-                                                  [
-                                                    resultado_mapa["location"]
-                                                        .latitude,
-                                                    resultado_mapa["location"]
-                                                        .longitude
-                                                  ],
+                                                  [0, 0],
                                                   this.url_descarga_imagen,
                                                   callback_borrar,
-                                                  resultado_mapa['radius']);
-                                          actualizar_objeto_firestore(
-                                              objeto_aux);
+                                                  this.radio_area_perdida);
+                                          actualizar_objeto_firestore(objeto_aux);
                                           Navigator.of(context).pop();
                                           objeto_aux.callback_borrar();
-                                        }
-                                      });
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.yellow,
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        Icon(Icons.warning),
-                                        Text("Perdido")
-                                      ],
-                                    ),
-                                  ),
-                            SizedBox(width: 5.5),
-                            ElevatedButton(
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      title: Text(
-                                        '¿Desea borrar los datos sobre el objeto "' +
-                                            this.nombre +
-                                            '"?',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      actions: <Widget>[
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.green,
+                                        ),
+                                        child: Column(
                                           children: [
-                                            TextButton(
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.blue,
-                                              ),
-                                              child: Text('No',
-                                                  style: TextStyle(
-                                                      color: Colors.white)),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                            TextButton(
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.white,
-                                              ),
-                                              child: Text('Sí'),
-                                              onPressed: () {
-                                                borrar_imagen_storage(
-                                                    this.url_descarga_imagen);
-                                                borrar_objeto_firestore(
-                                                    id_objeto);
-                                                callback_borrar();
-                                                Navigator.of(context).pop();
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
+                                            Icon(Icons.check),
+                                            Text("Hallado")
                                           ],
                                         ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.red,
-                              ),
-                              child: Column(
-                                children: [
-                                  Icon(Icons.delete),
-                                  Text("Borrar"),
-                                ],
+                                      )
+                                  )
+                                : Expanded(
+                                    child: ElevatedButton(
+                                      onPressed: () async {
+                                        await Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) {
+                                              // Coloca aquí el widget de la nueva ventana
+                                              // Puedes personalizarla como desees
+                                              return MapSelector(
+                                                  400); // 400 metros de radio el circulo
+                                            },
+                                          ),
+                                        ).then((resultado_mapa) async {
+                                          if (resultado_mapa != null) {
+                                            Objeto_Registrado objeto_aux =
+                                                Objeto_Registrado(
+                                                    this.id_objeto,
+                                                    this.nombre,
+                                                    this.propietario,
+                                                    this.descripcion,
+                                                    true,
+                                                    this.imagen,
+                                                    resultado_mapa["province"],
+                                                    DateTime.now(),
+                                                    [
+                                                      resultado_mapa["location"]
+                                                          .latitude,
+                                                      resultado_mapa["location"]
+                                                          .longitude
+                                                    ],
+                                                    this.url_descarga_imagen,
+                                                    callback_borrar,
+                                                    resultado_mapa['radius']);
+                                            actualizar_objeto_firestore(
+                                                objeto_aux);
+                                            Navigator.of(context).pop();
+                                            objeto_aux.callback_borrar();
+                                          }
+                                        });
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Color.fromRGBO(255, 206, 59, 1),
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          Icon(Icons.warning),
+                                          Text("Perdido")
+                                        ],
+                                      ),
+                                    ),
+                                ),
+                            SizedBox(width: 5.5),
+                            Expanded(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: Text(
+                                          '¿Desea borrar los datos sobre el objeto "' +
+                                              this.nombre +
+                                              '"?',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        actions: <Widget>[
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              TextButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: Colors.blue,
+                                                ),
+                                                child: Text('No',
+                                                    style: TextStyle(
+                                                        color: Colors.white)),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                              TextButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: Colors.white,
+                                                ),
+                                                child: Text('Sí'),
+                                                onPressed: () {
+                                                  borrar_imagen_storage(
+                                                      this.url_descarga_imagen);
+                                                  borrar_objeto_firestore(
+                                                      id_objeto);
+                                                  callback_borrar();
+                                                  Navigator.of(context).pop();
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.red,
+                                ),
+                                child: Column(
+                                  children: [
+                                    Icon(Icons.delete),
+                                    Text("Borrar"),
+                                  ],
+                                ),
                               ),
                             ),
                           ],
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -846,7 +918,7 @@ Future<void> actualizar_objeto_firestore(Objeto_Registrado objeto) async {
   });
 }
 
-Future<void> leer_objeto_concreto(String id_documento, context) async {
+Future<void> leer_objeto_concreto(String id_documento, context, Function callback_lectura_tarjeta_nfc) async {
   try {
     DocumentSnapshot documento = await FirebaseFirestore.instance
         .collection('objetos')
@@ -855,14 +927,16 @@ Future<void> leer_objeto_concreto(String id_documento, context) async {
 
     if (documento.exists) {
       Map<String, dynamic> datos = documento.data() as Map<String, dynamic>;
-      print("Propietario del objeto: " + datos['"propietario"']);
 
       /// ABRIR CHAT
       await APIs.addChatUser(datos['"propietario"']).then((value) async {
-        if (!value) {
+        if (value == 1) {
           ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text('Ese usuario no existe')));
-        } else {
+              .showSnackBar(SnackBar(content: Text('El objeto te pertenece')));
+        }else if (value ==3){
+         ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text('El usuario referenciado no existe')));
+        }else {
           DocumentSnapshot documento_propietario = await FirebaseFirestore
               .instance
               .collection('users')
@@ -880,8 +954,43 @@ Future<void> leer_objeto_concreto(String id_documento, context) async {
               lastActive: datos_propietario['last_active'],
               email: datos_propietario['email'],
               pushToken: datos_propietario['push_token']);
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => ChatScreen(user: chatuser)));
+          callback_lectura_tarjeta_nfc(false, false);
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text(
+                  '¡Objeto encontrado!',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+                //content: Image.asset('assets/tick.png'),
+                actions: <Widget>[
+                  Row(
+                    mainAxisAlignment:
+                        MainAxisAlignment.center,
+                    children: [
+                      TextButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                        ),
+                        child: Text('Ir al chat del propietario',
+                            style: TextStyle(
+                                color: Colors.white)),
+                        onPressed: () {
+                          Navigator.of(context).pop();    
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => ChatScreen(user: chatuser)));
+                          callback_lectura_tarjeta_nfc(true, false);
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              );
+            },
+          );
         }
       });
 

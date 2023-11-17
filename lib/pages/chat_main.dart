@@ -244,7 +244,7 @@ class _ChatMainScreenState extends State<ChatMainScreen> {
                       Navigator.pop(context);
                       if (email.isNotEmpty) {
                         await APIs.addChatUser(email).then((value) {
-                          if (!value) {
+                          if (value==3) {
                             Dialogs.showSnackbar(
                                 context, 'User does not Exists!');
                           }

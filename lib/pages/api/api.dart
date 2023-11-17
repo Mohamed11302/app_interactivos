@@ -148,7 +148,7 @@ class APIs {
         .snapshots();
   }
 
-  static Future<bool> addChatUser(String email) async {
+  static Future<int> addChatUser(String email) async {
     final data = await firestore
         .collection('users')
         .where('email', isEqualTo: email)
@@ -160,7 +160,11 @@ class APIs {
     print(data.docs.isNotEmpty);
     print(user.email);
     print("--------------");
-    if (data.docs.isNotEmpty && data.docs.first.id != user.email) {
+
+    if (data.docs.isNotEmpty && data.docs.first.id == user.email) {
+      return 1;
+
+    }else if (data.docs.isNotEmpty && data.docs.first.id != user.email) {
       //user exists
 
       log('user exists: ${data.docs.first.data()}');
@@ -172,11 +176,11 @@ class APIs {
           .doc(data.docs.first.id)
           .set({});
 
-      return true;
+      return 2;
     } else {
       //user doesn't exists
 
-      return false;
+      return 3;
     }
   }
 
