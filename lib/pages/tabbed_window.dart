@@ -147,7 +147,7 @@ class _Tabbed_Window extends State<Tabbed_Window> {
               SizedBox(height: 32),
               Center(
                   child: Container(
-                width: 75, // Ancho del botón al ancho completo
+                width: 150, // Ancho del botón al ancho completo
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8), // Bordes redondeados
                   color: Colors.blue, // Color del rectángulo
@@ -176,7 +176,14 @@ class _Tabbed_Window extends State<Tabbed_Window> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue, // Color del botón
                   ),
-                  child: Icon(Icons.add), //Text('Registrar nuevo objeto'),
+                  child: Expanded(child: Row(
+                    children: [
+                      Icon(Icons.add), 
+                      SizedBox(width: 10,),
+                      Text('Añadir objeto'),
+                    ],
+                  ),
+                  ),
                 ),
               )),
               SizedBox(
