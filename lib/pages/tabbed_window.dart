@@ -124,10 +124,11 @@ class _Tabbed_Window extends State<Tabbed_Window> {
     consigueObjetosPerdidos(provincia_seleccionada);
   }
 
-  void callback_lectura_tarjeta_nfc(bool cambiar_tab, bool habilitar_nfc){
+  void callback_lectura_tarjeta_nfc(bool cambiar_tab, bool habilitar_nfc) {
     setState(() {
       if (cambiar_tab)
-        this._selectedIndex = 3; //se pasa a la pestaña de chats para evitar poder seguir leyendo nfcs 
+        this._selectedIndex =
+            3; //se pasa a la pestaña de chats para evitar poder seguir leyendo nfcs
       this.enableNFCReading = habilitar_nfc;
     });
   }
@@ -135,73 +136,79 @@ class _Tabbed_Window extends State<Tabbed_Window> {
   _Tabbed_Window() {
     _widgetOptions = [
       () => Scaffold(
-            appBar: AppBar(
-              title: Text(
-                'OBJETOS REGISTRADOS',
-                style: optionStyle,
-              ),
-              automaticallyImplyLeading: false,
-              centerTitle: true,
-            ),
-            body: Column(children: [
-              SizedBox(height: 32),
-              Center(
-                  child: Container(
-                width: 150, // Ancho del botón al ancho completo
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8), // Bordes redondeados
-                  color: Colors.blue, // Color del rectángulo
-                ),
-                child: ElevatedButton(
-                  onPressed: () async {
-                    await Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return Formulario_Objeto("", "", "");
-                        },
-                      ),
-                    ).then((resultado_formulario) async {
-                      if (resultado_formulario != null) {
-                        registro_nuevo_objeto_acabado = false;
-                        await registrarObjeto(
-                            resultado_formulario.nombre_objeto,
-                            resultado_formulario.descripcion_objeto,
-                            resultado_formulario.imagen_objeto,
-                            cuenta_usuario);
-                        registro_nuevo_objeto_acabado = true;
-                        consigueObjetosRegistrados();
-                      }
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue, // Color del botón
-                  ),
-                  child: Expanded(child: Row(
+            body: Column(
+              children: [
+                SizedBox(height: 30),
+                Container(
+                  height: 100,
+                  //color: Colors.white, // Fondo blanco
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Icon(Icons.add), 
-                      SizedBox(width: 10,),
-                      Text('Añadir objeto'),
+                      Text(
+                        'Objetos Registrados',
+                        style: TextStyle(
+                          color: Colors.black, // Texto negro
+                          fontSize: 30, // Ajusta el tamaño del texto
+                          fontWeight:
+                              FontWeight.bold, // Ajusta el peso del texto
+                        ),
+                      ),
+                      Container(
+                        height: 1,
+                        color: Colors.black26, // Línea divisoria
+                      ),
                     ],
                   ),
+                ),
+                SizedBox(
+                  height: 32,
+                ),
+                Expanded(
+                  child: (lectura_objetos_registrados_usuario_acabada &&
+                          registro_nuevo_objeto_acabado)
+                      ? Listado_Objetos_Registrados(
+                          lista_objetos_registrados_usuario)
+                      : Center(child: CircularProgressIndicator()),
+                ),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 50, right: 30),
+                    child: FloatingActionButton(
+                      onPressed: () async {
+                        await Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return Formulario_Objeto("", "", "");
+                            },
+                          ),
+                        ).then((resultado_formulario) async {
+                          if (resultado_formulario != null) {
+                            registro_nuevo_objeto_acabado = false;
+                            await registrarObjeto(
+                              resultado_formulario.nombre_objeto,
+                              resultado_formulario.descripcion_objeto,
+                              resultado_formulario.imagen_objeto,
+                              cuenta_usuario,
+                            );
+                            registro_nuevo_objeto_acabado = true;
+                            consigueObjetosRegistrados();
+                          }
+                        });
+                      },
+                      child: const Icon(Icons.add_circle_outlined),
+                      backgroundColor: Colors.orange[700],
+                    ),
                   ),
                 ),
-              )),
-              SizedBox(
-                height: 32,
-              ),
-              Expanded(
-                child: (lectura_objetos_registrados_usuario_acabada &&
-                        registro_nuevo_objeto_acabado)
-                    ? Listado_Objetos_Registrados(
-                        lista_objetos_registrados_usuario)
-                    : Center(child: CircularProgressIndicator()),
-              ),
-            ]),
+              ],
+            ),
           ),
       () => Scaffold(
             appBar: AppBar(
               title: Text(
-                'OBJETOS PERDIDOS',
+                'Objetos Perdidos',
                 style: optionStyle,
               ),
               automaticallyImplyLeading: false,
@@ -246,36 +253,39 @@ class _Tabbed_Window extends State<Tabbed_Window> {
             ),
           ),
       () => Scaffold(
-  appBar: AppBar(
-    title: Text(
-      'ESCÁNER DE ETIQUETAS',
-      style: optionStyle,
-    ),
-    automaticallyImplyLeading: false,
-    centerTitle: true,
-  ),
-  body: Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Text(
-        'Acerca el teléfono al dispositivo NFC ...',
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-      ),
-      SizedBox(height: 30,),
-      Image.asset('assets/gif_nfc.gif'),
-      SizedBox(height: 30,),
-      Text(
-        '¡Podrás contactar con el propietario ',
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-      ),
-      Text(
-        'del objeto encontrado!',
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-      ),
-    ],
-  ),
-),
-
+            appBar: AppBar(
+              title: Text(
+                'ESCÁNER DE ETIQUETAS',
+                style: optionStyle,
+              ),
+              automaticallyImplyLeading: false,
+              centerTitle: true,
+            ),
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Acerca el teléfono al dispositivo NFC ...',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                Image.asset('assets/gif_nfc.gif'),
+                SizedBox(
+                  height: 30,
+                ),
+                Text(
+                  '¡Podrás contactar con el propietario ',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+                Text(
+                  'del objeto encontrado!',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+              ],
+            ),
+          ),
       () => ChatMainScreen(),
     ];
   }
@@ -286,7 +296,8 @@ class _Tabbed_Window extends State<Tabbed_Window> {
   @override
   Widget build(BuildContext context) {
     try {
-      startNFCSessionReading(enableNFCReading, context, callback_lectura_tarjeta_nfc);
+      startNFCSessionReading(
+          enableNFCReading, context, callback_lectura_tarjeta_nfc);
     } catch (e) {
       log("Ha ocurrido un error con la lectura NFC");
     }

@@ -75,42 +75,65 @@ class _ChatMainScreenState extends State<ChatMainScreen> {
         },
         child: Scaffold(
           //app bar
-          appBar: AppBar(
-            title: _isSearching
-                ? TextField(
-                    decoration: const InputDecoration(
-                        border: InputBorder.none, hintText: 'Name, Email, ...'),
-                    autofocus: true,
-                    style: const TextStyle(fontSize: 17, letterSpacing: 0.5),
-                    //when search text changes then updated search list
-                    onChanged: (val) {
-                      //search logic
-                      _searchList.clear();
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(
+                kToolbarHeight), // Ajusta la altura según tu preferencia
+            child: Container(
+              margin: EdgeInsets.only(top: 10.0), // Espacio arriba del AppBar
+              child: AppBar(
+                backgroundColor: Colors.white, // Color de fondo del AppBar
+                iconTheme:
+                    IconThemeData(color: Colors.black), // Color de los iconos
+                title: _isSearching
+                    ? TextField(
+                        decoration: const InputDecoration(
+                            border: InputBorder.none, hintText: 'Name...'),
+                        autofocus: true,
+                        style: const TextStyle(
+                            fontSize: 17,
+                            letterSpacing: 0.5,
+                            color: Colors.black), // Color del texto de búsqueda
+                        onChanged: (val) {
+                          //search logic
+                          _searchList.clear();
 
-                      for (var i in _list) {
-                        if (i.name.toLowerCase().contains(val.toLowerCase()) ||
-                            i.email.toLowerCase().contains(val.toLowerCase())) {
-                          _searchList.add(i);
-                          setState(() {
-                            _searchList;
-                          });
-                        }
-                      }
+                          for (var i in _list) {
+                            if (i.name
+                                    .toLowerCase()
+                                    .contains(val.toLowerCase()) ||
+                                i.email
+                                    .toLowerCase()
+                                    .contains(val.toLowerCase())) {
+                              _searchList.add(i);
+                              setState(() {
+                                _searchList;
+                              });
+                            }
+                          }
+                        },
+                      )
+                    : const Text(''),
+                actions: [
+                  //search user button
+                  IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _isSearching = !_isSearching;
+                      });
                     },
-                  )
-                : const Text(''),
-            actions: [
-              //search user button
-              IconButton(
-                  onPressed: () {
-                    setState(() {
-                      _isSearching = !_isSearching;
-                    });
-                  },
-                  icon: Icon(_isSearching
-                      ? CupertinoIcons.clear_circled_solid
-                      : Icons.search)),
-            ],
+                    icon: Icon(
+                      _isSearching
+                          ? CupertinoIcons.clear_circled_solid
+                          : Icons.search,
+                    ),
+                  ),
+                ],
+                shape: ContinuousRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                      50.0), // Ajusta el radio según tu preferencia
+                ),
+              ),
+            ),
           ),
 
           //floating button to add new user
@@ -165,7 +188,7 @@ class _ChatMainScreenState extends State<ChatMainScreen> {
                                 itemCount: _isSearching
                                     ? _searchList.length
                                     : _list.length,
-                                padding: EdgeInsets.only(top: mq.height * .01),
+                                //padding: EdgeInsets.only(top: mq.height * .01),
                                 physics: const BouncingScrollPhysics(),
                                 itemBuilder: (context, index) {
                                   return ChatUserCard(
@@ -208,7 +231,7 @@ class _ChatMainScreenState extends State<ChatMainScreen> {
                 children: const [
                   Icon(
                     Icons.person_add,
-                    color: Colors.blue,
+                    color: Colors.black,
                     size: 28,
                   ),
                   Text('  Add User')
@@ -220,10 +243,17 @@ class _ChatMainScreenState extends State<ChatMainScreen> {
                 maxLines: null,
                 onChanged: (value) => email = value,
                 decoration: InputDecoration(
-                    hintText: 'Email Id',
-                    prefixIcon: const Icon(Icons.email, color: Colors.blue),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15))),
+                  hintText: 'Email Id',
+                  hintStyle: TextStyle(
+                      color: Colors.black), // Color del texto de sugerencia
+                  prefixIcon: const Icon(Icons.email, color: Colors.white),
+                  filled: true,
+                  fillColor: Colors.white, // Color de fondo
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: BorderSide.none, // Elimina el borde visible
+                  ),
+                ),
               ),
 
               //actions
@@ -235,7 +265,7 @@ class _ChatMainScreenState extends State<ChatMainScreen> {
                       Navigator.pop(context);
                     },
                     child: const Text('Cancel',
-                        style: TextStyle(color: Colors.blue, fontSize: 16))),
+                        style: TextStyle(color: Colors.black, fontSize: 16))),
 
                 //add button
                 MaterialButton(
@@ -244,7 +274,7 @@ class _ChatMainScreenState extends State<ChatMainScreen> {
                       Navigator.pop(context);
                       if (email.isNotEmpty) {
                         await APIs.addChatUser(email).then((value) {
-                          if (value==3) {
+                          if (value == 3) {
                             Dialogs.showSnackbar(
                                 context, 'User does not Exists!');
                           }
@@ -253,7 +283,7 @@ class _ChatMainScreenState extends State<ChatMainScreen> {
                     },
                     child: const Text(
                       'Add',
-                      style: TextStyle(color: Colors.blue, fontSize: 16),
+                      style: TextStyle(color: Colors.black, fontSize: 16),
                     ))
               ],
             ));

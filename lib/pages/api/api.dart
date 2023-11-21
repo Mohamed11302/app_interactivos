@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:app_interactivos/pages/chat/data/message.dart';
 
@@ -163,8 +164,7 @@ class APIs {
 
     if (data.docs.isNotEmpty && data.docs.first.id == user.email) {
       return 1;
-
-    }else if (data.docs.isNotEmpty && data.docs.first.id != user.email) {
+    } else if (data.docs.isNotEmpty && data.docs.first.id != user.email) {
       //user exists
 
       log('user exists: ${data.docs.first.data()}');
@@ -329,7 +329,6 @@ class APIs {
 
   static Future<String?> getRegistroUser(String registro) async {
     try {
-      // Accede a la colección 'users' y recupera el documento correspondiente al usuario
       DocumentSnapshot<Map<String, dynamic>> userSnapshot =
           await firestore.collection('users').doc(user.email).get();
 
@@ -342,7 +341,7 @@ class APIs {
         return null;
       }
     } catch (e) {
-      print('Error al obtener la imagen del usuario: $e');
+      print('Error al obtener el registro del usuario: $e');
       return null;
     }
   }

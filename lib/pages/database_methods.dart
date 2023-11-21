@@ -97,33 +97,29 @@ class Objeto_Perdido extends StatelessWidget {
                               ],
                             ),
                           ),
-                          SizedBox(
-                              height: 20), 
+                          SizedBox(height: 20),
                           Container(
-                            width: double
-                                .infinity,
+                            width: double.infinity,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(
-                                  8), 
-                              color: Colors.black, 
+                              borderRadius: BorderRadius.circular(8),
+                              color: Colors.black,
                             ),
                             child: ElevatedButton(
                               onPressed: () {
-                                
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (context) {
-                                      
                                       return MapScreen(
                                           this.coordenadas_perdida[0],
                                           this.coordenadas_perdida[1],
-                                          this.radio_area_perdida); 
+                                          this.radio_area_perdida);
                                     },
                                   ),
                                 );
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color.fromARGB(255, 0, 0, 0), // Color del botón
+                                backgroundColor: const Color.fromARGB(
+                                    255, 0, 0, 0), // Color del botón
                               ),
                               child: Text('Ver ubicación de pérdida'),
                             ),
@@ -306,7 +302,8 @@ class _Objeto_Registrado extends State<Objeto_Registrado> {
   String mensaje_escribir_nfc = "";
   bool escritura_acabada = false;
 
-  void ajusta_valores_escritura(bool permitir_escritura, String contenido_escribir){
+  void ajusta_valores_escritura(
+      bool permitir_escritura, String contenido_escribir) {
     setState(() {
       this.enableNFCWriting = permitir_escritura;
       this.mensaje_escribir_nfc = contenido_escribir;
@@ -315,8 +312,8 @@ class _Objeto_Registrado extends State<Objeto_Registrado> {
 
   @override
   Widget build(BuildContext context) {
-    
-    startNFCSessionWriting(enableNFCWriting, this.id_objeto, context, ajusta_valores_escritura);
+    startNFCSessionWriting(
+        enableNFCWriting, this.id_objeto, context, ajusta_valores_escritura);
 
     return GestureDetector(
       onTap: () {
@@ -413,7 +410,7 @@ class _Objeto_Registrado extends State<Objeto_Registrado> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Expanded(
-                              child : ElevatedButton(
+                              child: ElevatedButton(
                                 onPressed: () async {
                                   await Navigator.of(context).push(
                                     MaterialPageRoute(
@@ -426,7 +423,8 @@ class _Objeto_Registrado extends State<Objeto_Registrado> {
                                     ),
                                   ).then((resultado_formulario) async {
                                     if (resultado_formulario != null) {
-                                      String url_usar = this.url_descarga_imagen;
+                                      String url_usar =
+                                          this.url_descarga_imagen;
                                       if (resultado_formulario.nueva_imagen) {
                                         url_usar = await subir_imagen_a_storage(
                                             resultado_formulario.imagen_objeto);
@@ -437,10 +435,11 @@ class _Objeto_Registrado extends State<Objeto_Registrado> {
                                           this.id_objeto,
                                           resultado_formulario.nombre_objeto,
                                           this.propietario,
-                                          resultado_formulario.descripcion_objeto,
+                                          resultado_formulario
+                                              .descripcion_objeto,
                                           this.perdido,
-                                          Image.file(
-                                              resultado_formulario.imagen_objeto),
+                                          Image.file(resultado_formulario
+                                              .imagen_objeto),
                                           this.provincia_perdida,
                                           this.fecha_perdida,
                                           this.coordenadas_perdida,
@@ -462,51 +461,57 @@ class _Objeto_Registrado extends State<Objeto_Registrado> {
                               ),
                             ),
                             SizedBox(width: 5.5),
-                            !this.perdido 
-                            ? Expanded(
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  ajusta_valores_escritura(true, this.id_objeto);
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        title: Text(
-                                          'Acerque el dispositivo NFC para realizar su escritura',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                          textAlign: TextAlign.center,
+                            !this.perdido
+                                ? Expanded(
+                                    child: ElevatedButton(
+                                        onPressed: () {
+                                          ajusta_valores_escritura(
+                                              true, this.id_objeto);
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                title: Text(
+                                                  'Acerque el dispositivo NFC para realizar su escritura',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                                content: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      CircularProgressIndicator()
+                                                    ]),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    child: Text('Cancelar'),
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                      ajusta_valores_escritura(
+                                                          false, "");
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              Color.fromARGB(255, 0, 0, 0),
                                         ),
-                                        content: 
-                                          Row(
-                                            mainAxisAlignment:  MainAxisAlignment.center,
-                                            children: [
-                                              CircularProgressIndicator()                                              
-                                              ]
-                                          ),
-                                        actions: <Widget>[ 
-                                              TextButton(
-                                                child: Text('Cancelar'),
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                  ajusta_valores_escritura(false, "");
-                                                },
-                                              ), 
-                                        ],
-                                      );
-                                    },
-                                  );
-                                  
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color.fromARGB(255, 0, 0, 0),
-                                ),
-                                child: Column(
-                                  children: [Icon(Icons.wifi), Text("Pasar a NFC")],
-                                )
-                              ),
-                            )
-                            : SizedBox(width: 0),
+                                        child: Column(
+                                          children: [
+                                            Icon(Icons.wifi),
+                                            Text("Pasar a NFC")
+                                          ],
+                                        )),
+                                  )
+                                : SizedBox(width: 0),
                           ],
                         ),
                         SizedBox(height: 20),
@@ -514,38 +519,37 @@ class _Objeto_Registrado extends State<Objeto_Registrado> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             this.perdido
-                                  ? Expanded(
-                                      child: ElevatedButton(
-                                        onPressed: () async {
-                                          Objeto_Registrado objeto_aux =
-                                              Objeto_Registrado(
-                                                  this.id_objeto,
-                                                  this.nombre,
-                                                  this.propietario,
-                                                  this.descripcion,
-                                                  false,
-                                                  this.imagen,
-                                                  "",
-                                                  DateTime.now(),
-                                                  [0, 0],
-                                                  this.url_descarga_imagen,
-                                                  callback_borrar,
-                                                  this.radio_area_perdida);
-                                          actualizar_objeto_firestore(objeto_aux);
-                                          Navigator.of(context).pop();
-                                          objeto_aux.callback_borrar();
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.green,
-                                        ),
-                                        child: Column(
-                                          children: [
-                                            Icon(Icons.check),
-                                            Text("Hallado")
-                                          ],
-                                        ),
-                                      )
-                                  )
+                                ? Expanded(
+                                    child: ElevatedButton(
+                                    onPressed: () async {
+                                      Objeto_Registrado objeto_aux =
+                                          Objeto_Registrado(
+                                              this.id_objeto,
+                                              this.nombre,
+                                              this.propietario,
+                                              this.descripcion,
+                                              false,
+                                              this.imagen,
+                                              "",
+                                              DateTime.now(),
+                                              [0, 0],
+                                              this.url_descarga_imagen,
+                                              callback_borrar,
+                                              this.radio_area_perdida);
+                                      actualizar_objeto_firestore(objeto_aux);
+                                      Navigator.of(context).pop();
+                                      objeto_aux.callback_borrar();
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.green,
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        Icon(Icons.check),
+                                        Text("Hallado")
+                                      ],
+                                    ),
+                                  ))
                                 : Expanded(
                                     child: ElevatedButton(
                                       onPressed: () async {
@@ -587,7 +591,8 @@ class _Objeto_Registrado extends State<Objeto_Registrado> {
                                         });
                                       },
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: Color.fromRGBO(255, 206, 59, 1),
+                                        backgroundColor:
+                                            Color.fromRGBO(255, 206, 59, 1),
                                       ),
                                       child: Column(
                                         children: [
@@ -596,7 +601,7 @@ class _Objeto_Registrado extends State<Objeto_Registrado> {
                                         ],
                                       ),
                                     ),
-                                ),
+                                  ),
                             SizedBox(width: 5.5),
                             Expanded(
                               child: ElevatedButton(
@@ -713,7 +718,6 @@ class Listado_Objetos_Registrados extends StatelessWidget {
   final List<Objeto_Registrado> objetos;
 
   const Listado_Objetos_Registrados(this.objetos) : super();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -918,7 +922,8 @@ Future<void> actualizar_objeto_firestore(Objeto_Registrado objeto) async {
   });
 }
 
-Future<void> leer_objeto_concreto(String id_documento, context, Function callback_lectura_tarjeta_nfc) async {
+Future<void> leer_objeto_concreto(
+    String id_documento, context, Function callback_lectura_tarjeta_nfc) async {
   try {
     DocumentSnapshot documento = await FirebaseFirestore.instance
         .collection('objetos')
@@ -933,10 +938,10 @@ Future<void> leer_objeto_concreto(String id_documento, context, Function callbac
         if (value == 1) {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text('El objeto te pertenece')));
-        }else if (value ==3){
-         ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text('El usuario referenciado no existe')));
-        }else {
+        } else if (value == 3) {
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('El usuario referenciado no existe')));
+        } else {
           DocumentSnapshot documento_propietario = await FirebaseFirestore
               .instance
               .collection('users')
@@ -961,27 +966,25 @@ Future<void> leer_objeto_concreto(String id_documento, context, Function callbac
               return AlertDialog(
                 title: Text(
                   '¡Objeto encontrado!',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold),
+                  style: TextStyle(fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
                 //content: Image.asset('assets/tick.png'),
                 actions: <Widget>[
                   Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       TextButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue,
                         ),
                         child: Text('Ir al chat del propietario',
-                            style: TextStyle(
-                                color: Colors.white)),
+                            style: TextStyle(color: Colors.white)),
                         onPressed: () {
-                          Navigator.of(context).pop();    
+                          Navigator.of(context).pop();
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => ChatScreen(user: chatuser)));
+                              builder: (context) =>
+                                  ChatScreen(user: chatuser)));
                           callback_lectura_tarjeta_nfc(true, false);
                         },
                       ),
