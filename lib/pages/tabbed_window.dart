@@ -140,7 +140,6 @@ class _Tabbed_Window extends State<Tabbed_Window> {
               children: [
                 SizedBox(height: 30),
                 Container(
-                  height: 100,
                   //color: Colors.white, // Fondo blanco
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -162,7 +161,7 @@ class _Tabbed_Window extends State<Tabbed_Window> {
                   ),
                 ),
                 SizedBox(
-                  height: 32,
+                  height: 5,
                 ),
                 Expanded(
                   child: (lectura_objetos_registrados_usuario_acabada &&
@@ -206,16 +205,30 @@ class _Tabbed_Window extends State<Tabbed_Window> {
             ),
           ),
       () => Scaffold(
-            appBar: AppBar(
-              title: Text(
-                'Objetos Perdidos',
-                style: optionStyle,
-              ),
-              automaticallyImplyLeading: false,
-              centerTitle: true,
-            ),
             body: Column(
               children: [
+                SizedBox(height: 30),
+                Container(
+                  //color: Colors.white, // Fondo blanco
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Objetos Perdidos',
+                        style: TextStyle(
+                          color: Colors.black, // Texto negro
+                          fontSize: 30, // Ajusta el tamaño del texto
+                          fontWeight:
+                              FontWeight.bold, // Ajusta el peso del texto
+                        ),
+                      ),
+                      Container(
+                        height: 1,
+                        color: Colors.black26, // Línea divisoria
+                      ),
+                    ],
+                  ),
+                ),
                 SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -253,17 +266,31 @@ class _Tabbed_Window extends State<Tabbed_Window> {
             ),
           ),
       () => Scaffold(
-            appBar: AppBar(
-              title: Text(
-                'ESCÁNER DE ETIQUETAS',
-                style: optionStyle,
-              ),
-              automaticallyImplyLeading: false,
-              centerTitle: true,
-            ),
             body: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                SizedBox(height: 30),
+                Container(
+                  //color: Colors.white, // Fondo blanco
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Escáner de Etiquetas',
+                        style: TextStyle(
+                          color: Colors.black, // Texto negro
+                          fontSize: 30, // Ajusta el tamaño del texto
+                          fontWeight:
+                              FontWeight.bold, // Ajusta el peso del texto
+                        ),
+                      ),
+                      Container(
+                        height: 1,
+                        color: Colors.black26, // Línea divisoria
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10),
                 Text(
                   'Acerca el teléfono al dispositivo NFC ...',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
@@ -309,6 +336,7 @@ class _Tabbed_Window extends State<Tabbed_Window> {
         child: _widgetOptions[_selectedIndex](),
       ),
       bottomNavigationBar: CurvedNavigationBar(
+        backgroundColor: Colors.orange.shade500,
         index: _selectedIndex,
         height: 50.0,
         items: <Widget>[
