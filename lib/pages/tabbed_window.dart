@@ -1,9 +1,6 @@
 import 'dart:developer';
-
-//import 'package:app_interactivos/main.dart';
 import 'package:app_interactivos/pages/api/api.dart';
 import 'package:app_interactivos/pages/app_bar.dart';
-//import 'package:app_interactivos/pages/chat/chat_screen.dart';
 import 'package:app_interactivos/pages/chat_main.dart';
 import 'package:app_interactivos/pages/new_object_form.dart';
 import 'package:app_interactivos/pages/side_bar/side_menu.dart';
@@ -12,7 +9,6 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:app_interactivos/pages/nfc_methods.dart';
 import 'package:app_interactivos/pages/database_methods.dart';
-//import 'package:app_interactivos/pages/side_bar/side_menu.dart';
 
 class Tabbed_Window extends StatefulWidget {
   Tabbed_Window({Key? key}) : super(key: key);
@@ -153,6 +149,9 @@ class _Tabbed_Window extends State<Tabbed_Window> {
                               FontWeight.bold, // Ajusta el peso del texto
                         ),
                       ),
+                      SizedBox(
+                        height: 10,
+                      ),
                       Container(
                         height: 1,
                         color: Colors.black26, // Línea divisoria
@@ -161,7 +160,7 @@ class _Tabbed_Window extends State<Tabbed_Window> {
                   ),
                 ),
                 SizedBox(
-                  height: 5,
+                  height: 30,
                 ),
                 Expanded(
                   child: (lectura_objetos_registrados_usuario_acabada &&
@@ -221,6 +220,9 @@ class _Tabbed_Window extends State<Tabbed_Window> {
                           fontWeight:
                               FontWeight.bold, // Ajusta el peso del texto
                         ),
+                      ),
+                      SizedBox(
+                        height: 10,
                       ),
                       Container(
                         height: 1,
@@ -283,6 +285,9 @@ class _Tabbed_Window extends State<Tabbed_Window> {
                               FontWeight.bold, // Ajusta el peso del texto
                         ),
                       ),
+                      SizedBox(
+                        height: 10,
+                      ),
                       Container(
                         height: 1,
                         color: Colors.black26, // Línea divisoria
@@ -290,21 +295,21 @@ class _Tabbed_Window extends State<Tabbed_Window> {
                     ],
                   ),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 40),
                 Text(
                   'Acerca el teléfono al dispositivo NFC ...',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
                 ),
                 SizedBox(
-                  height: 30,
+                  height: 20,
                 ),
                 Image.asset('assets/gif_nfc.gif'),
                 SizedBox(
-                  height: 30,
+                  height: 20,
                 ),
                 Text(
                   '¡Podrás contactar con el propietario ',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
                 ),
                 Text(
                   'del objeto encontrado!',
@@ -316,9 +321,6 @@ class _Tabbed_Window extends State<Tabbed_Window> {
       () => ChatMainScreen(),
     ];
   }
-
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.w600);
 
   @override
   Widget build(BuildContext context) {

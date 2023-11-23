@@ -1,6 +1,4 @@
 import 'dart:developer';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:app_interactivos/pages/auth/register_page.dart';
@@ -8,7 +6,6 @@ import 'package:app_interactivos/pages/auth/forgot_password.dart';
 import 'package:app_interactivos/pages/tabbed_window.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:app_interactivos/pages/api/api.dart';
 import 'package:app_interactivos/pages/chat/helper/dialogs.dart';
 

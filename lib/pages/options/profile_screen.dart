@@ -5,17 +5,14 @@ import 'dart:io';
 
 import 'package:app_interactivos/pages/tabbed_window.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:app_interactivos/pages/api/api.dart';
 import 'package:app_interactivos/pages/chat/helper/dialogs.dart';
 import 'package:app_interactivos/main.dart';
 import 'package:app_interactivos/pages/chat/data/chat_user.dart';
-import 'package:app_interactivos/pages/auth/register_login.dart';
 
 //profile screen -- to show signed in user info
 class ProfileScreen extends StatefulWidget {

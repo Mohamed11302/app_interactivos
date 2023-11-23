@@ -10,7 +10,6 @@ import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:geolocator/geolocator.dart';
 
 final FirebaseFirestore db = FirebaseFirestore.instance;
 final FirebaseStorage storage = FirebaseStorage.instance;
@@ -144,59 +143,32 @@ class Objeto_Perdido extends StatelessWidget {
       },
       child: Card(
         child: Container(
-          //height: 100, // Ajusta la altura deseada
-
+          width: 200,
+          height: 225,
           child: Column(
-            children: [
-              Row(
-                children: [
-                  Container(
-                    width: 100,
-                    height: 100,
-                    child: Image(
-                      image: this.imagen.image,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  SizedBox(width: 8.0), // Espaciado entre la imagen y el texto
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          height: 20, // Altura fija para el nombre
-                          child: Text(
-                            (this.nombre.toString().length > 30)
-                                ? this.nombre.toString().substring(0, 32) +
-                                    '...'
-                                : this.nombre.toString(),
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                            textAlign: TextAlign.left,
-                          ),
-                        ),
-                        SizedBox(
-                            height:
-                                8.0), // Espaciado entre el nombre y la descripción
-                        Text(
-                          (this.descripcion.toString().length > 73)
-                              ? this.descripcion.toString().substring(0, 70) +
-                                  '...'
-                              : this.descripcion.toString(),
-                          style: TextStyle(color: Colors.black),
-                          textAlign: TextAlign.left,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+            children: <Widget>[
+              SizedBox(
+                height: 20,
               ),
-            ],
-          ),
+              Container(
+                width: 150, // Establece el ancho deseado para la imagen
+                height: 150, // Establece el alto deseado para la imagen
+                child: this.imagen, // Cambia esto por tu imagen
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Expanded(
+                child: Text(
+                  this.nombre,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ]
         ),
       ),
+      )
     );
   }
 }
@@ -217,23 +189,37 @@ class Listado_Objetos_Perdidos extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Container(
-          child: ListView.builder(
-            scrollDirection: Axis.vertical,
-            itemCount: objetos.length,
-            padding: EdgeInsets.all(0), // Establece el padding a 0
-            itemBuilder: (BuildContext context, index) {
-              final objeto = objetos[index];
+        child: RefreshIndicator(
+          onRefresh:
+              _handleRefresh, // Llama a la función de callback al deslizar hacia abajo
+          child: Container(
+            child: ListView.builder(
+              scrollDirection: Axis.vertical,
+              itemCount: (this.objetos.length / 2).ceil(),
+              itemBuilder: (BuildContext context, index) {
+                final firstIndex = index * 2;
+                final secondIndex = firstIndex + 1;
 
-              return Container(
-                width: double.infinity,
-                child: objeto,
-              );
-            },
-          ),
-        ),
+                return Row(
+                  children: [
+                    if (firstIndex < this.objetos.length)
+                      Container(
+                        width: MediaQuery.of(context).size.width / 2,
+                        child: this.objetos[firstIndex],
+                      ),
+                    if (secondIndex < this.objetos.length)
+                      Container(
+                        width: MediaQuery.of(context).size.width / 2,
+                        child: this.objetos[secondIndex],
+                      ),
+                  ],
+                );
+              },
+            ),
       ),
-    );
+     )
+    )
+  );
   }
 }
 
@@ -701,59 +687,28 @@ class _Objeto_Registrado extends State<Objeto_Registrado> {
       },
       child: Card(
         child: Container(
-          //height: 100, // Ajusta la altura deseada
-
+          width: 200,
+          height: 225,
           child: Column(
-            children: [
-              Row(
-                children: [
-                  Container(
-                    width: 100,
-                    height: 100,
-                    child: Image(
-                      image: this.imagen.image,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  SizedBox(width: 8.0), // Espaciado entre la imagen y el texto
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          height: 20, // Altura fija para el nombre
-                          child: Text(
-                            (this.nombre.toString().length > 30)
-                                ? this.nombre.toString().substring(0, 32) +
-                                    '...'
-                                : this.nombre.toString(),
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                            textAlign: TextAlign.left,
-                          ),
-                        ),
-                        SizedBox(
-                            height:
-                                8.0), // Espaciado entre el nombre y la descripción
-                        Text(
-                          (this.descripcion.toString().length > 73)
-                              ? this.descripcion.toString().substring(0, 70) +
-                                  '...'
-                              : this.descripcion.toString(),
-                          style: TextStyle(color: Colors.black),
-                          textAlign: TextAlign.left,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+            children: <Widget>[
+              SizedBox(height: 20),
+              Container(
+                width: 150, // Ancho deseado para la imagen
+                height: 150, // Alto deseado para la imagen
+                child: this.imagen, // Cambia esto por tu imagen
               ),
-            ],
-          ),
+              SizedBox(height: 20),
+              Expanded(
+                child: Text(
+                  this.nombre,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+              )
+            ]
         ),
       ),
+      )
     );
   }
 }
@@ -768,20 +723,31 @@ class Listado_Objetos_Registrados extends StatelessWidget {
       body: SafeArea(
         child: Container(
           child: ListView.builder(
-            scrollDirection: Axis.vertical,
-            itemCount: objetos.length,
-            padding: EdgeInsets.all(0), // Establece el padding a 0
+            scrollDirection: Axis.vertical, // Columna vertical
+            itemCount: (this.objetos.length / 2)
+                .ceil(), // Divide por 2 y redondea hacia arriba
             itemBuilder: (BuildContext context, index) {
-              final objeto = objetos[index];
+              final firstIndex = index * 2;
+              final secondIndex = firstIndex + 1;
 
-              return Container(
-                width: double.infinity,
-                child: objeto,
+              return Row(
+                children: [
+                  if (firstIndex < this.objetos.length)
+                    Container(
+                      width: MediaQuery.of(context).size.width / 2,
+                      child: this.objetos[firstIndex],
+                    ),
+                  if (secondIndex < this.objetos.length)
+                    Container(
+                      width: MediaQuery.of(context).size.width / 2,
+                      child: this.objetos[secondIndex],
+                    ),
+                ],
               );
             },
           ),
-        ),
       ),
+    )
     );
   }
 }

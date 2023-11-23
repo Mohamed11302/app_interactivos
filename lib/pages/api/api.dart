@@ -7,7 +7,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:app_interactivos/pages/chat/data/message.dart';
 
@@ -155,12 +154,12 @@ class APIs {
         .where('email', isEqualTo: email)
         .get();
 
-    log('data: ${data.docs}');
+    /*log('data: ${data.docs}');
     print("------------");
     print(data.docs.first.id);
     print(data.docs.isNotEmpty);
     print(user.email);
-    print("--------------");
+    print("--------------");*/
 
     if (data.docs.isNotEmpty && data.docs.first.id == user.email) {
       return 1;

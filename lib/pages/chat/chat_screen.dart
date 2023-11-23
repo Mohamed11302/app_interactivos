@@ -93,7 +93,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                 });
                           } else {
                             return const Center(
-                              child: Text('Say Hii! 👋',
+                              child: Text('¡Avisa al usuario de tu hallazgo!',
                                   style: TextStyle(fontSize: 20)),
                             );
                           }

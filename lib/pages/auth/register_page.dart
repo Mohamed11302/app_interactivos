@@ -11,9 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:app_interactivos/main.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -33,7 +31,7 @@ class _RegisterPageState extends State<RegisterPage> {
   bool isSigningUp = false;
   bool _obscureText_password1 = true;
   bool _obscureText_password2 = true;
-  bool _isImagePickerActive = false;
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(

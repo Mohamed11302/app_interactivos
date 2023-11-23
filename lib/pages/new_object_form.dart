@@ -73,7 +73,7 @@ class _Formulario_Objeto extends State<Formulario_Objeto> {
               SizedBox(height: 20,),
               if ((imagenSeleccionada) || imagen_previa)
                 Expanded(
-                  child: (imagen_previa&&!imagenSeleccionada) ? Image.network(this.url_imagen_objeto) : Image.file(File(datos_objeto.imagen_objeto!.path)),
+                  child: (imagen_previa&&!imagenSeleccionada) ? Image.network(this.url_imagen_objeto) : Image.file(File(datos_objeto.imagen_objeto.path)),
                 ),
               SizedBox(height: 20),
               Row(
@@ -143,6 +143,7 @@ class _Formulario_Objeto extends State<Formulario_Objeto> {
                   if (value!.isEmpty) {
                     return "El objeto nuevo debe tener un nombre";
                   }
+                  return null;
                 },
               ),
               SizedBox(height: 20),

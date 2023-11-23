@@ -5,7 +5,6 @@ import 'package:app_interactivos/pages/chat/helper/dialogs.dart';
 import 'package:app_interactivos/pages/options/about.dart';
 import 'package:app_interactivos/pages/tabbed_window.dart';
 import 'package:flutter/material.dart';
-import 'package:app_interactivos/pages/side_bar/drawer_item.dart';
 import 'package:app_interactivos/pages/api/api.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';

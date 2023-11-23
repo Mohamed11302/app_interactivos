@@ -1,18 +1,13 @@
 import 'dart:developer';
-
-import 'package:app_interactivos/pages/options/profile_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:app_interactivos/pages/api/api.dart';
 import 'package:app_interactivos/pages/chat/helper/dialogs.dart';
-import 'package:app_interactivos/main.dart';
 import 'package:app_interactivos/pages/chat/data/chat_user.dart';
 
 import 'package:app_interactivos/pages/chat/helper/chat_user_card.dart';
-
-import 'package:app_interactivos/pages/chat/helper/profile_dialog.dart';
 
 //home screen -- where all available contacts are shown
 class ChatMainScreen extends StatefulWidget {
@@ -137,14 +132,14 @@ class _ChatMainScreenState extends State<ChatMainScreen> {
           ),
 
           //floating button to add new user
-          floatingActionButton: Padding(
+          /*floatingActionButton: Padding(
             padding: const EdgeInsets.only(bottom: 10),
             child: FloatingActionButton(
                 onPressed: () {
                   _addChatUserDialog();
                 },
                 child: const Icon(Icons.add_comment_rounded)),
-          ),
+          ),*/
 
           //body
           body: StreamBuilder(
@@ -198,7 +193,7 @@ class _ChatMainScreenState extends State<ChatMainScreen> {
                                 });
                           } else {
                             return const Center(
-                              child: Text('No Connections Found!',
+                              child: Text('¡Aún no has iniciado conversaciones!',
                                   style: TextStyle(fontSize: 20)),
                             );
                           }
@@ -214,7 +209,7 @@ class _ChatMainScreenState extends State<ChatMainScreen> {
   }
 
   // for adding new chat user
-  void _addChatUserDialog() {
+  /*void _addChatUserDialog() {
     String email = '';
 
     showDialog(
@@ -287,5 +282,5 @@ class _ChatMainScreenState extends State<ChatMainScreen> {
                     ))
               ],
             ));
-  }
+  }*/
 }
