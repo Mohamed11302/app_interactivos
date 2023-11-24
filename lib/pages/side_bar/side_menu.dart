@@ -17,6 +17,8 @@ class NavBar extends StatelessWidget {
   static const String COMPARTIR = 'Compartir';
   static const String CERRARSESION = 'Cerrar Sesion';
 
+  static String opcion_actual = INICIO;
+
   NavBar({Key? key}) : super(key: key);
   String? _email = APIs.user.email!;
   String? _image_database = APIs.user.photoURL!;
@@ -68,6 +70,7 @@ class NavBar extends StatelessWidget {
                     title: Text(INICIO),
                     onTap: () => onItemPressed(context, index: INICIO),
                   ),
+                  Divider(),
                   ListTile(
                     leading: Icon(Icons.account_box_rounded),
                     title: Text(PERFIL),
@@ -79,11 +82,11 @@ class NavBar extends StatelessWidget {
                     title: Text(ACERCADE),
                     onTap: () => onItemPressed(context, index: ACERCADE),
                   ),
-                  ListTile(
+                  /*ListTile(
                     leading: Icon(Icons.share),
                     title: Text(COMPARTIR),
                     onTap: () => onItemPressed(context, index: COMPARTIR),
-                  ),
+                  ),*/
                   Divider(),
                   ListTile(
                     leading: Icon(Icons.logout),
@@ -137,6 +140,7 @@ class NavBar extends StatelessWidget {
                     title: Text(INICIO),
                     onTap: () => onItemPressed(context, index: INICIO),
                   ),
+                  Divider(),
                   ListTile(
                     leading: Icon(Icons.account_box_rounded),
                     title: Text(PERFIL),
@@ -148,11 +152,11 @@ class NavBar extends StatelessWidget {
                     title: Text(ACERCADE),
                     onTap: () => onItemPressed(context, index: ACERCADE),
                   ),
-                  ListTile(
+                  /*ListTile(
                     leading: Icon(Icons.share),
                     title: Text(COMPARTIR),
                     onTap: () => onItemPressed(context, index: COMPARTIR),
-                  ),
+                  ),*/
                   Divider(),
                   ListTile(
                     leading: Icon(Icons.logout),
@@ -200,19 +204,38 @@ class NavBar extends StatelessWidget {
 
     switch (index) {
       case INICIO:
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Tabbed_Window()));
+        if (opcion_actual != INICIO){
+          
+          opcion_actual = INICIO;
+          Navigator.of(context).pop();
+          /*Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Tabbed_Window()));*/
+        }
         break;
       case PERFIL:
-        ChatUser chatuser = await CrearChatUserPersonalizado();
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ProfileScreen(user: chatuser)));
+        if (opcion_actual != PERFIL){
+          ChatUser chatuser = await CrearChatUserPersonalizado();
+
+          if (opcion_actual != INICIO)
+            Navigator.of(context).pop();
+            
+          opcion_actual = PERFIL;
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ProfileScreen(user: chatuser)));
+        }
         break;
       case ACERCADE:
-        Navigator.push(
+        if (opcion_actual != ACERCADE){
+
+          if (opcion_actual != INICIO)
+            Navigator.of(context).pop();
+            
+          opcion_actual = ACERCADE;
+          Navigator.push(
             context, MaterialPageRoute(builder: (context) => AboutPage()));
+        }
         break;
       case CERRARSESION:
         _signOut(context);

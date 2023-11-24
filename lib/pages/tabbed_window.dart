@@ -134,7 +134,7 @@ class _Tabbed_Window extends State<Tabbed_Window> {
       () => Scaffold(
             body: Column(
               children: [
-                SizedBox(height: 30),
+                SizedBox(height: 20),
                 Container(
                   //color: Colors.white, // Fondo blanco
                   child: Column(
@@ -206,7 +206,7 @@ class _Tabbed_Window extends State<Tabbed_Window> {
       () => Scaffold(
             body: Column(
               children: [
-                SizedBox(height: 30),
+                SizedBox(height: 20),
                 Container(
                   //color: Colors.white, // Fondo blanco
                   child: Column(
@@ -270,7 +270,7 @@ class _Tabbed_Window extends State<Tabbed_Window> {
       () => Scaffold(
             body: Column(
               children: [
-                SizedBox(height: 30),
+                SizedBox(height: 20),
                 Container(
                   //color: Colors.white, // Fondo blanco
                   child: Column(

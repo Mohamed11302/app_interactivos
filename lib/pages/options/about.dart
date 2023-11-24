@@ -23,13 +23,22 @@ class _AboutPageState extends State<AboutPage> {
             height: 20,
           ),
           Text(
-            'Acerca De',
+            'Acerca de',
             style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
+              color: Colors.black, // Texto negro
+              fontSize: 30, // Ajusta el tamaño del texto
+              fontWeight:
+                  FontWeight.bold, // Ajusta el peso del texto
             ),
           ),
-          SizedBox(height: 20),
+          SizedBox(
+            height: 10,
+          ),
+          Container(
+            height: 1,
+            color: Colors.black26, // Línea divisoria
+          ),
+          SizedBox(height: 30),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Text(

@@ -3,6 +3,8 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:app_interactivos/pages/app_bar.dart';
+import 'package:app_interactivos/pages/side_bar/side_menu.dart';
 import 'package:app_interactivos/pages/tabbed_window.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -35,19 +37,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
           //app bar
-          appBar: AppBar(
-            title: Text('Perfil'),
-            // Personaliza la flecha hacia atrás
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () {
-                // Navega de vuelta a la pantalla de inicio
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (_) => Tabbed_Window()));
-              },
-            ),
-          ),
-
+          backgroundColor: Colors.white,
+          appBar: MyAppBarDrawer(),
+          drawer: NavBar(),
           //body
           body: Form(
             key: _formKey,
@@ -58,7 +50,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     // for adding some space
                     SizedBox(width: mq.width, height: mq.height * .03),
-
+                    Text(
+                      'Perfil',
+                      style: TextStyle(
+                        color: Colors.black, // Texto negro
+                        fontSize: 30, // Ajusta el tamaño del texto
+                        fontWeight:
+                            FontWeight.bold, // Ajusta el peso del texto
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      height: 1,
+                      color: Colors.black26, // Línea divisoria
+                    ),
+                    SizedBox(
+                      height: 50,
+                    ),
                     //user profile picture
                     Stack(
                       children: [
@@ -109,7 +119,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
 
                     // for adding some space
-                    SizedBox(height: mq.height * .03),
+                    SizedBox(height: mq.height * .01),
 
                     // user email label
                     Text(widget.user.email,
