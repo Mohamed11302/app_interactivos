@@ -1,3 +1,4 @@
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +36,7 @@ class _ChatUserCardState extends State<ChatUserCard> {
           //for navigating to chat screen
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => ChatScreen(user: widget.user)),
+            MaterialPageRoute(builder: (_) => ChatScreen(user: widget.user,)), //objeto : Objeto_Perdido("","","","",true,Image.asset('assets/gif_nfc.gif'), "",DateTime.now(),[0,0],0))),
           );
         },
         child: StreamBuilder(

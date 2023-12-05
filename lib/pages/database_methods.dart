@@ -933,7 +933,7 @@ Future<void> leer_objeto_concreto(
       Map<String, dynamic> datos = documento.data() as Map<String, dynamic>;
 
       /// ABRIR CHAT
-      await APIs.addChatUser(datos['"propietario"']).then((value) async {
+      await APIs.addChatUser(datos['"propietario"'], id_documento).then((value) async {
         if (value == 1) {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text('El objeto te pertenece')));
@@ -946,6 +946,7 @@ Future<void> leer_objeto_concreto(
               .collection('users')
               .doc(datos['"propietario"'])
               .get();
+          
           Map<String, dynamic> datos_propietario =
               documento_propietario.data() as Map<String, dynamic>;
           ChatUser chatuser = ChatUser(

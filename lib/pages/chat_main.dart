@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:app_interactivos/pages/api/api.dart';
-import 'package:app_interactivos/pages/chat/helper/dialogs.dart';
 import 'package:app_interactivos/pages/chat/data/chat_user.dart';
 
 import 'package:app_interactivos/pages/chat/helper/chat_user_card.dart';

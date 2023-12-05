@@ -1,7 +1,10 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:app_interactivos/pages/chat/conversation_objetc_list.dart';
+import 'package:app_interactivos/pages/database_methods.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +17,7 @@ import 'package:app_interactivos/pages/chat/data/chat_user.dart';
 import 'package:app_interactivos/pages/chat/data/message.dart';
 import 'package:app_interactivos/pages/chat/helper/message_card.dart';
 import 'view_profile_screen.dart';
+
 
 class ChatScreen extends StatefulWidget {
   final ChatUser user;
@@ -34,6 +38,109 @@ class _ChatScreenState extends State<ChatScreen> {
   //showEmoji -- for storing value of showing or hiding emoji
   //isUploading -- for checking if image is uploading or not?
   bool _showEmoji = false, _isUploading = false;
+  
+  static FirebaseFirestore firestore = FirebaseFirestore.instance;
+  List<Objeto_Perdido> listado_objetos_conver = [];
+  bool lectura_objetos_perdidos_acabada = true;
+  
+  _ChatScreenState();
+
+  void consigue_objetos_conver() async{
+
+    List<String> conjunto_ids_objetos_conver = [];
+
+    var snapshot = await firestore
+        .collection('users')
+        .doc(APIs.auth.currentUser!.email)
+        .collection('my_chats')
+        .doc(widget.user.email)
+        .collection("conversation_objects")
+        .get();
+
+    // Verificar si hay documentos en la colección
+    if (snapshot.docs.isNotEmpty) {
+      // Iterar sobre los documentos y obtener sus ID
+      for (var document in snapshot.docs) {
+        var documentId = document.id;
+        conjunto_ids_objetos_conver.add(documentId);
+      }
+      consigueObjetos(conjunto_ids_objetos_conver);
+    } else {
+      print('No hay documentos en la colección "my_users"');
+    }
+
+  }
+
+  void consigueObjetos(List<String> ids_objetos) async {
+    setState(() {
+      lectura_objetos_perdidos_acabada = false;
+    });
+
+    listado_objetos_conver = await readObjetosConver(ids_objetos);
+
+    setState(() {
+      lectura_objetos_perdidos_acabada = true;
+    });
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) {
+          return Listado_Objetos_Conversacion(this.listado_objetos_conver,);
+        },
+      ),
+    ); 
+  }
+
+  Future<List<Objeto_Perdido>> readObjetosConver(List<String> ids_objetos) async {
+    List<Objeto_Perdido> objetos_future = [];
+
+    CollectionReference collectionReferenceObjects = db.collection('objetos');
+    QuerySnapshot queryObjetos = await collectionReferenceObjects.get();
+
+    queryObjetos.docs.forEach((documento) {
+      Map<String, dynamic> data = documento.data() as Map<String, dynamic>;
+
+      ids_objetos.forEach((String id_objeto) {
+        
+        if (id_objeto == documento.id){
+          bool perdido = data['"perdido"'];
+          String provincia_perdida = data['"provincia_perdida"'];
+          String id_objeto = documento.id;
+          String descripcion = data['"descripcion"'];
+          String propietario = data['"propietario"'];
+          String nombre = data['"nombre"'];
+          String imagen = data['"imagen"'];
+          DateTime fecha_perdida = DateTime.parse(data['"fecha_perdida"']);
+          List<String> coordenadas = data['"coordenadas_perdida"'].split(",");
+          List<double> coordenadas_perdida = [
+            double.parse(coordenadas[0]),
+            double.parse(coordenadas[1])
+          ];
+          double radio_area_perdida = double.parse(data['"radio_area_perdida"']);
+          objetos_future.add(
+            Objeto_Perdido(
+              id_objeto,
+              nombre,
+              propietario,
+              descripcion,
+              perdido,
+              Image.network(imagen),
+              provincia_perdida,
+              fecha_perdida,
+              coordenadas_perdida,
+              radio_area_perdida
+            )
+          );
+        }
+
+      });
+      
+    });
+
+    objetos_future.sort((a, b) => b.fecha_perdida.compareTo(a.fecha_perdida));
+
+    return objetos_future;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +170,25 @@ class _ChatScreenState extends State<ChatScreen> {
             //body
             body: Column(
               children: [
+                SizedBox(height: 10),
+                this.lectura_objetos_perdidos_acabada ? 
+                  ElevatedButton(
+                              onPressed: () {
+                               consigue_objetos_conver();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue, // Color del botón
+                              ),
+                              child: Text('Lista de objetos que hallaste del usuario'),
+                            )
+                    :
+                    Center(child: CircularProgressIndicator()),
+                SizedBox(height: 10),
+                Container(
+                  height: 1,
+                  color: Colors.black26,
+                ),
+                SizedBox(height: 10),
                 Expanded(
                   child: StreamBuilder(
                     stream: APIs.getAllMessages(widget.user),

@@ -108,7 +108,7 @@ class APIs {
     await firestore
         .collection('users')
         .doc(chatUser.email)
-        .collection('my_users')
+        .collection('my_chats')
         .doc(user.email)
         .set({}).then((value) => sendMessage(chatUser, msg, type));
   }
@@ -148,7 +148,7 @@ class APIs {
         .snapshots();
   }
 
-  static Future<int> addChatUser(String email) async {
+  static Future<int> addChatUser(String email, String id_objeto) async {
     final data = await firestore
         .collection('users')
         .where('email', isEqualTo: email)
@@ -168,13 +168,20 @@ class APIs {
 
       log('user exists: ${data.docs.first.data()}');
 
-      firestore
-          .collection('users')
-          .doc(user.email)
-          .collection('my_users')
-          .doc(data.docs.first.id)
-          .set({});
-
+      try {
+        await firestore
+            .collection('users')
+            .doc(user.email)
+            .collection('my_chats')
+            .doc(data.docs.first.id)
+            .collection("conversation_objects")
+            .doc(id_objeto)
+            .set({}, SetOptions(merge: true));
+        print('Documento añadido exitosamente o ya existe');
+      } catch (e) {
+        print('Error al añadir el documento: $e');
+      }
+      
       return 2;
     } else {
       //user doesn't exists
@@ -230,7 +237,7 @@ class APIs {
     return firestore
         .collection('users')
         .doc(user.email)
-        .collection('my_users')
+        .collection('my_chats')
         .snapshots();
   }
 

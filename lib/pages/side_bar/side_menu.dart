@@ -3,7 +3,6 @@ import 'package:app_interactivos/pages/auth/register_login.dart';
 import 'package:app_interactivos/pages/chat/data/chat_user.dart';
 import 'package:app_interactivos/pages/chat/helper/dialogs.dart';
 import 'package:app_interactivos/pages/options/about.dart';
-import 'package:app_interactivos/pages/tabbed_window.dart';
 import 'package:flutter/material.dart';
 import 'package:app_interactivos/pages/api/api.dart';
 import 'package:firebase_auth/firebase_auth.dart';

@@ -5,7 +5,6 @@ import 'dart:io';
 
 import 'package:app_interactivos/pages/app_bar.dart';
 import 'package:app_interactivos/pages/side_bar/side_menu.dart';
-import 'package:app_interactivos/pages/tabbed_window.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -112,7 +111,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             },
                             shape: const CircleBorder(),
                             color: Colors.white,
-                            child: const Icon(Icons.edit, color: Colors.blue),
+                            child: const Icon(Icons.edit, color: Colors.orange),
                           ),
                         )
                       ],
@@ -138,7 +137,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           : 'Required Field',
                       decoration: InputDecoration(
                           prefixIcon:
-                              const Icon(Icons.person, color: Colors.blue),
+                              const Icon(Icons.person, color: Colors.orange),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12)),
                           hintText: 'eg. User123123',
@@ -157,7 +156,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           : 'Required Field',
                       decoration: InputDecoration(
                           prefixIcon: const Icon(Icons.info_outline,
-                              color: Colors.blue),
+                              color: Colors.orange),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12)),
                           hintText: 'eg. Feeling Happy',
@@ -170,8 +169,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     // update profile button
                     ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
-                          shape: const StadiumBorder(),
-                          minimumSize: Size(mq.width * .5, mq.height * .06)),
+                          shape: const StadiumBorder(), backgroundColor: Colors.orange[700],
+                          minimumSize: Size(mq.width * .5, mq.height * .06), // Color primario del botón
+                          ),
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState!.save();
