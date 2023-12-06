@@ -36,7 +36,7 @@ class _ChatUserCardState extends State<ChatUserCard> {
           //for navigating to chat screen
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => ChatScreen(user: widget.user,)), //objeto : Objeto_Perdido("","","","",true,Image.asset('assets/gif_nfc.gif'), "",DateTime.now(),[0,0],0))),
+            MaterialPageRoute(builder: (_) => ChatScreen(user: widget.user,)), 
           );
         },
         child: StreamBuilder(

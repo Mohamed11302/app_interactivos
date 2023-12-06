@@ -173,14 +173,22 @@ class _ChatScreenState extends State<ChatScreen> {
                 SizedBox(height: 10),
                 this.lectura_objetos_perdidos_acabada ? 
                   ElevatedButton(
-                              onPressed: () {
-                               consigue_objetos_conver();
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue, // Color del botón
-                              ),
-                              child: Text('Lista de objetos que hallaste del usuario'),
-                            )
+                    onPressed: () {
+                      consigue_objetos_conver();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue, // Color del botón
+                      maximumSize: Size(315, 40), // Establece el tamaño mínimo del botón
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Lista de objetos que hallaste del usuario'),
+                        SizedBox(width: 5),
+                        Icon(Icons.warning),
+                      ],
+                    ),
+                  )
                     :
                     Center(child: CircularProgressIndicator()),
                 SizedBox(height: 10),
