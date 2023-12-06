@@ -538,6 +538,7 @@ class _Objeto_Registrado extends State<Objeto_Registrado> {
                                       actualizar_objeto_firestore(objeto_aux);
                                       Navigator.of(context).pop();
                                       objeto_aux.callback_borrar();
+                                      borrar_objeto_conversaciones(this.id_objeto);
                                     },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.green,
@@ -903,6 +904,26 @@ void borrar_objeto_firestore(String id_objeto) {
   docRef.delete().then((_) {}).catchError((error) {
     print('Error al eliminar el documento: $error');
   });
+  borrar_objeto_conversaciones(id_objeto);
+}
+
+void borrar_objeto_conversaciones(String id_objeto) async {
+  var snapshot_objetos_conversaciones =  await FirebaseFirestore.instance
+            .collection('objeto_conversaciones')
+            .get();
+
+  //Cojo los datos referidos a cada conversación registrada 
+  for (var documento_conversacion in snapshot_objetos_conversaciones.docs) {
+
+    //Para cada conversación borro el objeto eliminado (da igual que no esté contenido en la lista, no genera error)
+    await FirebaseFirestore.instance
+            .collection('objeto_conversaciones')
+            .doc(documento_conversacion.id)
+            .collection('lista_objetos')
+            .doc(id_objeto)
+            .delete();
+  } 
+
 }
 
 Future<void> actualizar_objeto_firestore(Objeto_Registrado objeto) async {
@@ -928,8 +949,13 @@ Future<void> leer_objeto_concreto(
         .collection('objetos')
         .doc(id_documento)
         .get();
-
-    if (documento.exists) {
+    if (!documento.exists){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('El objeto ya no se ha encuentra registrado')));
+    }else if (!documento['"perdido"']){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('El objeto no está marcado como perdido')));
+    }else {
       Map<String, dynamic> datos = documento.data() as Map<String, dynamic>;
 
       /// ABRIR CHAT
@@ -997,11 +1023,7 @@ Future<void> leer_objeto_concreto(
         }
       });
 
-      /// ABRIR CHAT
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('El objeto ya no se ha encuentra registrado')));
-    }
+    } 
   } catch (e) {
     print("Error al leer el objeto desde la base de datos: $e");
   }

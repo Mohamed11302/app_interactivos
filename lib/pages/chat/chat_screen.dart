@@ -49,25 +49,28 @@ class _ChatScreenState extends State<ChatScreen> {
 
     List<String> conjunto_ids_objetos_conver = [];
 
-    var snapshot = await firestore
+    //Cojo el id del documento que contiene los objetos de la conversacion entre los dos usuarios
+    var snapshot_chats = await firestore
         .collection('users')
         .doc(APIs.auth.currentUser!.email)
         .collection('my_chats')
         .doc(widget.user.email)
-        .collection("conversation_objects")
         .get();
+       
+    // Cojo los ids de objetos dentro de la lista de los objetos de la conversación de los dos usuarios
 
-    // Verificar si hay documentos en la colección
-    if (snapshot.docs.isNotEmpty) {
-      // Iterar sobre los documentos y obtener sus ID
-      for (var document in snapshot.docs) {
-        var documentId = document.id;
-        conjunto_ids_objetos_conver.add(documentId);
-      }
-      consigueObjetos(conjunto_ids_objetos_conver);
-    } else {
-      print('No hay documentos en la colección "my_users"');
-    }
+      var snapshot_2 = await firestore
+          .collection('objeto_conversaciones')
+          .doc(snapshot_chats["objetos_conver"])
+          .collection('lista_objetos')
+          .get();
+
+      for (var document_2 in snapshot_2.docs) {
+        conjunto_ids_objetos_conver.add(document_2.id);
+      }  
+    
+    consigueObjetos(conjunto_ids_objetos_conver);
+  
 
   }
 
@@ -183,9 +186,9 @@ class _ChatScreenState extends State<ChatScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('Lista de objetos que hallaste del usuario'),
+                        Icon(Icons.question_mark),
                         SizedBox(width: 5),
-                        Icon(Icons.warning),
+                        Text('Objetos tratados en la conversación'),
                       ],
                     ),
                   )

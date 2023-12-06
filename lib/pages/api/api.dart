@@ -169,15 +169,48 @@ class APIs {
       log('user exists: ${data.docs.first.data()}');
 
       try {
-        await firestore
+        String id_doc_objetos_conver = "";
+        try{
+          var snapshot_chats = await firestore
             .collection('users')
             .doc(user.email)
             .collection('my_chats')
             .doc(data.docs.first.id)
-            .collection("conversation_objects")
+            .get();
+          
+          print("SÍ EXISTIA LA CONVER ENTRE ESTOS DOS EMAILS");
+          id_doc_objetos_conver = snapshot_chats["objetos_conver"];
+
+        }catch(e2){
+          print("NO EXISTIA LA CONVER ENTRE ESTOS DOS EMAILS");
+
+          DocumentReference documento_objetos_conver = await firestore.collection('objeto_conversaciones').add({});
+
+        //Registro la conversación en ambos usuarios
+        firestore
+          .collection('users')
+          .doc(user.email)
+          .collection('my_chats')
+          .doc(data.docs.first.id)
+          .set({'objetos_conver' : documento_objetos_conver.id}, SetOptions(merge: true));
+
+        firestore
+          .collection('users')
+          .doc(data.docs.first.id)
+          .collection('my_chats')
+          .doc(user.email)
+          .set({'objetos_conver' : documento_objetos_conver.id}, SetOptions(merge: true));
+
+          id_doc_objetos_conver = documento_objetos_conver.id;
+        }
+        
+        await firestore
+            .collection('objeto_conversaciones')
+            .doc(id_doc_objetos_conver)
+            .collection('lista_objetos')
             .doc(id_objeto)
             .set({}, SetOptions(merge: true));
-        print('Documento añadido exitosamente o ya existe');
+
       } catch (e) {
         print('Error al añadir el documento: $e');
       }

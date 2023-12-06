@@ -56,7 +56,8 @@ class Listado_Objetos_Conversacion extends StatelessWidget {
                   height: 30,
                 ),
           Expanded(
-            child: SafeArea(
+            child: 
+            this.objetos.length > 0 ? SafeArea(
                 child: Container(
                   child: ListView.builder(
                     scrollDirection: Axis.vertical,
@@ -66,21 +67,33 @@ class Listado_Objetos_Conversacion extends StatelessWidget {
                 final secondIndex = firstIndex + 1;
 
                 return Row(
-                  children: [
-                    if (firstIndex < this.objetos.length)
-                      Container(
-                        width: MediaQuery.of(context).size.width / 2,
-                        child: this.objetos[firstIndex],
-                      ),
-                    if (secondIndex < this.objetos.length)
-                      Container(
-                        width: MediaQuery.of(context).size.width / 2,
-                        child: this.objetos[secondIndex],
-                      ),
-                  ],
-                );
+                children: [
+                  if (firstIndex < this.objetos.length)
+                    Container(
+                      width: MediaQuery.of(context).size.width / 2,
+                      child: this.objetos[firstIndex],
+                    ),
+                  if (secondIndex < this.objetos.length)
+                    Container(
+                      width: MediaQuery.of(context).size.width / 2,
+                      child: this.objetos[secondIndex],
+                    ),
+                ],
+              );
               },
             ),
+                ),
+              )
+              :
+              const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [ 
+                    Text('¡Todos los objetos de los que hablasteis',
+                      style: TextStyle(fontSize: 20)),
+                    Text('fueron eliminados o recuperados!',
+                      style: TextStyle(fontSize: 20)),
+                  ]
                 ),
               ),
             ),
