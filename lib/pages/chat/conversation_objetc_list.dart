@@ -23,7 +23,7 @@ class Listado_Objetos_Conversacion extends StatelessWidget {
           ),
         ),
         title: Text(
-          'FindAll',
+          'Objetos perdidos',
           style: TextStyle(
             color: Colors.white,
             fontSize: 24,
@@ -37,21 +37,6 @@ class Listado_Objetos_Conversacion extends StatelessWidget {
       body: Column(
         children: [
           SizedBox(height: 20),
-          Text(
-            'Objetos de la Conversación',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Container(
-            height: 1,
-            color: Colors.black26,
-          ),
           SizedBox(
                   height: 30,
                 ),

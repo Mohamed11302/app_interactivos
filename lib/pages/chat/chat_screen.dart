@@ -18,7 +18,6 @@ import 'package:app_interactivos/pages/chat/data/message.dart';
 import 'package:app_interactivos/pages/chat/helper/message_card.dart';
 import 'view_profile_screen.dart';
 
-
 class ChatScreen extends StatefulWidget {
   final ChatUser user;
 
@@ -38,15 +37,14 @@ class _ChatScreenState extends State<ChatScreen> {
   //showEmoji -- for storing value of showing or hiding emoji
   //isUploading -- for checking if image is uploading or not?
   bool _showEmoji = false, _isUploading = false;
-  
+
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
   List<Objeto_Perdido> listado_objetos_conver = [];
   bool lectura_objetos_perdidos_acabada = true;
-  
+
   _ChatScreenState();
 
-  void consigue_objetos_conver() async{
-
+  void consigue_objetos_conver() async {
     List<String> conjunto_ids_objetos_conver = [];
 
     //Cojo el id del documento que contiene los objetos de la conversacion entre los dos usuarios
@@ -56,22 +54,20 @@ class _ChatScreenState extends State<ChatScreen> {
         .collection('my_chats')
         .doc(widget.user.email)
         .get();
-       
+
     // Cojo los ids de objetos dentro de la lista de los objetos de la conversación de los dos usuarios
 
-      var snapshot_2 = await firestore
-          .collection('objeto_conversaciones')
-          .doc(snapshot_chats["objetos_conver"])
-          .collection('lista_objetos')
-          .get();
+    var snapshot_2 = await firestore
+        .collection('objeto_conversaciones')
+        .doc(snapshot_chats["objetos_conver"])
+        .collection('lista_objetos')
+        .get();
 
-      for (var document_2 in snapshot_2.docs) {
-        conjunto_ids_objetos_conver.add(document_2.id);
-      }  
-    
+    for (var document_2 in snapshot_2.docs) {
+      conjunto_ids_objetos_conver.add(document_2.id);
+    }
+
     consigueObjetos(conjunto_ids_objetos_conver);
-  
-
   }
 
   void consigueObjetos(List<String> ids_objetos) async {
@@ -88,13 +84,16 @@ class _ChatScreenState extends State<ChatScreen> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) {
-          return Listado_Objetos_Conversacion(this.listado_objetos_conver,);
+          return Listado_Objetos_Conversacion(
+            this.listado_objetos_conver,
+          );
         },
       ),
-    ); 
+    );
   }
 
-  Future<List<Objeto_Perdido>> readObjetosConver(List<String> ids_objetos) async {
+  Future<List<Objeto_Perdido>> readObjetosConver(
+      List<String> ids_objetos) async {
     List<Objeto_Perdido> objetos_future = [];
 
     CollectionReference collectionReferenceObjects = db.collection('objetos');
@@ -104,8 +103,7 @@ class _ChatScreenState extends State<ChatScreen> {
       Map<String, dynamic> data = documento.data() as Map<String, dynamic>;
 
       ids_objetos.forEach((String id_objeto) {
-        
-        if (id_objeto == documento.id){
+        if (id_objeto == documento.id) {
           bool perdido = data['"perdido"'];
           String provincia_perdida = data['"provincia_perdida"'];
           String id_objeto = documento.id;
@@ -119,9 +117,9 @@ class _ChatScreenState extends State<ChatScreen> {
             double.parse(coordenadas[0]),
             double.parse(coordenadas[1])
           ];
-          double radio_area_perdida = double.parse(data['"radio_area_perdida"']);
-          objetos_future.add(
-            Objeto_Perdido(
+          double radio_area_perdida =
+              double.parse(data['"radio_area_perdida"']);
+          objetos_future.add(Objeto_Perdido(
               id_objeto,
               nombre,
               propietario,
@@ -131,13 +129,9 @@ class _ChatScreenState extends State<ChatScreen> {
               provincia_perdida,
               fecha_perdida,
               coordenadas_perdida,
-              radio_area_perdida
-            )
-          );
+              radio_area_perdida));
         }
-
       });
-      
     });
 
     objetos_future.sort((a, b) => b.fecha_perdida.compareTo(a.fecha_perdida));
@@ -174,31 +168,34 @@ class _ChatScreenState extends State<ChatScreen> {
             body: Column(
               children: [
                 SizedBox(height: 10),
-                this.lectura_objetos_perdidos_acabada ? 
-                  ElevatedButton(
-                    onPressed: () {
-                      consigue_objetos_conver();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue, // Color del botón
-                      maximumSize: Size(315, 40), // Establece el tamaño mínimo del botón
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.question_mark),
-                        SizedBox(width: 5),
-                        Text('Objetos tratados en la conversación'),
-                      ],
-                    ),
-                  )
-                    :
-                    Center(child: CircularProgressIndicator()),
+                this.lectura_objetos_perdidos_acabada
+                    ? ElevatedButton(
+                        onPressed: () {
+                          consigue_objetos_conver();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.white, // Color de fondo blanco
+                          onPrimary: Colors.black, // Color del texto negro
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                                20.0), // Bordes redondeados
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                        ),
+                        child: Text(
+                          'Objetos perdidos',
+                          style: TextStyle(
+                              fontSize:
+                                  18), // Ajusta el tamaño del texto según sea necesario
+                        ),
+                      )
+                    : Center(child: CircularProgressIndicator()),
                 SizedBox(height: 10),
-                Container(
+                /*Container(
                   height: 1,
                   color: Colors.black26,
-                ),
+                ),*/
                 SizedBox(height: 10),
                 Expanded(
                   child: StreamBuilder(
@@ -273,78 +270,101 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   // app bar widget
+  // app bar widget
   Widget _appBar() {
     return InkWell(
-        onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (_) => ViewProfileScreen(user: widget.user)));
-        },
-        child: StreamBuilder(
-            stream: APIs.getUserInfo(widget.user),
-            builder: (context, snapshot) {
-              final data = snapshot.data?.docs;
-              final list =
-                  data?.map((e) => ChatUser.fromJson(e.data())).toList() ?? [];
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ViewProfileScreen(user: widget.user),
+          ),
+        );
+      },
+      child: StreamBuilder(
+        stream: APIs.getUserInfo(widget.user),
+        builder: (context, snapshot) {
+          final data = snapshot.data?.docs;
+          final list =
+              data?.map((e) => ChatUser.fromJson(e.data())).toList() ?? [];
 
-              return Row(
-                children: [
-                  //back button
-                  IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon:
-                          const Icon(Icons.arrow_back, color: Colors.black54)),
+          return Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Colors.orange.shade600, Colors.orange.shade900],
+              ),
+            ),
+            child: Row(
+              children: [
+                //back button
+                IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: const Icon(Icons.arrow_back, color: Colors.black54),
+                ),
 
-                  //user profile picture
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(mq.height * .03),
-                    child: CachedNetworkImage(
-                      width: mq.height * .05,
-                      height: mq.height * .05,
-                      imageUrl:
-                          list.isNotEmpty ? list[0].image : widget.user.image,
-                      errorWidget: (context, url, error) => const CircleAvatar(
-                          child: Icon(CupertinoIcons.person)),
-                    ),
+                //user profile picture
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(mq.height * 0.03),
+                  child: CachedNetworkImage(
+                    width: mq.height * 0.05,
+                    height: mq.height * 0.05,
+                    imageUrl:
+                        list.isNotEmpty ? list[0].image : widget.user.image,
+                    errorWidget: (context, url, error) =>
+                        const CircleAvatar(child: Icon(CupertinoIcons.person)),
                   ),
+                ),
 
-                  //for adding some space
-                  const SizedBox(width: 10),
+                //for adding some space
+                const SizedBox(width: 10),
 
-                  //user name & last seen time
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      //user name
-                      Text(list.isNotEmpty ? list[0].name : widget.user.name,
-                          style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.black87,
-                              fontWeight: FontWeight.w500)),
+                //user name & last seen time
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    //user name
+                    Text(
+                      list.isNotEmpty ? list[0].name : widget.user.name,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.black87,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
 
-                      //for adding some space
-                      const SizedBox(height: 2),
+                    //for adding some space
+                    const SizedBox(height: 2),
 
-                      //last seen time of user
-                      Text(
-                          list.isNotEmpty
-                              ? list[0].isOnline
-                                  ? 'Online'
-                                  : MyDateUtil.getLastActiveTime(
-                                      context: context,
-                                      lastActive: list[0].lastActive)
+                    //last seen time of user
+                    Text(
+                      list.isNotEmpty
+                          ? list[0].isOnline
+                              ? 'Online'
                               : MyDateUtil.getLastActiveTime(
                                   context: context,
-                                  lastActive: widget.user.lastActive),
-                          style: const TextStyle(
-                              fontSize: 13, color: Colors.black54)),
-                    ],
-                  )
-                ],
-              );
-            }));
+                                  lastActive: list[0].lastActive,
+                                )
+                          : MyDateUtil.getLastActiveTime(
+                              context: context,
+                              lastActive: widget.user.lastActive,
+                            ),
+                      style: const TextStyle(
+                        fontSize: 13,
+                        //color: Colors.black54,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          );
+        },
+      ),
+    );
   }
 
   // bottom chat input field

@@ -25,7 +25,28 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
           //app bar
-          appBar: AppBar(title: Text(widget.user.name)),
+          appBar: AppBar(
+            elevation: 0,
+            flexibleSpace: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [Colors.orange.shade400, Colors.orange.shade900],
+                ),
+              ),
+            ),
+            title: Text(
+              widget.user.name,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                fontFamily:
+                    'CustomFont', // Reemplaza 'CustomFont' con el nombre de tu fuente
+              ),
+            ),
+          ),
           floatingActionButton: //user about
               Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -84,7 +105,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text(
-                        'About: ',
+                        'Estado:  ',
                         style: TextStyle(
                             color: Colors.black87,
                             fontWeight: FontWeight.w500,

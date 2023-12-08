@@ -24,16 +24,22 @@ class ProfileDialog extends StatelessWidget {
             children: [
               //user profile picture
               Positioned(
-                top: mq.height * .075,
-                left: mq.width * .1,
+                top: mq.height * 0.075,
+                left: mq.width * 0.1,
+                bottom: mq.width * 0.03,
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(mq.height * .25),
-                  child: CachedNetworkImage(
-                    width: mq.width * .5,
-                    fit: BoxFit.cover,
-                    imageUrl: user.image,
-                    errorWidget: (context, url, error) =>
-                        const CircleAvatar(child: Icon(CupertinoIcons.person)),
+                  borderRadius: BorderRadius.circular(mq.height * 0.25),
+                  child: SizedBox(
+                    width: mq.width * 0.5,
+                    height:
+                        mq.height * 0.5, // Ajusta la altura según sea necesario
+                    child: CachedNetworkImage(
+                      fit: BoxFit.cover, // Otra opción podría ser BoxFit.contain según tus necesidades
+                      imageUrl: user.image,
+                      errorWidget: (context, url, error) => const CircleAvatar(
+                        child: Icon(CupertinoIcons.person),
+                      ),
+                    ),
                   ),
                 ),
               ),
