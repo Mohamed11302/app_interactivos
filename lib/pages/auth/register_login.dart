@@ -57,7 +57,7 @@ class _RegisterLoginState extends State<RegisterLogin> {
                   FadeInUp(
                       duration: Duration(milliseconds: 1000),
                       child: Text(
-                        "Login",
+                        "¡Bienvenido!",
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       )),
                 ],
@@ -106,7 +106,7 @@ class _RegisterLoginState extends State<RegisterLogin> {
                                     },
                                     keyboardType: TextInputType.emailAddress,
                                     decoration: InputDecoration(
-                                        labelText: "Email or Phone number",
+                                        labelText: "Email o número de teléfono",
                                         hintStyle:
                                             TextStyle(color: Colors.grey),
                                         border: InputBorder.none),
@@ -129,7 +129,7 @@ class _RegisterLoginState extends State<RegisterLogin> {
                                           },
                                           obscureText: _obscureText,
                                           decoration: InputDecoration(
-                                            labelText: "Password",
+                                            labelText: "Contraseña",
                                             hintStyle:
                                                 TextStyle(color: Colors.grey),
                                             border: InputBorder.none,
@@ -176,7 +176,7 @@ class _RegisterLoginState extends State<RegisterLogin> {
                                       (route) => false);
                                 },
                                 child: Text(
-                                  "Forgot password?",
+                                  "¿Has olvidado la contraseña?",
                                   style: TextStyle(
                                       color: Colors.grey,
                                       fontWeight: FontWeight.bold),
@@ -207,7 +207,7 @@ class _RegisterLoginState extends State<RegisterLogin> {
                                   ),
                                   child: Center(
                                     child: Text(
-                                      "Register",
+                                      "Registro",
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold),
@@ -232,7 +232,7 @@ class _RegisterLoginState extends State<RegisterLogin> {
                                   color: Colors.orange[900],
                                   child: Center(
                                     child: Text(
-                                      "Login",
+                                      "Inicio de sesión",
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold),
@@ -270,7 +270,7 @@ class _RegisterLoginState extends State<RegisterLogin> {
                                     ]
                                   : [
                                       Text(
-                                        'Login with Google',
+                                        'Inicio de sesión con Google',
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold),
@@ -336,42 +336,50 @@ class _RegisterLoginState extends State<RegisterLogin> {
     }
   }
 
+
   Future<void> _signInWithGoogle() async {
+
     Dialogs.showProgressBar(context);
     //await _signOut_Simple(); //MOHA
+    
     _signInWithGoogle_user().then((user) async {
+      
       _signIn(user);
+      
     });
+    
   }
 
-  Future<UserCredential?> _signInWithGoogle_user() async {
-    try {
-      //await InternetAddress.lookup('google.com');
-      // Trigger the authentication flow
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+Future<UserCredential?> _signInWithGoogle_user() async {
+  try {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-      // Obtain the auth details from the request
-      final GoogleSignInAuthentication? googleAuth =
-          await googleUser?.authentication;
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
 
-      // Create a new credential
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken,
-      );
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
 
-      // Once signed in, return the UserCredential
-      return await APIs.auth.signInWithCredential(credential);
-    } catch (e) {
-      print("-----");
-      log('\n_signInWithGoogle: $e');
-      print("-----");
-      Dialogs.showSnackbar(context, 'Something Went Wrong');
-      return null;
-    }
+    // Once signed in, return the UserCredential
+    return APIs.auth.signInWithCredential(credential);
+  } catch (e) {
+    print("-----");
+    log('\n_signInWithGoogle: $e');
+    print("-----");
+    Dialogs.showSnackbar(context, 'Algo no fue como se esperaba');
+    return null;
   }
+}
+
+
+
 
   Future<void> _signIn(UserCredential? user) async {
+    
     //for hiding progress bar
     Navigator.pop(context);
     final us = user;
@@ -402,6 +410,7 @@ class _RegisterLoginState extends State<RegisterLogin> {
       }
     } else {
       // Las credenciales no son válidas, puedes mostrar un mensaje al usuario.
+      print("Las credenciales no son válidas, puedes mostrar un mensaje al usuario.");
       showDialog(
         context: context,
         builder: (context) {

@@ -222,6 +222,26 @@ class _AboutPageState extends State<AboutPage> {
                             ),
                           ),
                         ),
+                        SizedBox(height: 30),
+                        Text(
+                          'Fecha de desarrollo:',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Text(
+                            'Desde Septiembre a Diciembre del año 2023',
+                            textAlign: TextAlign.justify,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                 ),
