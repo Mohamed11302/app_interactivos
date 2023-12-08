@@ -370,7 +370,7 @@ Future<UserCredential?> _signInWithGoogle_user() async {
     print("-----");
     log('\n_signInWithGoogle: $e');
     print("-----");
-    Dialogs.showSnackbar(context, 'Algo no fue como se esperaba');
+    Dialogs.showSnackbar(context, 'Inicio de sesión con Google cancelado');
     return null;
   }
 }
@@ -408,7 +408,7 @@ Future<UserCredential?> _signInWithGoogle_user() async {
           });
         }
       }
-    } else {
+    } /*else {
       // Las credenciales no son válidas, puedes mostrar un mensaje al usuario.
       print("Las credenciales no son válidas, puedes mostrar un mensaje al usuario.");
       showDialog(
@@ -427,6 +427,6 @@ Future<UserCredential?> _signInWithGoogle_user() async {
           );
         },
       );
-    }
+    }*/
   }
 }
