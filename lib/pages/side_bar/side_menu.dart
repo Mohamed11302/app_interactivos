@@ -81,11 +81,6 @@ class NavBar extends StatelessWidget {
                     title: Text(ACERCADE),
                     onTap: () => onItemPressed(context, index: ACERCADE),
                   ),
-                  /*ListTile(
-                    leading: Icon(Icons.share),
-                    title: Text(COMPARTIR),
-                    onTap: () => onItemPressed(context, index: COMPARTIR),
-                  ),*/
                   Divider(),
                   ListTile(
                     leading: Icon(Icons.logout),
@@ -151,11 +146,6 @@ class NavBar extends StatelessWidget {
                     title: Text(ACERCADE),
                     onTap: () => onItemPressed(context, index: ACERCADE),
                   ),
-                  /*ListTile(
-                    leading: Icon(Icons.share),
-                    title: Text(COMPARTIR),
-                    onTap: () => onItemPressed(context, index: COMPARTIR),
-                  ),*/
                   Divider(),
                   ListTile(
                     leading: Icon(Icons.logout),
@@ -198,23 +188,23 @@ class NavBar extends StatelessWidget {
     }
   }
 
+  void callback_boton_retroceso(){
+   opcion_actual = INICIO;
+  }
+
   void onItemPressed(BuildContext context, {required String index}) async {
     Navigator.pop(context);
-
+    
     switch (index) {
       case INICIO:
         if (opcion_actual != INICIO){
-          
           opcion_actual = INICIO;
           Navigator.of(context).pop();
-          /*Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Tabbed_Window()));*/
         }
         break;
       case PERFIL:
         if (opcion_actual != PERFIL){
           ChatUser chatuser = await CrearChatUserPersonalizado();
-
           if (opcion_actual != INICIO)
             Navigator.of(context).pop();
             
@@ -222,7 +212,7 @@ class NavBar extends StatelessWidget {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => ProfileScreen(user: chatuser)));
+                  builder: (context) => ProfileScreen(user: chatuser, callback_boton_retroceso: callback_boton_retroceso)));
         }
         break;
       case ACERCADE:
@@ -233,7 +223,7 @@ class NavBar extends StatelessWidget {
             
           opcion_actual = ACERCADE;
           Navigator.push(
-            context, MaterialPageRoute(builder: (context) => AboutPage()));
+            context, MaterialPageRoute(builder: (context) => AboutPage(callback_boton_retroceso)));
         }
         break;
       case CERRARSESION:
