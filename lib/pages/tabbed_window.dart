@@ -103,6 +103,7 @@ class _Tabbed_Window extends State<Tabbed_Window> {
   }
 
   void consigueObjetosRegistrados() async {
+    print("HACIENDO CONSIGUEOBJETOSREGISTRADOS");
     setState(() {
       lectura_objetos_registrados_usuario_acabada = false;
     });
@@ -172,7 +173,7 @@ class _Tabbed_Window extends State<Tabbed_Window> {
                 Align(
                   alignment: Alignment.bottomRight,
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: 50, right: 30),
+                    padding: const EdgeInsets.only(top: 10, bottom: 30, right: 30),
                     child: FloatingActionButton(
                       onPressed: () async {
                         await Navigator.of(context).push(
