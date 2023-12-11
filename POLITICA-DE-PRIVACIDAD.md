@@ -1,5 +1,5 @@
 # POLÍTICA DE PRIVACIDAD DE LA APLICACIÓN "Findall"
-## Últimos cambios: 16 de noviembre de 2022
+## Últimos cambios: 11 de diciembre de 2023
 
 Esta política de privacidad gobierna el uso de la aplicación "Findall" para dispositivos móviles Android™ que fue creada por Enrique Albalate Prieto y Mohamed Essalhi Ahamyan.
 
@@ -42,7 +42,7 @@ Para asegurar una seguridad óptima, deber instalar regularmente cualquier actua
 Se recomienda al usuario comprobar regularmente cualquier actualización del sistema operativo de Android que pueda estar disponible y permitir actualizaciones automáticas del sistema.
 
 ## Cambios
-La Política de Privacidad puede ser actualizada periódicamente por cualquier motivo. Se notificará sobre cualquier cambio en la Política de Privacidad en [https://github.com/Adri-Sanchez-Miguel/Politica-de-privacidad/blob/main/POLITICA-DE-PRIVACIDAD.md] y se actualizará la fecha de "Ultima actualización" en la parte de arriba de la Política de Privacidad.
+La Política de Privacidad puede ser actualizada periódicamente por cualquier motivo. Se notificará sobre cualquier cambio en la Política de Privacidad en [https://github.com/Mohamed11302/app_interactivos/edit/master/POLITICA-DE-PRIVACIDAD.md] y se actualizará la fecha de "Ultima actualización" en la parte de arriba de la Política de Privacidad.
 
 Se debe tener en cuenta que, aunque se provee una razonable seguridad en la información procesada, ningún sistema es 100% seguro y puede prevenir cualquier potencial brecha de seguridad (por ejemplo, un ataque de día 0 que ataque al Sistema Operativo).
 
@@ -55,6 +55,6 @@ En ningún momento, ninguna información de usuario será compartida, procesada 
 
 ## Contacto 
 Para cualquier duda al respecto de la privacidad mientras se usa la aplicación "Findall", por favor contacte vía email a: 
-Enrique.Albalate@alu.uclm.es 
+Enrique.Albalate@alu.uclm.es | mohamed.essalhi@alu.uclm.es
 
 El nombre "Android", el logo de Android, la marca "Google Play", y otras trademarks de Google, son propiedad de Google LLC y no son parte de los recursos disponibles a través del Proyecto Open Source de Android.
