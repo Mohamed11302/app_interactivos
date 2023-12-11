@@ -42,7 +42,7 @@ Para asegurar una seguridad óptima, deber instalar regularmente cualquier actua
 Se recomienda al usuario comprobar regularmente cualquier actualización del sistema operativo de Android que pueda estar disponible y permitir actualizaciones automáticas del sistema.
 
 ## Cambios
-La Política de Privacidad puede ser actualizada periódicamente por cualquier motivo. Se notificará sobre cualquier cambio en la Política de Privacidad en [https://github.com/Mohamed11302/app_interactivos/edit/master/POLITICA-DE-PRIVACIDAD.md] y se actualizará la fecha de "Ultima actualización" en la parte de arriba de la Política de Privacidad.
+La Política de Privacidad puede ser actualizada periódicamente por cualquier motivo. Se notificará sobre cualquier cambio en la Política de Privacidad en [https://github.com/Mohamed11302/app_interactivos/blob/master/POLITICA-DE-PRIVACIDAD.md] y se actualizará la fecha de "Ultima actualización" en la parte de arriba de la Política de Privacidad.
 
 Se debe tener en cuenta que, aunque se provee una razonable seguridad en la información procesada, ningún sistema es 100% seguro y puede prevenir cualquier potencial brecha de seguridad (por ejemplo, un ataque de día 0 que ataque al Sistema Operativo).
 
