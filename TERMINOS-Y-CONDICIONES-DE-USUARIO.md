@@ -36,6 +36,6 @@ You acknowledge that you have read this Agreement and agree to all its terms and
 
 If you have any questions, concerns, or complaints regarding this Agreement, we encourage you to contact us using the details below:
 
-adriansandaimiel25@gmail.com
+enrique.albalate@alu.uclm.es | mohamed.essalhi@alu.uclm.es
 
-This document was last updated on February 23, 2023
+This document was last updated on December 11, 2023
