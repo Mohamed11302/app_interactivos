@@ -3,7 +3,7 @@
 
 Esta política de privacidad gobierna el uso de la aplicación "Findall" para dispositivos móviles Android™ que fue creada por Enrique Albalate Prieto y Mohamed Essalhi Ahamyan.
 
-La aplicación "Findall" forma parte del Programa Mentor llevado a cabo por la Universidad de Castilla-La Mancha, cuyo objetivo inicial nació de la idea de facilitar alguna interacción cotidiana. En nuestro caso nos centramos en todo el proceso de recuperación de objetos perdidos.
+La aplicación "Findall" forma parte de uno de los proyectos llevados a cabo por estudiantes de la Universidad de Castilla-La Mancha, cuyo objetivo inicial consistía en facilitar alguna interacción cotidiana. En nuestro caso nos centramos en todo el proceso de recuperación de objetos perdidos.
 
 ## ¿Qué información obtiene la aplicación del usuario y cómo la usa?
 La aplicación "Findall" requiere de registro de los usuarios usando la cuenta de email personal o número de teléfono que elija. La gestión de las cuentas registradas se almacena en Firebase, plataforma para el desarrollo de aplicaciones apoyada por Google.
