@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:app_interactivos/pages/api/api.dart';
 import 'package:app_interactivos/pages/chat/helper/dialogs.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class RegisterLogin extends StatefulWidget {
   const RegisterLogin({Key? key}) : super(key: key);
@@ -282,6 +283,32 @@ class _RegisterLoginState extends State<RegisterLogin> {
                           ),
                         ),
                       ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 5,
+                          ),
+                          FadeInUp(
+                            duration: Duration(milliseconds: 1000),
+                            child: GestureDetector(
+                                onTap: () {
+                                  //_launchURL();
+                                  Uri uri = Uri.parse("https://github.com/Mohamed11302/app_interactivos/blob/master/TERMINOS-Y-CONDICIONES-DE-USUARIO.md");
+                                  launchUrl(uri);
+                                },
+                                child: Text(
+                                  "Términos y condiciones de usuario",
+                                  style: TextStyle(
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.bold),
+                                )),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -293,16 +320,7 @@ class _RegisterLoginState extends State<RegisterLogin> {
     );
   }
 
-  /*
-  _signOut_Simple() async {
-    try {
-      //await FirebaseAuth.instance.signOut();
-      await GoogleSignIn().signOut();
-    } catch (e) {
-      log('+++++++ Error: ${e}');
-    }
-  }
-  */
+
   Future<void> _signInWithEmail() async {
     Dialogs.showProgressBar(context);
     //await _signOut_Simple(); //MOHA
@@ -335,8 +353,6 @@ class _RegisterLoginState extends State<RegisterLogin> {
       );
     }
   }
-
-
   Future<void> _signInWithGoogle() async {
 
     Dialogs.showProgressBar(context);
@@ -408,25 +424,7 @@ Future<UserCredential?> _signInWithGoogle_user() async {
           });
         }
       }
-    } /*else {
-      // Las credenciales no son válidas, puedes mostrar un mensaje al usuario.
-      print("Las credenciales no son válidas, puedes mostrar un mensaje al usuario.");
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Credenciales incorrectas'),
-            content: Text(
-                'El usuario o la contraseña no son válidos. Por favor, inténtelo de nuevo.'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
-    }*/
+    } 
+    
   }
 }
