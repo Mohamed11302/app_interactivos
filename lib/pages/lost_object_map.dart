@@ -58,7 +58,7 @@ class _MapScreen extends State<MapScreen>{
       lectura_info_localizacion_acabada = false;
     });
   
-    List<String> info= await obtener_Provincia_y_Pais(this.centerLatitude,this.centerLongitude);
+    List<String> info= await obtener_ciudad_y_provincia(this.centerLatitude,this.centerLongitude);
     info_localizacion =  info[2]+", "+info[1]+", "+info[0];
 
     setState(() {
@@ -126,18 +126,20 @@ class _MapScreen extends State<MapScreen>{
   
 }
 
-Future<List<String>> obtener_Provincia_y_Pais(double latitud, double longitud) async {
-  final url = 'https://nominatim.openstreetmap.org/reverse?format=json&lat=$latitud&lon=$longitud';
+Future<List<String>> obtener_ciudad_y_provincia(double latitud, double longitud) async {
+  final url = 'https://nominatim.openstreetmap.org/reverse?format=json&lat=$latitud&lon=$longitud&zoom=18&addressdetails=1';
+  //'https://nominatim.openstreetmap.org/reverse?format=json&lat=$latitud&lon=$longitud';
   
   final response = await http.get(Uri.parse(url));
 
   if (response.statusCode == 200) {
     final Map<String, dynamic> data = json.decode(response.body);
-    //print(data['display_name'].toString());
+    
     List<String> info_localizacion = data['display_name'].split(",");
     String pais = info_localizacion.last;
     String comunidad_autonoma = info_localizacion[info_localizacion.length-3];
     String provincia = info_localizacion[info_localizacion.length-4];
+    
     return [pais,comunidad_autonoma,provincia];
   }else{  
   // Manejar errores o devolver un valor predeterminado si es necesario
@@ -146,6 +148,3 @@ Future<List<String>> obtener_Provincia_y_Pais(double latitud, double longitud) a
   }
 
 }
-
-
-    

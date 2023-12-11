@@ -10,6 +10,7 @@ import 'package:line_icons/line_icons.dart';
 import 'package:app_interactivos/pages/nfc_methods.dart';
 import 'package:app_interactivos/pages/database_methods.dart';
 
+
 class Tabbed_Window extends StatefulWidget {
   Tabbed_Window({Key? key}) : super(key: key);
 
@@ -22,17 +23,19 @@ class _Tabbed_Window extends State<Tabbed_Window> {
   void initState() {
     super.initState();
     consigueObjetosRegistrados();
+    //consigue_bounding_boxes();
   }
 
   String cuenta_usuario = APIs.auth.currentUser!.email.toString();
   bool enableNFCReading = false;
   int _selectedIndex = 0;
+
   List<String> lista_provincias_espana = [
-    'Álava',
+    'Araba/Álava',
     'Albacete',
-    'Alicante',
+    'Alacant / Alicante',
     'Almería',
-    'Asturias',
+    'Asturias / Asturies',
     'Ávila',
     'Badajoz',
     'Barcelona',
@@ -40,29 +43,29 @@ class _Tabbed_Window extends State<Tabbed_Window> {
     'Cáceres',
     'Cádiz',
     'Cantabria',
-    'Castellón',
+    'Castelló / Castellón',
     'Ciudad Real',
     'Córdoba',
     'Cuenca',
-    'Gerona',
+    'Girona',
     'Granada',
     'Guadalajara',
-    'Guipúzcoa',
+    'Gipuzkoa',
     'Huelva',
     'Huesca',
-    'Islas Balears',
+    'Illes Balears',
     'Jaén',
     'La Coruña',
     'La Rioja',
     'Las Palmas',
     'León',
-    'Lérida',
+    'Lleida',
     'Lugo',
     'Madrid',
     'Málaga',
-    'Murcia',
-    'Navarra',
-    'Orense',
+    'Región de Murcia',
+    'Navarra - Nafarroa',
+    'Ourense',
     'Palencia',
     'Pontevedra',
     'Salamanca',
@@ -73,13 +76,68 @@ class _Tabbed_Window extends State<Tabbed_Window> {
     'Tarragona',
     'Teruel',
     'Toledo',
-    'Valencia',
+    'València / Valencia',
     'Valladolid',
-    'Vizcaya',
+    'Bizkaia',
     'Zamora',
     'Zaragoza',
     "<Ninguna>"
   ];
+
+  List<String> lista_provincias_peticiones = [
+    'A Coruña',
+    'Araba/Álava',
+    'Albacete',
+    'Alacant / Alicante',
+    'Almería',
+    'Asturias / Asturies',
+    'Ávila',
+    'Badajoz',
+    'Barcelona',
+    'Burgos',
+    'Cáceres',
+    'Cádiz',
+    'Cantabria',
+    'Castelló / Castellón',
+    'Ciudad Real',
+    'Córdoba',
+    'Cuenca',
+    'Girona',
+    'Granada',
+    'Guadalajara',
+    'Gipuzkoa',
+    'Huelva',
+    'Huesca',
+    'Illes Balears',
+    'Jaén',
+    'La Rioja',
+    'Las Palmas',
+    'León',
+    'Lleida',
+    'Lugo',
+    'Madrid',
+    'Málaga',
+    'Región de Murcia',
+    'Navarra - Nafarroa',
+    'Ourense',
+    'Palencia',
+    'Pontevedra',
+    'Salamanca',
+    'Santa Cruz de Tenerife',
+    'Segovia',
+    'Sevilla',
+    'Soria',
+    'Tarragona',
+    'Teruel',
+    'Toledo',
+    'València / Valencia',
+    'Valladolid',
+    'Bizkaia',
+    'Zamora',
+    'Zaragoza',
+    "<Ninguna>"
+  ];
+  
   String provincia_seleccionada = "<Ninguna>";
   bool lectura_objetos_perdidos_acabada = true;
   bool lectura_objetos_registrados_usuario_acabada = false;
@@ -89,6 +147,7 @@ class _Tabbed_Window extends State<Tabbed_Window> {
 
   List<Objeto_Perdido> lista_objetos_perdidos = [];
   List<Objeto_Registrado> lista_objetos_registrados_usuario = [];
+
 
   void consigueObjetosPerdidos(String provincia) async {
     setState(() {
@@ -103,7 +162,7 @@ class _Tabbed_Window extends State<Tabbed_Window> {
   }
 
   void consigueObjetosRegistrados() async {
-    print("HACIENDO CONSIGUEOBJETOSREGISTRADOS");
+    
     setState(() {
       lectura_objetos_registrados_usuario_acabada = false;
     });
@@ -243,7 +302,7 @@ class _Tabbed_Window extends State<Tabbed_Window> {
                       width: 200,
                       child: DropdownButtonFormField(
                         value: provincia_seleccionada,
-                        items: lista_provincias_espana.map((name) {
+                        items: lista_provincias_peticiones.map((name) {
                           return DropdownMenuItem(
                             child: Text(name),
                             value: name,

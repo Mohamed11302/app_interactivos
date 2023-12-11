@@ -20,7 +20,7 @@ Future<void> startNFCSessionReading(enableNFCReading,context, Function callback_
         }catch(error){
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Error mientras se manejaba una etiqueta nfc. $error'),
+              content: Text('Error mientras se manejaba una etiqueta nfc'),
             ),
           );
           return Future.value();
@@ -90,6 +90,11 @@ void startNFCSessionWriting(bool enableNFCWriting, String cadena_escribir,contex
           }
 
         } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error mientras se manejaba una etiqueta nfc'),
+            ),
+          );
           NfcManager.instance.stopSession(errorMessage: e.toString());
           return;
         }

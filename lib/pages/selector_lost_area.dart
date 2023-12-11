@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -6,33 +7,45 @@ import 'package:latlong2/latlong.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+
 class MapSelector extends StatefulWidget {
   final double initialRadius;
+  //final List<List<double>> lista_boundingboxes_provincias;
 
-  MapSelector(this.initialRadius);
+  MapSelector(this.initialRadius);//, this.lista_boundingboxes_provincias);
 
   @override
-  _MapSelectorState createState() => _MapSelectorState(this.initialRadius);
+  _MapSelectorState createState() => _MapSelectorState(this.initialRadius);//, this.lista_boundingboxes_provincias);
 }
 
 class _MapSelectorState extends State<MapSelector> {
   double radiusInMeters;
   LatLng selectedLocation = LatLng(40.0, -4.0); // Coordenadas para España
-  String info_localizacion = "";
+  String info_imprimir = "";
+  late List<String> info_localizacion;
   List<LatLng> circlePoints = [];
   bool info_actualizada = true;
   bool zona_correcta = true;
-
-  List<String> lista_provincias_espana = [
-    'Álava', 'Albacete', 'Alicante', 'Almería', 'Asturias', 'Ávila', 'Badajoz', 'Barcelona', 'Burgos', 'Cáceres', 'Cádiz', 'Cantabria',
-    'Castellón', 'Ciudad Real', 'Córdoba', 'Cuenca', 'Gerona', 'Granada', 'Guadalajara', 'Guipúzcoa', 'Huelva', 'Huesca', 'Islas Balears',
-    'Jaén', 'La Coruña', 'La Rioja', 'Las Palmas', 'León', 'Lérida', 'Lugo', 'Madrid', 'Málaga', 'Murcia', 'Navarra', 'Orense', 'Palencia',
-    'Pontevedra', 'Salamanca', 'Santa Cruz de Tenerife', 'Segovia', 'Sevilla', 'Soria', 'Tarragona', 'Teruel', 'Toledo', 'Valencia',
-    'Valladolid', 'Vizcaya', 'Zamora', 'Zaragoza', "<Ninguna>"
+  //final List<List<double>> lista_boundingboxes_provincias;
+  
+  List<String> lista_provincias_peticiones = [
+    'A Coruña', 'Araba/Álava', 'Albacete', 'Alacant / Alicante', 'Almería', 'Asturias / Asturies', 'Ávila', 'Badajoz', 'Barcelona', 'Burgos', 'Cáceres', 'Cádiz', 'Cantabria',
+    'Castelló / Castellón', 'Ciudad Real', 'Córdoba', 'Cuenca', 'Girona', 'Granada', 'Guadalajara', 'Gipuzkoa', 'Huelva', 'Huesca', 'Illes Balears',
+    'Jaén', 'La Rioja', 'Las Palmas', 'León', 'Lleida', 'Lugo', 'Madrid', 'Málaga', 'Región de Murcia', 'Navarra - Nafarroa', 'Ourense', 'Palencia',
+    'Pontevedra', 'Salamanca', 'Santa Cruz de Tenerife', 'Segovia', 'Sevilla', 'Soria', 'Tarragona', 'Teruel', 'Toledo', 'València / Valencia',
+    'Valladolid', 'Bizkaia', 'Zamora', 'Zaragoza', "<Ninguna>"
   ];
-  String provincia_final = "";
 
-  _MapSelectorState(this.radiusInMeters);
+
+  final puntos_toledo = [
+    LatLng(40.5538, -5.2252),
+    LatLng(40.5538, -3.8931),
+    LatLng(38.2858, -3.8931),
+    LatLng(38.2858, -5.2252),
+    LatLng(40.5538, -5.2252),
+  ];
+
+  _MapSelectorState(this.radiusInMeters);//, this.lista_boundingboxes_provincias);
 
   @override
   void initState() {
@@ -41,35 +54,92 @@ class _MapSelectorState extends State<MapSelector> {
     actualizar_info_punto_seleccionado();
   }
 
-  String buscar_provincia(String a, String b) {
-    for (int i = 0; i < lista_provincias_espana.length; i++) {
-      
-      if (lista_provincias_espana[i] == a) {
-        return a;
-      } else if (lista_provincias_espana[i] == b) {
-        return b;
+  Future<String> buscar_provincia(List<String> info_punto, String comunidad) async {
+    
+    for (int i = 0; i < lista_provincias_peticiones.length; i++) {
+      //Miro en toda la lista a ver si está el nombre de una provincia española
+      //En caso de que esté se devuelve su nombre únicamente en castellano 
+      if (info_punto.contains(lista_provincias_peticiones[i])) 
+        return lista_provincias_peticiones[i];
+    }
+
+    if (comunidad == "Comunidad de Madrid")
+      return "Madrid";
+    else
+      return "Toledo";
+    /*
+    //En caso de no haberse encontrado, como ya sabemos que el punto sí pertenece a España
+    // se buscará por coordenadas a qué provincia pertenece usando los boundingboxes de cada una de ellas
+    for (int i = 0; i < lista_provincias_peticiones.length; i++){
+
+      if (estaEnProvincia([selectedLocation.latitude,selectedLocation.longitude], this.lista_boundingboxes_provincias[i])){
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("EL PUNTO PERTENECE A " + lista_provincias_peticiones[i]),
+            ),
+          );
+        
+        return lista_provincias_peticiones[i];
       }
     }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("NO SE HA ENCONTRADO PROVINCIA PARA EL PUNTO"),
+            ),
+          );
+          
     return "";
+    */
+   
+  }
+
+  String buscar_comunidad(List<String> info_punto){
+
+    //Siempre aparece en la ultima posición el pais, y luego en la penúltima o bien un codigo postal o
+    // la comunidad autonoma del punto
+    try{
+      
+      int codigo_postal = int.parse(info_punto[info_punto.length-2]);
+      return info_punto[info_punto.length-3];
+    }catch(e){
+      return info_punto[info_punto.length-2];
+    }
   }
 
   void actualizar_info_punto_seleccionado() async {
+
     late bool zona_correcta_aux;
     setState(() {
       info_actualizada = false;
     });
-    final info = await obtener_Provincia_y_Pais(selectedLocation.latitude, selectedLocation.longitude);
-    if (info.length > 0) {
-      info_localizacion = info[2] + ", " + info[1] + ", " + info[0];
+
+    this.info_localizacion = await obtener_informacion_ubicacion(selectedLocation.latitude, selectedLocation.longitude);
+
+    if (info_localizacion.length > 0) {
+
+      String comunidad = buscar_comunidad(this.info_localizacion);
+      String provincia = await buscar_provincia(this.info_localizacion, comunidad);
+      String zona_adicional = provincia != this.info_localizacion[this.info_localizacion.indexOf(comunidad)-1] ? 
+         this.info_localizacion[this.info_localizacion.indexOf(comunidad)-1] 
+         :
+          this.info_localizacion[this.info_localizacion.indexOf(comunidad)-2];
+      info_imprimir = provincia != comunidad ? 
+                      zona_adicional + ", " + provincia  + ", " + comunidad 
+                      :
+                      zona_adicional + ", " + provincia; 
       zona_correcta_aux = true;
+
     } else {
-      info_localizacion = "Ubicación fuera de España";
+      info_imprimir = "Ubicación fuera de España";
       zona_correcta_aux = false;
     }
+
     setState(() {
       info_actualizada = true;
       zona_correcta = zona_correcta_aux;
     });
+
   }
 
   List<LatLng> calculateCirclePoints(int numberOfPoints) {
@@ -88,6 +158,7 @@ class _MapSelectorState extends State<MapSelector> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Selecciona el lugar de pérdida'),
@@ -145,7 +216,7 @@ class _MapSelectorState extends State<MapSelector> {
               children: [
                 info_actualizada
                     ? Text(
-                        info_localizacion,
+                        info_imprimir,
                         style: TextStyle(fontWeight: FontWeight.bold),
                       )
                     : Center(child: CircularProgressIndicator()),
@@ -170,14 +241,12 @@ class _MapSelectorState extends State<MapSelector> {
             divisions: 100, // Cantidad de divisiones
           ),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               if (zona_correcta) {
                 Navigator.of(context).pop({
                   'radius': radiusInMeters,
                   'location': selectedLocation,
-                  'province': buscar_provincia(
-                      info_localizacion.split(",")[1].substring(2),
-                      info_localizacion.split(",")[0].substring(1))
+                  'province': await buscar_provincia(info_localizacion,  buscar_comunidad(this.info_localizacion)),
                 });
               } else {
                 showDialog(
@@ -213,7 +282,7 @@ class _MapSelectorState extends State<MapSelector> {
   }
 }
 
-Future<List<String>> obtener_Provincia_y_Pais(
+Future<List<String>> obtener_informacion_ubicacion(
     double latitud, double longitud) async {
   final url =
       'https://nominatim.openstreetmap.org/reverse?format=json&lat=$latitud&lon=$longitud';
@@ -223,12 +292,23 @@ Future<List<String>> obtener_Provincia_y_Pais(
   if (response.statusCode == 200) {
     final Map<String, dynamic> data = json.decode(response.body);
     try {
+      //print(data.toString());
+
       List<String> info_localizacion = data['display_name'].split(",");
+
       String pais = info_localizacion.last;
       if (pais.substring(1) != "España") return [];
-      String comunidad_autonoma = info_localizacion[info_localizacion.length - 3];
-      String provincia = info_localizacion[info_localizacion.length - 4];
-      return [pais, comunidad_autonoma, provincia];
+
+      info_localizacion = info_localizacion.asMap().entries.map((entry) {
+        int index = entry.key;
+        String elemento = entry.value;
+        return (index == 0) ? elemento : elemento.substring(1);
+      }).toList();
+
+      //print(info_localizacion);
+
+      return info_localizacion;
+
     } catch (e) {
       return [];
     }
@@ -238,3 +318,107 @@ Future<List<String>> obtener_Provincia_y_Pais(
     return ["error"];
   }
 }
+
+/*
+bool estaEnProvincia(List<double> coordenadasPueblo, List<double> boundingBoxProvincia) {
+  //print(boundingBoxProvincia);
+  //print(coordenadasPueblo);
+  double latitudPueblo = coordenadasPueblo[0];
+  double longitudPueblo = coordenadasPueblo[1];
+
+  double latitudInferior = boundingBoxProvincia[0];
+  double latitudSuperior = boundingBoxProvincia[1];
+  double longitudIzquierda = boundingBoxProvincia[2];
+  double longitudDerecha = boundingBoxProvincia[3];
+
+  // Verificar si las coordenadas del pueblo están dentro del bounding box de la provincia
+  return (latitudPueblo >= latitudInferior && latitudPueblo <= latitudSuperior) &&
+         (longitudPueblo >= longitudIzquierda && longitudPueblo <= longitudDerecha);
+}
+
+
+
+Future<String?> obtenerProvincia(String lugar) async {
+  final String overpassURL = 'https://overpass-api.de/api/interpreter';
+  final String query = '''
+    [out:json];
+    (
+      node["place"="village"]["name"="$lugar"](area);
+      way["place"="village"]["name"="$lugar"](area);
+      relation["place"="village"]["name"="$lugar"](area);
+    );
+    out body;
+  ''';
+
+  try {
+    final response = await http.post(Uri.parse(overpassURL), body: {'data': query});
+    
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = json.decode(response.body);
+
+      // Verifica si hay resultados y extrae la provincia si es así
+      if (data['elements'] != null && data['elements'].isNotEmpty) {
+        final provincia = data['elements'][0]['tags']['addr:province'];
+        print("PROVINCIA INFERIDA " + provincia);
+        return provincia;
+      } else {
+        return null; // No se encontraron resultados
+      }
+    } else {
+      print('Error en la solicitud: ${response.statusCode}');
+      return null;
+    }
+  } catch (error) {
+    print('Error: $error');
+    return null;
+  }
+}
+
+Future<String?> obtenerProvinciaDesdeChatGPT(String pueblo) async {
+  //final String endpoint = 'https://api.openai.com/v1/engines/davinci-codex/completions'; // Reemplaza con el endpoint correcto
+  final String apiKey = "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";
+  final String prompt = 'Provincia de $pueblo en España: ';
+
+  final List<Map<String, String>> messages = [];
+  messages.add({
+      'role': 'user',
+      'content': prompt,
+    });
+
+  try {
+      final res = await http.post(
+        Uri.parse('https://api.openai.com/v1/chat/completions'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $apiKey',
+        },
+        body: jsonEncode({
+          "model": "gpt-3.5-turbo",
+          "messages": messages,
+        }),  
+      );
+
+      if (res.statusCode == 200) {
+        String content =
+            jsonDecode(res.body)['choices'][0]['message']['content'];
+        content = content.trim();
+
+        messages.add({
+          'role': 'assistant',
+          'content': content,
+        });
+        print(content);
+        return content;
+      }
+      else{
+        print("errorcete");
+        print(jsonDecode(res.body).toString());
+        return 'An internal error occurred';
+      }
+
+  }catch(e){
+    print(e.toString());
+    return e.toString();
+  }
+}
+*/
