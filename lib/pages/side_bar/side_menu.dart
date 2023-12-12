@@ -159,34 +159,7 @@ class NavBar extends StatelessWidget {
         });
   }
 
-  _signOut(BuildContext context) async {
-    try {
-      //for showing progress dialog
-      Dialogs.showProgressBar(context);
-      await APIs.updateActiveStatus(false);
 
-      //sign out from app
-      await APIs.auth.signOut().then((value) async {
-        await GoogleSignIn().signOut().then((value) {
-          //for hiding progress dialog
-          Navigator.pop(context);
-
-          //for moving to home screen
-          Navigator.pop(context);
-
-          APIs.auth = FirebaseAuth.instance;
-
-          //replacing home screen with login screen
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (_) => const RegisterLogin()));
-        });
-      });
-      //await FirebaseAuth.instance.signOut();
-      //await GoogleSignIn().signOut();
-    } catch (e) {
-      log('+++++++ Error: ${e}');
-    }
-  }
 
   void callback_boton_retroceso(){
    opcion_actual = INICIO;
@@ -248,4 +221,33 @@ class NavBar extends StatelessWidget {
         pushToken: '');
     return chatuser;
   }
-}
+} 
+
+Future<void> _signOut(BuildContext context) async {
+    try {
+      //for showing progress dialog
+      Dialogs.showProgressBar(context);
+      await APIs.updateActiveStatus(false);
+
+      //sign out from app
+      await APIs.auth.signOut().then((value) async {
+        await GoogleSignIn().signOut().then((value) {
+          //for hiding progress dialog
+          Navigator.pop(context);
+
+          //for moving to home screen
+          Navigator.pop(context);
+
+          APIs.auth = FirebaseAuth.instance;
+
+          //replacing home screen with login screen
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (_) => const RegisterLogin()));
+        });
+      });
+      //await FirebaseAuth.instance.signOut();
+      //await GoogleSignIn().signOut();
+    } catch (e) {
+      log('+++++++ Error: ${e}');
+    }
+  }

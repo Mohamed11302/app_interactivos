@@ -1,11 +1,12 @@
+import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
+import 'dart:developer' as developer;
+import 'package:app_interactivos/pages/auth/verification_page.dart';
 import 'package:app_interactivos/pages/database_methods.dart';
 import 'package:app_interactivos/pages/api/api.dart';
 import 'package:app_interactivos/pages/auth/register_login.dart';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:app_interactivos/pages/tabbed_window.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
@@ -31,7 +32,8 @@ class _RegisterPageState extends State<RegisterPage> {
   bool isSigningUp = false;
   bool _obscureText_password1 = true;
   bool _obscureText_password2 = true;
-  
+  bool isEmailVerfied = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -172,7 +174,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                       },
                                       keyboardType: TextInputType.emailAddress,
                                       decoration: InputDecoration(
-                                          labelText: "Email or Phone number",
+                                          labelText: "Email",
                                           hintStyle:
                                               TextStyle(color: Colors.grey),
                                           border: InputBorder.none),
@@ -191,7 +193,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                         });
                                       },
                                       decoration: InputDecoration(
-                                          labelText: "Username",
+                                          labelText: "Nombre de usuario",
                                           hintStyle:
                                               TextStyle(color: Colors.grey),
                                           border: InputBorder.none),
@@ -214,7 +216,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                             },
                                             obscureText: _obscureText_password1,
                                             decoration: InputDecoration(
-                                              labelText: "Password",
+                                              labelText: "Contraseña",
                                               hintStyle:
                                                   TextStyle(color: Colors.grey),
                                               border: InputBorder.none,
@@ -256,7 +258,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                             },
                                             obscureText: _obscureText_password2,
                                             decoration: InputDecoration(
-                                              labelText: "Confirm Password",
+                                              labelText: "Confirmar contraseña",
                                               hintStyle:
                                                   TextStyle(color: Colors.grey),
                                               border: InputBorder.none,
@@ -291,7 +293,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text("Already have an account?"),
+                              Text("Ya tienes una cuenta?"),
                               SizedBox(
                                 width: 5,
                               ),
@@ -335,7 +337,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                           color: Colors.white,
                                         )
                                       : Text(
-                                          "Sign Up",
+                                          "Registrarse",
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold),
@@ -392,12 +394,28 @@ class _RegisterPageState extends State<RegisterPage> {
         },
       );
     } else {
-      _signUp_user();
-      sendEmail(user_email_data, username_data);
+      await _signUp_user();
+
+      await SendVerificationEmail();
+      //sendEmail(user_email_data, username_data);
+      Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                VerificationPage()),
+                                        (route) => false);
     }
   }
-
-  void _signUp_user() async {
+  Future<void> SendVerificationEmail()async{
+    try{
+      if (!isEmailVerfied){
+        await APIs.user.sendEmailVerification();
+      }
+    }catch (e) {
+      print(e.toString());
+    }
+  }
+  Future<void> _signUp_user() async {
     setState(() {
       isSigningUp = true;
     });
@@ -420,13 +438,11 @@ class _RegisterPageState extends State<RegisterPage> {
             await us.updateDisplayName(username_data);
             await APIs.createUser(
                 us.uid, username_data, user_email_data, imagen);
-            ScaffoldMessenger.of(context).showSnackBar(
+            /*ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('User is successfully created'),
               ),
-            );
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => Tabbed_Window()));
+            );*/
           } catch (e) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -544,7 +560,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         final XFile? image = await picker.pickImage(
                             source: ImageSource.gallery, imageQuality: 80);
                         if (image != null) {
-                          log('Image Path: ${image.path}');
+                          developer.log('Image Path: ${image.path}');
                           setState(() {
                             _image = File(image.path);
                           });
@@ -569,7 +585,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         final XFile? image = await picker.pickImage(
                             source: ImageSource.camera, imageQuality: 80);
                         if (image != null) {
-                          log('Image Path: ${image.path}');
+                          developer.log('Image Path: ${image.path}');
                           setState(() {
                             _image = File(image.path);
                           });
