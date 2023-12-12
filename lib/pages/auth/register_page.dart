@@ -195,7 +195,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                       },
                                       decoration: InputDecoration(
                                           labelText: "Nombre de usuario",
-                                          labelText: "Nombre de usuario",
                                           hintStyle:
                                               TextStyle(color: Colors.grey),
                                           border: InputBorder.none),
