@@ -69,7 +69,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     FadeInUp(
                         duration: Duration(milliseconds: 1300),
                         child: Text(
-                          "Register",
+                          "Registro",
                           style: TextStyle(color: Colors.white, fontSize: 18),
                         )),
                   ],
@@ -172,7 +172,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                       },
                                       keyboardType: TextInputType.emailAddress,
                                       decoration: InputDecoration(
-                                          labelText: "Email or Phone number",
+                                          labelText: "Email o número de teléfono",
                                           hintStyle:
                                               TextStyle(color: Colors.grey),
                                           border: InputBorder.none),
@@ -191,7 +191,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                         });
                                       },
                                       decoration: InputDecoration(
-                                          labelText: "Username",
+                                          labelText: "Nombre de usuario",
                                           hintStyle:
                                               TextStyle(color: Colors.grey),
                                           border: InputBorder.none),
@@ -214,7 +214,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                             },
                                             obscureText: _obscureText_password1,
                                             decoration: InputDecoration(
-                                              labelText: "Password",
+                                              labelText: "Contraseña",
                                               hintStyle:
                                                   TextStyle(color: Colors.grey),
                                               border: InputBorder.none,
@@ -256,7 +256,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                             },
                                             obscureText: _obscureText_password2,
                                             decoration: InputDecoration(
-                                              labelText: "Confirm Password",
+                                              labelText: "Confirmación de contraseña",
                                               hintStyle:
                                                   TextStyle(color: Colors.grey),
                                               border: InputBorder.none,
@@ -291,7 +291,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text("Already have an account?"),
+                              Text("¿Ya tienes una cuenta?"),
                               SizedBox(
                                 width: 5,
                               ),
@@ -305,7 +305,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                         (route) => false);
                                   },
                                   child: Text(
-                                    "Login",
+                                    "Inicia sesión",
                                     style: TextStyle(
                                         color: Colors.blue,
                                         fontWeight: FontWeight.bold),
@@ -335,7 +335,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                           color: Colors.white,
                                         )
                                       : Text(
-                                          "Sign Up",
+                                          "Registrarse",
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold),
@@ -520,7 +520,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 EdgeInsets.only(top: mq.height * .03, bottom: mq.height * .05),
             children: [
               //pick profile picture label
-              const Text('Pick Profile Picture',
+              const Text('Selecciona una imagen de perfil',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
 
