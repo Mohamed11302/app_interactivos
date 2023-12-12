@@ -5,7 +5,14 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'dart:math'; 
-import 'package:permission_handler/permission_handler.dart';
+
+ Future<XFile?> seleccionarImagen(bool camara) async {
+    final ImagePicker picker = ImagePicker();
+    XFile? imagen = null;
+    if  (camara) imagen = await picker.pickImage(source: ImageSource.camera);
+    else imagen = await picker.pickImage(source: ImageSource.gallery);
+    return imagen;
+  }
 
 // ignore: must_be_immutable
 class Formulario_Objeto extends StatefulWidget {
@@ -196,14 +203,6 @@ class _Formulario_Objeto extends State<Formulario_Objeto> {
         ),
       ),
     );
-  }
-
-  Future<XFile?> seleccionarImagen(bool camara) async {
-    final ImagePicker picker = ImagePicker();
-    XFile? imagen = null;
-    if  (camara) imagen = await picker.pickImage(source: ImageSource.camera);
-    else imagen = await picker.pickImage(source: ImageSource.gallery);
-    return imagen;
   }
 
   void validar_datos_nuevo_objeto(BuildContext context) {
