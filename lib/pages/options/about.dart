@@ -163,7 +163,7 @@ class _AboutPageState extends State<AboutPage> {
                                 ),
                                 TextSpan(
                                   text:
-                                      'Si te cruzas con alguno de los objetos anteriores, escanea su tarjeta NFC para redirigirte a un chat que permitirá la comunicación con el propietario real. Una vez dentro, podrás acordar su devolución a través de mensajes de texto e incluso fotografías, como ocurre en cualquier otra aplicación de mensajería',
+                                      'Si te cruzas con alguno de los objetos anteriores, escanea su tarjeta NFC para redirigirte a un chat que permitirá la comunicación con el propietario real. Una vez dentro, podrás acordar su devolución a través de mensajes de texto e incluso fotografías, como ocurre en cualquier otra aplicación de mensajería.',
                                 ),
                               ],
                             ),
