@@ -23,7 +23,6 @@ class _Tabbed_Window extends State<Tabbed_Window> {
   void initState() {
     super.initState();
     consigueObjetosRegistrados();
-    //consigue_bounding_boxes();
   }
 
   String cuenta_usuario = APIs.auth.currentUser!.email.toString();

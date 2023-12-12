@@ -14,6 +14,7 @@ import 'package:app_interactivos/pages/api/api.dart';
 import 'package:app_interactivos/pages/chat/helper/dialogs.dart';
 import 'package:app_interactivos/main.dart';
 import 'package:app_interactivos/pages/chat/data/chat_user.dart';
+import 'package:app_interactivos/pages/new_object_form.dart';
 
 //profile screen -- to show signed in user info
 class ProfileScreen extends StatefulWidget {
@@ -143,13 +144,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             onSaved: (val) => APIs.me.name = val ?? '',
                             validator: (val) => val != null && val.isNotEmpty
                                 ? null
-                                : 'Required Field',
+                                : 'Campo obligatorio',
                             decoration: InputDecoration(
                                 prefixIcon:
                                     const Icon(Icons.person, color: Colors.orange),
                                 border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12)),
-                                hintText: 'eg. User123123',
+                                hintText: 'ejemplo: User123123',
                                 label: const Text('Nombre de usuario')),
                           ),
 
@@ -162,13 +163,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             onSaved: (val) => APIs.me.about = val ?? '',
                             validator: (val) => val != null && val.isNotEmpty
                                 ? null
-                                : 'Required Field',
+                                : 'Campo obligatorio',
                             decoration: InputDecoration(
                                 prefixIcon: const Icon(Icons.info_outline,
                                     color: Colors.orange),
                                 border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12)),
-                                hintText: 'eg. Feeling Happy',
+                                hintText: 'ejemplo: ¡Buenos días a todos!',
                                 label: const Text('Acerca de mi')),
                           ),
 
@@ -217,7 +218,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 EdgeInsets.only(top: mq.height * .03, bottom: mq.height * .05),
             children: [
               //pick profile picture label
-              const Text('Pick Profile Picture',
+              const Text('Selecciona una imagen de perfil',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
 
@@ -235,11 +236,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           shape: const CircleBorder(),
                           fixedSize: Size(mq.width * .3, mq.height * .15)),
                       onPressed: () async {
-                        final ImagePicker picker = ImagePicker();
-
+                      
                         // Pick an image
-                        final XFile? image = await picker.pickImage(
-                            source: ImageSource.gallery, imageQuality: 80);
+                        final XFile? image = await seleccionarImagen(false);
                         if (image != null) {
                           log('Image Path: ${image.path}');
                           setState(() {
@@ -260,11 +259,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           shape: const CircleBorder(),
                           fixedSize: Size(mq.width * .3, mq.height * .15)),
                       onPressed: () async {
-                        final ImagePicker picker = ImagePicker();
 
                         // Pick an image
-                        final XFile? image = await picker.pickImage(
-                            source: ImageSource.camera, imageQuality: 80);
+                        final XFile? image = await seleccionarImagen(true);
                         if (image != null) {
                           log('Image Path: ${image.path}');
                           setState(() {
@@ -284,3 +281,5 @@ class _ProfileScreenState extends State<ProfileScreen> {
         });
   }
 }
+
+

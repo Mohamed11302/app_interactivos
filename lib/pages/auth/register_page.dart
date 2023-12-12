@@ -13,6 +13,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:app_interactivos/main.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:app_interactivos/pages/new_object_form.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -71,7 +72,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     FadeInUp(
                         duration: Duration(milliseconds: 1300),
                         child: Text(
-                          "Register",
+                          "Registro",
                           style: TextStyle(color: Colors.white, fontSize: 18),
                         )),
                   ],
@@ -194,6 +195,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                       },
                                       decoration: InputDecoration(
                                           labelText: "Nombre de usuario",
+                                          labelText: "Nombre de usuario",
                                           hintStyle:
                                               TextStyle(color: Colors.grey),
                                           border: InputBorder.none),
@@ -258,7 +260,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                             },
                                             obscureText: _obscureText_password2,
                                             decoration: InputDecoration(
-                                              labelText: "Confirmar contraseña",
+                                              labelText: "Confirm Password",
                                               hintStyle:
                                                   TextStyle(color: Colors.grey),
                                               border: InputBorder.none,
@@ -293,7 +295,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text("Ya tienes una cuenta?"),
+                              Text("Already have an account?"),
                               SizedBox(
                                 width: 5,
                               ),
@@ -307,7 +309,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                         (route) => false);
                                   },
                                   child: Text(
-                                    "Login",
+                                    "Inicia sesión",
                                     style: TextStyle(
                                         color: Colors.blue,
                                         fontWeight: FontWeight.bold),
@@ -536,7 +538,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 EdgeInsets.only(top: mq.height * .03, bottom: mq.height * .05),
             children: [
               //pick profile picture label
-              const Text('Pick Profile Picture',
+              const Text('Selecciona una imagen de perfil',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
 
@@ -554,11 +556,9 @@ class _RegisterPageState extends State<RegisterPage> {
                           shape: const CircleBorder(),
                           fixedSize: Size(mq.width * .3, mq.height * .15)),
                       onPressed: () async {
-                        final ImagePicker picker = ImagePicker();
-
+                        
                         // Pick an image
-                        final XFile? image = await picker.pickImage(
-                            source: ImageSource.gallery, imageQuality: 80);
+                        final XFile? image = await seleccionarImagen(false);
                         if (image != null) {
                           developer.log('Image Path: ${image.path}');
                           setState(() {
@@ -579,11 +579,8 @@ class _RegisterPageState extends State<RegisterPage> {
                           shape: const CircleBorder(),
                           fixedSize: Size(mq.width * .3, mq.height * .15)),
                       onPressed: () async {
-                        final ImagePicker picker = ImagePicker();
-
                         // Pick an image
-                        final XFile? image = await picker.pickImage(
-                            source: ImageSource.camera, imageQuality: 80);
+                        final XFile? image = await seleccionarImagen(true);
                         if (image != null) {
                           developer.log('Image Path: ${image.path}');
                           setState(() {
@@ -603,3 +600,5 @@ class _RegisterPageState extends State<RegisterPage> {
         });
   }
 }
+
+

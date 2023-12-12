@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -10,12 +9,11 @@ import 'dart:convert';
 
 class MapSelector extends StatefulWidget {
   final double initialRadius;
-  //final List<List<double>> lista_boundingboxes_provincias;
 
-  MapSelector(this.initialRadius);//, this.lista_boundingboxes_provincias);
+  MapSelector(this.initialRadius);
 
   @override
-  _MapSelectorState createState() => _MapSelectorState(this.initialRadius);//, this.lista_boundingboxes_provincias);
+  _MapSelectorState createState() => _MapSelectorState(this.initialRadius);
 }
 
 class _MapSelectorState extends State<MapSelector> {
@@ -26,7 +24,6 @@ class _MapSelectorState extends State<MapSelector> {
   List<LatLng> circlePoints = [];
   bool info_actualizada = true;
   bool zona_correcta = true;
-  //final List<List<double>> lista_boundingboxes_provincias;
   
   List<String> lista_provincias_peticiones = [
     'A Coruña', 'Araba/Álava', 'Albacete', 'Alacant / Alicante', 'Almería', 'Asturias / Asturies', 'Ávila', 'Badajoz', 'Barcelona', 'Burgos', 'Cáceres', 'Cádiz', 'Cantabria',
@@ -67,31 +64,6 @@ class _MapSelectorState extends State<MapSelector> {
       return "Madrid";
     else
       return "Toledo";
-    /*
-    //En caso de no haberse encontrado, como ya sabemos que el punto sí pertenece a España
-    // se buscará por coordenadas a qué provincia pertenece usando los boundingboxes de cada una de ellas
-    for (int i = 0; i < lista_provincias_peticiones.length; i++){
-
-      if (estaEnProvincia([selectedLocation.latitude,selectedLocation.longitude], this.lista_boundingboxes_provincias[i])){
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("EL PUNTO PERTENECE A " + lista_provincias_peticiones[i]),
-            ),
-          );
-        
-        return lista_provincias_peticiones[i];
-      }
-    }
-
-    ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("NO SE HA ENCONTRADO PROVINCIA PARA EL PUNTO"),
-            ),
-          );
-          
-    return "";
-    */
-   
   }
 
   String buscar_comunidad(List<String> info_punto){
@@ -318,107 +290,3 @@ Future<List<String>> obtener_informacion_ubicacion(
     return ["error"];
   }
 }
-
-/*
-bool estaEnProvincia(List<double> coordenadasPueblo, List<double> boundingBoxProvincia) {
-  //print(boundingBoxProvincia);
-  //print(coordenadasPueblo);
-  double latitudPueblo = coordenadasPueblo[0];
-  double longitudPueblo = coordenadasPueblo[1];
-
-  double latitudInferior = boundingBoxProvincia[0];
-  double latitudSuperior = boundingBoxProvincia[1];
-  double longitudIzquierda = boundingBoxProvincia[2];
-  double longitudDerecha = boundingBoxProvincia[3];
-
-  // Verificar si las coordenadas del pueblo están dentro del bounding box de la provincia
-  return (latitudPueblo >= latitudInferior && latitudPueblo <= latitudSuperior) &&
-         (longitudPueblo >= longitudIzquierda && longitudPueblo <= longitudDerecha);
-}
-
-
-
-Future<String?> obtenerProvincia(String lugar) async {
-  final String overpassURL = 'https://overpass-api.de/api/interpreter';
-  final String query = '''
-    [out:json];
-    (
-      node["place"="village"]["name"="$lugar"](area);
-      way["place"="village"]["name"="$lugar"](area);
-      relation["place"="village"]["name"="$lugar"](area);
-    );
-    out body;
-  ''';
-
-  try {
-    final response = await http.post(Uri.parse(overpassURL), body: {'data': query});
-    
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = json.decode(response.body);
-
-      // Verifica si hay resultados y extrae la provincia si es así
-      if (data['elements'] != null && data['elements'].isNotEmpty) {
-        final provincia = data['elements'][0]['tags']['addr:province'];
-        print("PROVINCIA INFERIDA " + provincia);
-        return provincia;
-      } else {
-        return null; // No se encontraron resultados
-      }
-    } else {
-      print('Error en la solicitud: ${response.statusCode}');
-      return null;
-    }
-  } catch (error) {
-    print('Error: $error');
-    return null;
-  }
-}
-
-Future<String?> obtenerProvinciaDesdeChatGPT(String pueblo) async {
-  //final String endpoint = 'https://api.openai.com/v1/engines/davinci-codex/completions'; // Reemplaza con el endpoint correcto
-  final String apiKey = "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";
-  final String prompt = 'Provincia de $pueblo en España: ';
-
-  final List<Map<String, String>> messages = [];
-  messages.add({
-      'role': 'user',
-      'content': prompt,
-    });
-
-  try {
-      final res = await http.post(
-        Uri.parse('https://api.openai.com/v1/chat/completions'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $apiKey',
-        },
-        body: jsonEncode({
-          "model": "gpt-3.5-turbo",
-          "messages": messages,
-        }),  
-      );
-
-      if (res.statusCode == 200) {
-        String content =
-            jsonDecode(res.body)['choices'][0]['message']['content'];
-        content = content.trim();
-
-        messages.add({
-          'role': 'assistant',
-          'content': content,
-        });
-        print(content);
-        return content;
-      }
-      else{
-        print("errorcete");
-        print(jsonDecode(res.body).toString());
-        return 'An internal error occurred';
-      }
-
-  }catch(e){
-    print(e.toString());
-    return e.toString();
-  }
-}
-*/

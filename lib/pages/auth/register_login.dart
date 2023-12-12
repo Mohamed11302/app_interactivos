@@ -58,7 +58,7 @@ class _RegisterLoginState extends State<RegisterLogin> {
                   FadeInUp(
                       duration: Duration(milliseconds: 1000),
                       child: Text(
-                        "¡Bienvenido!",
+                        "Inicio de sesión",
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       )),
                 ],
