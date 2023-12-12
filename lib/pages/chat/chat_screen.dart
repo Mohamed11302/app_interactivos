@@ -184,7 +184,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               horizontal: 20, vertical: 10),
                         ),
                         child: Text(
-                          'Objetos perdidos',
+                          'Objetos de la conversación',
                           style: TextStyle(
                               fontSize:
                                   18), // Ajusta el tamaño del texto según sea necesario

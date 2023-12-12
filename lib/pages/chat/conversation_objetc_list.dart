@@ -23,7 +23,7 @@ class Listado_Objetos_Conversacion extends StatelessWidget {
           ),
         ),
         title: Text(
-          'Objetos perdidos',
+          'Objetos de la conversación',
           style: TextStyle(
             color: Colors.white,
             fontSize: 24,
