@@ -51,10 +51,10 @@ dev_dependencies:
 flutter_launcher_icons:
   ios: true
   android: true
-  image_path_ios: "assets/icono_sin_letras.png"
-  image_path_android: "assets/icono_sin_letras.png"
-  adaptive_icon_background: "assets/icono_sin_letras.png"
-  adaptive_icon_foreground: "assets/icono_sin_letras.png"
+  image_path_ios: "assets/icon_adaptativo.png"
+  image_path_android: "assets/icon_adaptativo.png"
+  adaptive_icon_background: "assets/icon_adaptativo.png"
+  adaptive_icon_foreground: "assets/icon_adaptativo.png"
 
 
 # For information on the generic Dart part of this file, see the
