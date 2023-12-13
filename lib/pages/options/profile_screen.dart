@@ -369,8 +369,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       QuerySnapshot querySnapshot2 = await objetosCollection.where('"propietario"', isEqualTo: email).get();
       for (QueryDocumentSnapshot document in querySnapshot2.docs) {
           print('Documento eliminado: ${document.data()}');
-          await objetosCollection.doc(document.id).delete();
+          borrar_objeto_firestore(document.id);
       }
+      ///ELIMINAR LOS OBJETOS DE LA CONVERSACION SI EL OBJETO LE PERTENECE AL OTRO USUARIO
       for (String objeto_conversaciones in objetos_conversaciones){
         CollectionReference objetosconversacionCollection = APIs.firestore.collection('objetos_conversacion');
         await objetosconversacionCollection.doc(objeto_conversaciones).delete();
