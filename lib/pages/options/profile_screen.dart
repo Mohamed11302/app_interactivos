@@ -6,6 +6,7 @@ import 'dart:io';
 
 import 'package:app_interactivos/pages/app_bar.dart';
 import 'package:app_interactivos/pages/auth/register_login.dart';
+import 'package:app_interactivos/pages/database_methods.dart';
 import 'package:app_interactivos/pages/side_bar/side_menu.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
