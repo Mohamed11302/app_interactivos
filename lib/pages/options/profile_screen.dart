@@ -1,11 +1,15 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
 import 'package:app_interactivos/pages/app_bar.dart';
+import 'package:app_interactivos/pages/auth/register_login.dart';
+import 'package:app_interactivos/pages/database_methods.dart';
 import 'package:app_interactivos/pages/side_bar/side_menu.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -194,6 +198,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             icon: const Icon(Icons.edit, size: 28),
                             label: const Text('ACTUALIZAR',
                                 style: TextStyle(fontSize: 16)),
+                          ),
+
+                          SizedBox(height: mq.height * .05),
+
+                          // update profile button
+                          ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                                shape: const StadiumBorder(), backgroundColor: Colors.red[900],
+                                minimumSize: Size(mq.width * .5, mq.height * .06), // Color primario del botón
+                                ),
+                            onPressed: () async{
+                              ShowDialogDeleteAccount();
+                            },
+                            icon: const Icon(Icons.delete, size: 28),
+                            label: const Text('DELETE',
+                                style: TextStyle(fontSize: 16)),
                           )
                         ],
                       ),
@@ -280,6 +300,116 @@ class _ProfileScreenState extends State<ProfileScreen> {
           );
         });
   }
+  void ShowDialogDeleteAccount() {
+    
+    showDialog(context:context, builder: (BuildContext context){
+        return AlertDialog(
+          title: Text('Eliminar cuenta'),
+          content: Text('¿Estás seguro de eliminar tu cuenta?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                // Lógica para manejar la opción 'Sí'
+                Navigator.of(context).pop(true);
+                
+              },
+              child: Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () async{
+                // Lógica para manejar la opción 'Cancelar'
+                Navigator.of(context).pop(false);
+                print("Eliminar cuenta");
+                await DeleteAccount();
+              },
+              child: Text('Si'),
+            ),
+          ],
+        );
+      }
+    );
+  }
+  Future<void> DeleteAccount() async{
+    try{
+      String email = APIs.auth.currentUser!.email.toString();
+      List<String> chats = [];
+      List<String> objetos_conversaciones = [];
+      ///////////////// ELIMINAR CHATS DEL USUARIO
+      DocumentSnapshot usersColection = await APIs.firestore.collection('users').doc(email).get();
+      QuerySnapshot usersChatCollection = await usersColection.reference.collection('my_chats').get();
+        for (QueryDocumentSnapshot chatDocument in usersChatCollection.docs) {
+            Map<String, dynamic> data2 = chatDocument.data() as Map<String, dynamic>;
+            if (data2["objetos_conver"]!=null){ //AÑADO EL ID DE LA LISTA DE OBJETOS DEL CHAT PARA BORRARLA LUEGO
+              objetos_conversaciones.add(data2["objetos_conver"]);
+            }
+            chats.add(chatDocument.id); //AÑADO EL EMAIL DEL OTRO PARTICIPANTE DEL CHAT PARA BORRARLO DESPUES
+            await DeleteChat(chatDocument.id, email); //BORRO LA CONVERSACION
+            print('ELIMINADO: ${chatDocument.id} ');
+      }
+
+      print(chats);
+      for (String chat in chats){ //PARA LAS PERSONAS CON LAS QUE HABLA EL USUARIO
+          DocumentSnapshot usersColection_dest = await APIs.firestore.collection('users').doc(chat).get();
+          DocumentSnapshot querySnapshot2 = await usersColection.reference.collection('my_chats').doc(email).get();
+          if (querySnapshot2.data() != null){
+              Map<String, dynamic> data = querySnapshot2.data() as Map<String, dynamic>;
+              if (data["objetos_conver"]!=null){
+                objetos_conversaciones.add(data["objetos_conver"]);
+              }
+          }
+          print(chat);
+          print('Datos del chat: ${querySnapshot2.id}');
+          await querySnapshot2.reference.delete(); //BORRO EL CORREO DEL USUARIO DE SU LISTA DE MY_CHATS
+      }
+
+
+
+      ///////////////// ELIMINAR OBJETOS Y OBJETO_CONVERSACIONES DEL PROPIETARIO
+      CollectionReference objetosCollection = APIs.firestore.collection('objetos');
+      QuerySnapshot querySnapshot2 = await objetosCollection.where('"propietario"', isEqualTo: email).get();
+      for (QueryDocumentSnapshot document in querySnapshot2.docs) {
+          print('Documento eliminado: ${document.data()}');
+          await objetosCollection.doc(document.id).delete();
+      }
+      for (String objeto_conversaciones in objetos_conversaciones){
+        CollectionReference objetosconversacionCollection = APIs.firestore.collection('objetos_conversacion');
+        await objetosconversacionCollection.doc(objeto_conversaciones).delete();
+
+      }
+      print("---");
+
+
+      //ELIMINO LA COLECCION DE CHATS DEL PROPIO USUARIO y EL USER
+      CollectionReference myChatsCollection = usersColection.reference.collection('my_chats');
+      QuerySnapshot myChatsSnapshot = await myChatsCollection.get();
+
+      for (QueryDocumentSnapshot chatDocument in myChatsSnapshot.docs) {
+        await chatDocument.reference.delete();
+      }
+      await usersColection.reference.delete();
+      await APIs.auth.currentUser!.delete();
+      Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context) => RegisterLogin()), (route) => false);
+    } catch (e) {
+      print('+++++++ Error: ${e}');
+    }
+  }
+  Future<void> DeleteChat(String usuario1, String usuario2) async{
+    String path = 'chats/${usuario1}_${usuario2}/messages/';
+    try{
+      QuerySnapshot<Map<String, dynamic>> querySnapshot = await APIs.firestore.collection(path).get();
+      if (querySnapshot.size == 0){
+        path = 'chats/${usuario2}_${usuario1}/messages/';
+        querySnapshot = await APIs.firestore.collection(path).get();
+      }
+      for (QueryDocumentSnapshot<Map<String, dynamic>> doc in querySnapshot.docs) {
+          await doc.reference.delete();
+          print('ELIMINADO: ${path}');
+      }
+    }catch(e){
+
+    }
+  }
+
 }
 
 

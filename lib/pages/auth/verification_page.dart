@@ -69,7 +69,7 @@ class _VerificationPageState extends State<VerificationPage> {
                   FadeInUp(
                       duration: Duration(milliseconds: 1000),
                       child: Text(
-                        "Findal",
+                        "Findall",
                         style: TextStyle(color: Colors.white, fontSize: 40),
                       )),
                   SizedBox(
@@ -78,7 +78,7 @@ class _VerificationPageState extends State<VerificationPage> {
                   FadeInUp(
                       duration: Duration(milliseconds: 1300),
                       child: Text(
-                        "Verify email",
+                        "Verificar email",
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       )),
                 ],
