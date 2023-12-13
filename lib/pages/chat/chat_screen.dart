@@ -342,7 +342,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     Text(
                       list.isNotEmpty
                           ? list[0].isOnline
-                              ? 'Online'
+                              ? 'En línea'
                               : MyDateUtil.getLastActiveTime(
                                   context: context,
                                   lastActive: list[0].lastActive,
@@ -399,7 +399,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       if (_showEmoji) setState(() => _showEmoji = !_showEmoji);
                     },
                     decoration: const InputDecoration(
-                        hintText: 'Type Something...',
+                        hintText: 'Escribe algo ...',
                         hintStyle: TextStyle(color: Colors.blueAccent),
                         border: InputBorder.none),
                   )),

@@ -9,21 +9,28 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:app_interactivos/pages/options/profile_screen.dart';
 
-class NavBar extends StatelessWidget {
+class NavBar extends StatefulWidget {
+
+  @override
+  State<NavBar> createState() => _NavBar();
+}
+
+class _NavBar extends State<NavBar> {
+
   static const String INICIO = 'Inicio';
   static const String PERFIL = 'Perfil';
   static const String ACERCADE = 'Acerca de';
-  static const String COMPARTIR = 'Compartir';
   static const String CERRARSESION = 'Cerrar Sesion';
 
   static String opcion_actual = INICIO;
 
-  NavBar({Key? key}) : super(key: key);
+  _NavBar() : super();
   String? _email = APIs.user.email!;
   String? _image_database = APIs.user.photoURL!;
   String? _name = APIs.user.displayName!;
   @override
   Widget build(BuildContext context) {
+    
     return FutureBuilder<List<String?>>(
         future: Future.wait([
           APIs.getRegistroUser('name'),
