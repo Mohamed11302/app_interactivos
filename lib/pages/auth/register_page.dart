@@ -398,13 +398,6 @@ class _RegisterPageState extends State<RegisterPage> {
       await _signUp_user();
 
       await SendVerificationEmail();
-      //sendEmail(user_email_data, username_data);
-      Navigator.pushAndRemoveUntil(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                VerificationPage()),
-                                        (route) => false);
     }
   }
   Future<void> SendVerificationEmail()async{
@@ -444,6 +437,12 @@ class _RegisterPageState extends State<RegisterPage> {
                 content: Text('User is successfully created'),
               ),
             );*/
+                  Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                VerificationPage()),
+                                        (route) => false);
           } catch (e) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -454,7 +453,7 @@ class _RegisterPageState extends State<RegisterPage> {
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Error connecting with Firebase'),
+              content: Text('Error al conectar con la base de datos')
             ),
           );
         }
@@ -462,7 +461,7 @@ class _RegisterPageState extends State<RegisterPage> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('User is already in use'),
+          content: Text('Error en el registro'),
         ),
       );
     }
